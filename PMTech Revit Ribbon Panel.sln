@@ -1,0 +1,65 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29209.62
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PMTech Revit Ribbon Panel", "PMTech Revit Ribbon Panel\PMTech Revit Ribbon Panel.csproj", "{8B41BF79-71A8-40E5-BCB8-E3F9FF5D0235}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreateSharedParams", "CreateSharedParams\CreateSharedParams.csproj", "{4F3E7B19-C615-43F4-AB05-1D9695A6C30F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AddFamilyParameters", "AddFamilyParameters\AddFamilyParameters.csproj", "{4415C418-3F5C-49FA-A95C-C4D70398B6CF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		x64|Any CPU = x64|Any CPU
+		x64|x64 = x64|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8B41BF79-71A8-40E5-BCB8-E3F9FF5D0235}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B41BF79-71A8-40E5-BCB8-E3F9FF5D0235}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B41BF79-71A8-40E5-BCB8-E3F9FF5D0235}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8B41BF79-71A8-40E5-BCB8-E3F9FF5D0235}.Debug|x64.Build.0 = Debug|Any CPU
+		{8B41BF79-71A8-40E5-BCB8-E3F9FF5D0235}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B41BF79-71A8-40E5-BCB8-E3F9FF5D0235}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B41BF79-71A8-40E5-BCB8-E3F9FF5D0235}.Release|x64.ActiveCfg = Release|Any CPU
+		{8B41BF79-71A8-40E5-BCB8-E3F9FF5D0235}.Release|x64.Build.0 = Release|Any CPU
+		{8B41BF79-71A8-40E5-BCB8-E3F9FF5D0235}.x64|Any CPU.ActiveCfg = Debug|x64
+		{8B41BF79-71A8-40E5-BCB8-E3F9FF5D0235}.x64|Any CPU.Build.0 = Debug|x64
+		{8B41BF79-71A8-40E5-BCB8-E3F9FF5D0235}.x64|x64.ActiveCfg = Release|x64
+		{8B41BF79-71A8-40E5-BCB8-E3F9FF5D0235}.x64|x64.Build.0 = Release|x64
+		{4F3E7B19-C615-43F4-AB05-1D9695A6C30F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F3E7B19-C615-43F4-AB05-1D9695A6C30F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F3E7B19-C615-43F4-AB05-1D9695A6C30F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4F3E7B19-C615-43F4-AB05-1D9695A6C30F}.Debug|x64.Build.0 = Debug|Any CPU
+		{4F3E7B19-C615-43F4-AB05-1D9695A6C30F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F3E7B19-C615-43F4-AB05-1D9695A6C30F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F3E7B19-C615-43F4-AB05-1D9695A6C30F}.Release|x64.ActiveCfg = Release|Any CPU
+		{4F3E7B19-C615-43F4-AB05-1D9695A6C30F}.Release|x64.Build.0 = Release|Any CPU
+		{4F3E7B19-C615-43F4-AB05-1D9695A6C30F}.x64|Any CPU.ActiveCfg = Debug|x64
+		{4F3E7B19-C615-43F4-AB05-1D9695A6C30F}.x64|Any CPU.Build.0 = Debug|x64
+		{4F3E7B19-C615-43F4-AB05-1D9695A6C30F}.x64|x64.ActiveCfg = Release|x64
+		{4F3E7B19-C615-43F4-AB05-1D9695A6C30F}.x64|x64.Build.0 = Release|x64
+		{4415C418-3F5C-49FA-A95C-C4D70398B6CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4415C418-3F5C-49FA-A95C-C4D70398B6CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4415C418-3F5C-49FA-A95C-C4D70398B6CF}.Debug|x64.ActiveCfg = Debug|x64
+		{4415C418-3F5C-49FA-A95C-C4D70398B6CF}.Debug|x64.Build.0 = Debug|x64
+		{4415C418-3F5C-49FA-A95C-C4D70398B6CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4415C418-3F5C-49FA-A95C-C4D70398B6CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4415C418-3F5C-49FA-A95C-C4D70398B6CF}.Release|x64.ActiveCfg = Release|x64
+		{4415C418-3F5C-49FA-A95C-C4D70398B6CF}.Release|x64.Build.0 = Release|x64
+		{4415C418-3F5C-49FA-A95C-C4D70398B6CF}.x64|Any CPU.ActiveCfg = Debug|x64
+		{4415C418-3F5C-49FA-A95C-C4D70398B6CF}.x64|Any CPU.Build.0 = Debug|x64
+		{4415C418-3F5C-49FA-A95C-C4D70398B6CF}.x64|x64.ActiveCfg = Release|x64
+		{4415C418-3F5C-49FA-A95C-C4D70398B6CF}.x64|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C874479F-69DD-4F32-98FF-8711378BC0E8}
+	EndGlobalSection
+EndGlobal

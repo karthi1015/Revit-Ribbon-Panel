@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RevitAddIns>
+  <AddIn Type="Application">
+    <Name>Application PMTech Revit Ribbon Panel</Name>
+    <Assembly>PMTech Revit Ribbon Panel.dll</Assembly>
+    <FullClassName>PMTech_Revit_Ribbon_Panel.App</FullClassName>
+    <ClientId>cd9a21ae-4822-45dd-ab23-3b5e5b8ed3bc</ClientId>
+    <VendorId>PMTech</VendorId>
+    <VendorDescription>PMTech LLC, http://pmtech.by</VendorDescription>
+  </AddIn>
+</RevitAddIns>

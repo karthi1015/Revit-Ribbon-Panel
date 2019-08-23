@@ -1,0 +1,68 @@
+﻿<Window
+    x:Class="AddFamilyParameters.V.FamilyListView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:AddFamilyParameters.V"
+    xmlns:m="clr-namespace:AddFamilyParameters.M"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:src="clr-namespace:Autodesk.Revit.DB;assembly=RevitAPI"
+    Width="400"
+    Height="800"
+    MinWidth="400"
+    MinHeight="800"
+    WindowStartupLocation="CenterScreen"
+    mc:Ignorable="d">
+    <Grid>
+        <TreeView
+            x:Name="treeView"
+            Margin="10,80,10,10"
+            ItemsSource="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=Families}">
+            <TreeView.Resources>
+                <HierarchicalDataTemplate DataType="{x:Type m:FamilyCategory}" ItemsSource="{Binding Members}">
+                    <CheckBox Content="{Binding Name}" IsChecked="{Binding Path=(m:ItemHelper.IsChecked), Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <CheckBox.Style>
+                            <Style TargetType="{x:Type CheckBox}">
+                                <Setter Property="Foreground" Value="Black" />
+                                <Setter Property="Visibility" Value="Visible" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Path=(m:ItemHelper.IsChecked)}" Value="False">
+                                        <Setter Property="Foreground" Value="LightGray" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </CheckBox.Style>
+                    </CheckBox>
+                </HierarchicalDataTemplate>
+                <DataTemplate DataType="{x:Type m:MyFamily}">
+                    <CheckBox Content="{Binding Path=Family.Name}" IsChecked="{Binding Path=(m:ItemHelper.IsChecked), Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <CheckBox.Style>
+                            <Style TargetType="{x:Type CheckBox}">
+                                <Setter Property="Foreground" Value="Black" />
+                                <Setter Property="Visibility" Value="Visible" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Path=(m:ItemHelper.IsChecked)}" Value="False">
+                                        <Setter Property="Foreground" Value="LightGray" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </CheckBox.Style>
+                    </CheckBox>
+                </DataTemplate>
+            </TreeView.Resources>
+            <TreeView.ItemContainerStyle>
+                <Style TargetType="{x:Type TreeViewItem}">
+                    <Setter Property="IsExpanded" Value="True" />
+                </Style>
+            </TreeView.ItemContainerStyle>
+        </TreeView>
+
+
+        <Button
+            Margin="10,10,274,735"
+            Click="ButtonPrintCrewClick"
+            Content="Load" />
+        <TextBlock x:Name="textBoxCrew" Margin="10,39,10,706" />
+
+    </Grid>
+</Window>
