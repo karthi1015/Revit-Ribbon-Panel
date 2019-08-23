@@ -22,12 +22,14 @@ namespace AddFamilyParameters.V
     /// </summary>
     public partial class FamilyListView : Window
     {
+        private Document revitDocument;
+
         public FamilyListView(Document doc)
         {
             try
             {
                 this.InitializeComponent();
-
+                this.revitDocument = doc;
                 Service service = new Service(doc);
 
                 // this.ViewsTreeViewFamilies.ItemsSource = service.FamCategoriesList;
@@ -48,7 +50,7 @@ namespace AddFamilyParameters.V
                                 where ItemHelper.GetIsChecked(item) == true
                                 select item.Family).ToList();
 
-
+            Service.EditFamily(fam);
 
             this.textBoxCrew.Text = "Success";
         }

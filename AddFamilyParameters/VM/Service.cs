@@ -35,7 +35,7 @@ namespace AddFamilyParameters.VM
 
                 using (Transaction t = new Transaction(familyDoc))
                 {
-                    t.Start();
+                    t.Start($"editing {family.Name}");
                     BuiltInParameterGroup addToGroup = BuiltInParameterGroup.INVALID;
                     ParameterType parameterType = ParameterType.Text;
                     familyDoc.FamilyManager.AddParameter("MyParameter Name", addToGroup, parameterType, true);
