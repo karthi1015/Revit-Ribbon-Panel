@@ -1,4 +1,5 @@
 ﻿// ReSharper disable StyleCop.SA1600
+
 namespace AddFamilyParameters.VM
 {
     using System.Collections.Generic;
@@ -26,6 +27,26 @@ namespace AddFamilyParameters.VM
 
         public ObservableCollection<FamilyCategory> FamCategoriesList => famCategories;
 
+        public static void EditFamily(List<Family> fam)
+        {
+            foreach (Family family in fam)
+            {
+                var familyDoc = revitDocument.EditFamily(family);
+
+                using (Transaction t = new Transaction(familyDoc))
+                {
+                    t.Start();
+                    BuiltInParameterGroup addToGroup = BuiltInParameterGroup.INVALID;
+                    ParameterType parameterType = ParameterType.Text;
+                    familyDoc.FamilyManager.AddParameter("MyParameter Name", addToGroup, parameterType, true);
+                    t.Commit();
+                }
+
+                revitDocument.LoadFamily(familyDoc, new FamilyLoadOptionsMod());
+                familyDoc.Close(false);
+            }
+        }
+
         private static Dictionary<string, List<Family>> FindFamilyTypes()
         {
             return new FilteredElementCollector(revitDocument)
@@ -47,6 +68,26 @@ namespace AddFamilyParameters.VM
             {
                 famCategories.Add(new FamilyCategory(item.Value) { Name = item.Key });
             }
+        }
+    }
+
+    class FamilyLoadOptionsMod : IFamilyLoadOptions
+    {
+        public bool OnFamilyFound(bool familyInUse, out bool overwriteParameterValues)
+        {
+            overwriteParameterValues = true;
+            return true;
+        }
+
+        public bool OnSharedFamilyFound(
+            Family sharedFamily,
+            bool familyInUse,
+            out FamilySource source,
+            out bool overwriteParameterValues)
+        {
+            source = FamilySource.Family;
+            overwriteParameterValues = true;
+            return true;
         }
     }
 }

@@ -43,16 +43,14 @@ namespace AddFamilyParameters.V
 
         private void ButtonPrintCrewClick(object sender, RoutedEventArgs e)
         {
-            string crew = this.Families.Aggregate(
-                string.Empty,
-                (current1, family) =>
-                    family.Members.Where(person => ItemHelper.GetIsChecked(person) == true)
-                          .Aggregate(
-                               current1,
-                               (current, person) => current + (person.Family.Name + ", ")));
+            List<Family> fam = (from familyCategory in this.Families
+                                from item in familyCategory.Members
+                                where ItemHelper.GetIsChecked(item) == true
+                                select item.Family).ToList();
 
-            crew = crew.TrimEnd(',', ' ');
-            this.textBoxCrew.Text = "Your crew: " + crew;
+
+
+            this.textBoxCrew.Text = "Success";
         }
     }
 }
