@@ -1,7 +1,7 @@
 ﻿// ReSharper disable StyleCop.SA1623
 // ReSharper disable StyleCop.SA1600
 
-namespace AddFamilyParameters.M
+namespace AddFamilyParameters.HelperClass
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -15,7 +15,7 @@ namespace AddFamilyParameters.M
         /// </summary>
         private List<TextNoteTypeResult> textNoteTypeResults;
 
-        public SetParametersInFamilyResult(Family f)
+        public SetParametersInFamilyResult(Element f)
         {
             this.FamilyName = f.Name;
             this.textNoteTypeResults = null;

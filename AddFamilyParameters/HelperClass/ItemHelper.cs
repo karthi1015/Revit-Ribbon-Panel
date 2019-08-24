@@ -2,10 +2,12 @@
 // ReSharper disable StyleCop.SA1306
 // ReSharper disable StyleCop.SA1600
 
-namespace AddFamilyParameters.M
+namespace AddFamilyParameters.HelperClass
 {
     using System.Linq;
     using System.Windows;
+
+    using AddFamilyParameters.Interfaces;
 
     public class ItemHelper : DependencyObject
     {

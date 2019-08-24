@@ -5,6 +5,8 @@ namespace AddFamilyParameters.M
     using System.Collections.Generic;
     using System.Windows;
 
+    using AddFamilyParameters.Interfaces;
+
     using Autodesk.Revit.DB;
 
     public class FamilyCategory : DependencyObject, IParent<object>

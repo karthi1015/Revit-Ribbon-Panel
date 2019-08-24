@@ -13,6 +13,7 @@ namespace AddFamilyParameters.V
     using System.Text;
     using System.Windows;
 
+    using AddFamilyParameters.HelperClass;
     using AddFamilyParameters.M;
     using AddFamilyParameters.VM;
 
@@ -29,21 +30,22 @@ namespace AddFamilyParameters.V
     [Regeneration(RegenerationOption.Manual)]
     public partial class FamilyListView : Window, IExternalCommand
     {
-        private FamilyListViewModel service;
+        private FamilyListViewModel familyListViewModel;
 
-        UIApplication uiapp;
+        private UIApplication uiapp;
 
-        UIDocument uidoc;
+        private UIDocument uidoc;
 
-        Application app;
+        private Application app;
 
-        Document doc;
+        private Document doc;
 
         public FamilyListView()
         {
             try
             {
                 this.InitializeComponent();
+                this.Families = this.familyListViewModel.FamCategoriesList;
             }
             catch (Exception e)
             {
@@ -53,16 +55,6 @@ namespace AddFamilyParameters.V
 
         public ObservableCollection<FamilyCategory> Families { get; set; }
 
-        private void ButtonLoadParametersClick(object sender, RoutedEventArgs e)
-        {
-            List<Family> fam = (from familyCategory in this.Families
-                                from item in familyCategory.Members
-                                where ItemHelper.GetIsChecked(item) == true
-                                select item.Family).ToList();
-
-            this.service.EditFamily(fam);
-        }
-
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
             this.uiapp = commandData.Application;
@@ -70,12 +62,21 @@ namespace AddFamilyParameters.V
             this.app = this.uiapp.Application;
             this.doc = this.uidoc.Document;
 
-            this.service = new FamilyListViewModel(this.doc);
-            this.Families = this.service.FamCategoriesList;
+            this.familyListViewModel = new FamilyListViewModel(this.doc);
 
             this.ShowDialog();
 
             return Result.Succeeded;
+        }
+
+        private void ButtonLoadParametersClick(object sender, RoutedEventArgs e)
+        {
+            List<Family> fam = (from familyCategory in this.Families
+                                from item in familyCategory.Members
+                                where ItemHelper.GetIsChecked(item) == true
+                                select item.Family).ToList();
+
+            this.familyListViewModel.AddFamilyParameters(fam);
         }
     }
 }
