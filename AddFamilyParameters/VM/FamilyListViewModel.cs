@@ -1,22 +1,26 @@
 ﻿// ReSharper disable StyleCop.SA1600
 
+// ReSharper disable StyleCop.SA1402
+
 namespace AddFamilyParameters.VM
 {
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Diagnostics;
     using System.Linq;
 
     using AddFamilyParameters.M;
 
     using Autodesk.Revit.DB;
+    using Autodesk.Revit.UI;
 
-    public class Service
+    public class FamilyListViewModel
     {
         private static ObservableCollection<FamilyCategory> famCategories;
 
         private static Document revitDocument;
 
-        public Service(Document doc)
+        public FamilyListViewModel(Document doc)
         {
             revitDocument = doc;
 
@@ -27,24 +31,64 @@ namespace AddFamilyParameters.VM
 
         public ObservableCollection<FamilyCategory> FamCategoriesList => famCategories;
 
-        public static void EditFamily(List<Family> fam)
+        public void EditFamily(List<Family> fam)
         {
+            BuiltInParameterGroup addToGroup = BuiltInParameterGroup.INVALID;
+            ParameterType parameterType = ParameterType.Text;
+            List<SetParametersInFamilyResult> results = new List<SetParametersInFamilyResult>();
+
             foreach (Family family in fam)
             {
-                var familyDoc = revitDocument.EditFamily(family);
+                var r1 = new SetParametersInFamilyResult(family);
+
+                Document familyDoc;
+                var updatedTextNoteStyle = false;
+                if (family.IsEditable)
+                {
+                    r1.FamilyDocument = familyDoc = revitDocument.EditFamily(family);
+                }
+                else
+                {
+                    r1.Skipped = true;
+                    results.Add(r1);
+                    Debug.Print("Family '{0}' is not editable", family.Name);
+                    continue;
+                }
 
                 using (Transaction t = new Transaction(familyDoc))
                 {
                     t.Start($"editing {family.Name}");
-                    BuiltInParameterGroup addToGroup = BuiltInParameterGroup.INVALID;
-                    ParameterType parameterType = ParameterType.Text;
                     familyDoc.FamilyManager.AddParameter("MyParameter Name", addToGroup, parameterType, true);
                     t.Commit();
                 }
 
-                revitDocument.LoadFamily(familyDoc, new FamilyLoadOptionsMod());
-                familyDoc.Close(false);
+                updatedTextNoteStyle = true;
+                r1.AddTextNoteType(family, updatedTextNoteStyle);
+
+                results.Add(r1);
             }
+
+            FamilyLoadOptionsMod opt = new FamilyLoadOptionsMod();
+
+            foreach (var r in results)
+            {
+                if (r.NeedsReload)
+                {
+                    r.FamilyDocument.LoadFamily(revitDocument, opt);
+                    r.FamilyDocument.Close(false);
+                }
+            }
+
+            TaskDialog d =
+                new TaskDialog("Set Text Note Font") { MainInstruction = $"{results.Count} families processed." };
+
+            List<string> familyResults = results.ConvertAll<string>(r => r.ToString());
+
+            familyResults.Sort();
+
+            d.MainContent = string.Join("\r\n", familyResults);
+
+            d.Show();
         }
 
         private static Dictionary<string, List<Family>> FindFamilyTypes()
@@ -71,7 +115,7 @@ namespace AddFamilyParameters.VM
         }
     }
 
-    class FamilyLoadOptionsMod : IFamilyLoadOptions
+    public class FamilyLoadOptionsMod : IFamilyLoadOptions
     {
         public bool OnFamilyFound(bool familyInUse, out bool overwriteParameterValues)
         {

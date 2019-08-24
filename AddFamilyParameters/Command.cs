@@ -30,8 +30,8 @@ namespace AddFamilyParameters
             Application app = uiapp.Application;
             Document doc = uidoc.Document;
 
-            FamilyListView familyListView = new FamilyListView(doc);
-            familyListView.Show();
+            //FamilyListView familyListView = new FamilyListView(doc);
+            //familyListView.ShowDialog();
 
 
             return Result.Succeeded;

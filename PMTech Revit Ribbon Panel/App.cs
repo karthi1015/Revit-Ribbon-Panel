@@ -103,7 +103,7 @@ namespace PMTech_Revit_Ribbon_Panel
                     "Button2",
                     "Add family parameters",
                     this.addFamilyParametersPath,
-                    "AddFamilyParameters.Command")
+                    "AddFamilyParameters.V.FamilyListView")
                 {
                     ToolTip = "Batch add family parameters from excel file",
                     LongDescription = "Batch add family parameters from excel file",
