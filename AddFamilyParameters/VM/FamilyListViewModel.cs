@@ -114,7 +114,7 @@ namespace AddFamilyParameters.VM
         {
             return new FilteredElementCollector(revitDocument)
                   .WherePasses(new ElementClassFilter(typeof(Family))).Cast<Family>()
-                  .GroupBy(e => e.FamilyCategory.Name).ToDictionary(e => e.Key, e => e.ToList());
+                  .GroupBy(e => e.FamilyCategory.Name).OrderBy(e => e.Key).ToDictionary(e => e.Key, e => e.ToList());
         }
 
         private static Dictionary<string, List<FamilySymbol>> FindFamilySymbolTypes(BuiltInCategory cat)
