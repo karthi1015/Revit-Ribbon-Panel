@@ -78,7 +78,7 @@ namespace PMTech_Revit_Ribbon_Panel
             // create the button data
             PushButtonData btnData =
                 new PushButtonData(
-                    "Button",
+                    "Add shared parameters",
                     "Add shared parameters",
                     this.addSharedParamsPath,
                     "CreateSharedParams.CreateSharedParameter")
@@ -100,10 +100,10 @@ namespace PMTech_Revit_Ribbon_Panel
             // create the button data
             PushButtonData btn2Data =
                 new PushButtonData(
-                    "Button2",
+                    "Add family parameters",
                     "Add family parameters",
                     this.addFamilyParametersPath,
-                    "AddFamilyParameters.V.FamilyListView")
+                    "AddFamilyParameters.Command")
                 {
                     ToolTip = "Batch add family parameters from excel file",
                     LongDescription = "Batch add family parameters from excel file",

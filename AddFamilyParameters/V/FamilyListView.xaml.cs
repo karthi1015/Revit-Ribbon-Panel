@@ -1,10 +1,4 @@
-﻿// ReSharper disable StyleCop.SA1650
-// ReSharper disable StyleCop.SA1600
-
-// ReSharper disable StyleCop.SA1309
-// ReSharper disable InconsistentNaming
-
-namespace AddFamilyParameters.V
+﻿namespace AddFamilyParameters.V
 {
     using System;
     using System.Collections.Generic;
@@ -17,34 +11,30 @@ namespace AddFamilyParameters.V
     using AddFamilyParameters.M;
     using AddFamilyParameters.VM;
 
-    using Autodesk.Revit.Attributes;
     using Autodesk.Revit.DB;
     using Autodesk.Revit.UI;
-
-    using Application = Autodesk.Revit.ApplicationServices.Application;
 
     /// <summary>
     /// The family list window.
     /// </summary>
-    [Transaction(TransactionMode.Manual)]
-    [Regeneration(RegenerationOption.Manual)]
-    public partial class FamilyListView : Window, IExternalCommand
+    public partial class FamilyListView : Window
     {
-        private FamilyListViewModel familyListViewModel;
+        private readonly FamilyListViewModel familyListViewModel;
 
-        private UIApplication uiapp;
-
-        private UIDocument uidoc;
-
-        private Application app;
-
-        private Document doc;
-
-        public FamilyListView()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FamilyListView"/> class.
+        /// </summary>
+        /// <param name="doc">
+        /// The doc.
+        /// </param>
+        public FamilyListView(Document doc)
         {
             try
             {
                 this.InitializeComponent();
+
+                this.familyListViewModel = new FamilyListViewModel(doc);
+                this.Families = this.familyListViewModel.FamCategoriesList;
             }
             catch (Exception e)
             {
@@ -52,22 +42,10 @@ namespace AddFamilyParameters.V
             }
         }
 
+        /// <summary>
+        /// Gets or sets the families.
+        /// </summary>
         public ObservableCollection<FamilyCategory> Families { get; set; }
-
-        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
-        {
-            this.uiapp = commandData.Application;
-            this.uidoc = this.uiapp.ActiveUIDocument;
-            this.app = this.uiapp.Application;
-            this.doc = this.uidoc.Document;
-
-            this.familyListViewModel = new FamilyListViewModel(this.doc);
-            this.Families = this.familyListViewModel.FamCategoriesList;
-
-            this.ShowDialog();
-
-            return Result.Succeeded;
-        }
 
         private void ButtonLoadParametersClick(object sender, RoutedEventArgs e)
         {
@@ -79,8 +57,6 @@ namespace AddFamilyParameters.V
             var results = this.familyListViewModel.AddFamilyParameters(fam);
 
             SetParametersInFamilyResult.ShowResultsDialog(results);
-
-            this.Activate();
         }
     }
 }
