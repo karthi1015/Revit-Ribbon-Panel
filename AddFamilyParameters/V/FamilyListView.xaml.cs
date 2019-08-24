@@ -45,7 +45,6 @@ namespace AddFamilyParameters.V
             try
             {
                 this.InitializeComponent();
-                this.Families = this.familyListViewModel.FamCategoriesList;
             }
             catch (Exception e)
             {
@@ -63,6 +62,7 @@ namespace AddFamilyParameters.V
             this.doc = this.uidoc.Document;
 
             this.familyListViewModel = new FamilyListViewModel(this.doc);
+            this.Families = this.familyListViewModel.FamCategoriesList;
 
             this.ShowDialog();
 
@@ -76,7 +76,11 @@ namespace AddFamilyParameters.V
                                 where ItemHelper.GetIsChecked(item) == true
                                 select item.Family).ToList();
 
-            this.familyListViewModel.AddFamilyParameters(fam);
+            var results = this.familyListViewModel.AddFamilyParameters(fam);
+
+            SetParametersInFamilyResult.ShowResultsDialog(results);
+
+            this.Activate();
         }
     }
 }

@@ -50,12 +50,15 @@ namespace AddFamilyParameters.VM
         public ObservableCollection<FamilyCategory> FamCategoriesList => famCategories;
 
         /// <summary>
-        /// The edit family.
+        /// The add family parameters.
         /// </summary>
         /// <param name="fam">
         /// The fam.
         /// </param>
-        public void AddFamilyParameters(List<Family> fam)
+        /// <returns>
+        /// The <see cref="List{T}"/>.
+        /// </returns>
+        public List<SetParametersInFamilyResult> AddFamilyParameters(List<Family> fam)
         {
             BuiltInParameterGroup addToGroup = BuiltInParameterGroup.INVALID;
             ParameterType parameterType = ParameterType.Text;
@@ -67,6 +70,7 @@ namespace AddFamilyParameters.VM
 
                 Document familyDoc;
                 var updatedParameter = false;
+
                 if (family.IsEditable)
                 {
                     r1.FamilyDocument = familyDoc = revitDocument.EditFamily(family);
@@ -103,16 +107,7 @@ namespace AddFamilyParameters.VM
                 }
             }
 
-            TaskDialog d =
-                new TaskDialog("Add parameter") { MainInstruction = $"{results.Count} families processed." };
-
-            List<string> familyResults = results.ConvertAll<string>(r => r.ToString());
-
-            familyResults.Sort();
-
-            d.MainContent = string.Join("\r\n", familyResults);
-
-            d.Show();
+            return results;
         }
 
         private static Dictionary<string, List<Family>> FindFamilyTypes()

@@ -7,8 +7,9 @@ namespace AddFamilyParameters.HelperClass
     using System.Linq;
 
     using Autodesk.Revit.DB;
+    using Autodesk.Revit.UI;
 
-    internal class SetParametersInFamilyResult
+    public class SetParametersInFamilyResult
     {
         /// <summary>
         /// List of text note type names and updated flags.
@@ -44,6 +45,19 @@ namespace AddFamilyParameters.HelperClass
             {
                 return this.textNoteTypeResults?.Count(r => r.Updated) ?? 0;
             }
+        }
+
+        public static void ShowResultsDialog(List<SetParametersInFamilyResult> results)
+        {
+            TaskDialog d = new TaskDialog("Add parameter") { MainInstruction = $"{results.Count} families processed." };
+
+            List<string> familyResults = results.ConvertAll(r => r.ToString());
+
+            familyResults.Sort();
+
+            d.MainContent = string.Join("\r\n", familyResults);
+
+            d.Show();
         }
 
         public void AddTextNoteType(Family fam, bool updated)
