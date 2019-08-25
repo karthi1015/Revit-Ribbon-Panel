@@ -9,6 +9,8 @@
 
 namespace CreateSharedParams.Models
 {
+    using Autodesk.Revit.DB;
+
     /// <summary>
     /// My customized model
     /// </summary>
@@ -27,26 +29,26 @@ namespace CreateSharedParams.Models
         /// <summary>
         /// Gets or sets the shared parameter type.
         /// </summary>
-        public string ParamType { get; set; }
+        public ParameterType ParamType { get; set; }
 
         /// <summary>
-        /// Gets or sets the visibility.
+        /// Gets or sets a value indicating whether visible.
         /// </summary>
-        public string Visible { get; set; }
+        public bool IsVisible { get; set; }
 
         /// <summary>
         /// Gets or sets the shared parameter category.
         /// </summary>
-        public string Category { get; set; }
+        public BuiltInCategory Category { get; set; }
 
         /// <summary>
         /// Gets or sets the shared parameter group.
         /// </summary>
-        public string ParamGroup { get; set; }
+        public BuiltInParameterGroup ParamGroup { get; set; }
 
         /// <summary>
-        /// Gets or sets the shared parameter to be of instance or of type.
+        /// Gets or sets a value indicating whether instance.
         /// </summary>
-        public string Instance { get; set; }
+        public bool IsInstance { get; set; }
     }
 }

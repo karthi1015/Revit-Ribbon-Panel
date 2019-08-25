@@ -49,34 +49,19 @@ namespace CreateSharedParams
 
                 using (Transaction t = new Transaction(doc))
                 {
-                    t.Start($"Add Shared Parameters");
+                    t.Start($"Adding Shared Parameters");
 
                     foreach (var item in dataList)
                     {
-                        DefinitionGroup dg = HelperParams.GetOrCreateSharedParamsGroup(
-                            sharedParameterFile,
-                            item.GroupName);
-                        var parameterTypeParse = (ParameterType)Enum.Parse(typeof(ParameterType), item.ParamType);
-                        var visibleParse = bool.Parse(item.Visible);
-                        ExternalDefinition externalDefinition = HelperParams.GetOrCreateSharedParamDefinition(
-                            dg,
-                            parameterTypeParse,
-                            item.ParamName,
-                            visibleParse);
+                        DefinitionGroup dg = HelperParams.GetOrCreateSharedParamsGroup(sharedParameterFile, item.GroupName);
+                        ExternalDefinition externalDefinition = HelperParams.GetOrCreateSharedParamDefinition(dg, item.ParamType, item.ParamName, item.IsVisible);
 
-                        var categoryParse = (BuiltInCategory)Enum.Parse(typeof(BuiltInCategory), item.Category);
-
-                        Category category = doc.Settings.Categories.get_Item(categoryParse);
+                        Category category = doc.Settings.Categories.get_Item(item.Category);
                         categorySet.Insert(category);
-
-                        // parameter group to text
-                        var parameterGroupParse = (BuiltInParameterGroup)Enum.Parse(
-                            typeof(BuiltInParameterGroup),
-                            item.ParamGroup);
 
                         // parameter binding
                         Binding newIb;
-                        if (bool.Parse(item.Instance))
+                        if (item.IsInstance)
                         {
                             newIb = app.Create.NewInstanceBinding(categorySet);
                         }
@@ -85,7 +70,7 @@ namespace CreateSharedParams
                             newIb = app.Create.NewTypeBinding(categorySet);
                         }
 
-                        doc.ParameterBindings.Insert(externalDefinition, newIb, parameterGroupParse);
+                        doc.ParameterBindings.Insert(externalDefinition, newIb, item.ParamGroup);
 
                         if (doc.ParameterBindings.Contains(externalDefinition))
                         {
@@ -101,7 +86,7 @@ namespace CreateSharedParams
 
                 if (showResult)
                 {
-                    TaskDialog.Show("Revit", "Successfully bound");
+                    TaskDialog.Show("Adding Shared Parameters", "Shared parameters have been added successfully");
                 }
             }
             catch

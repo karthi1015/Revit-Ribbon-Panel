@@ -126,28 +126,21 @@ namespace AddFamilyParameters.VM
 
             foreach (var item in dataList)
             {
-                var parameterType = (ParameterType)Enum.Parse(typeof(ParameterType), item.ParamType);
-                var parameterGroup = (BuiltInParameterGroup)Enum.Parse(typeof(BuiltInParameterGroup), item.ParamGroup);
-                bool isInstance = bool.Parse(item.Instance);
-                string parameterName = item.ParamName;
-
                 bool nameIsInUse = familyDoc.FamilyManager.Parameters.Cast<FamilyParameter>()
-                                            .Any(parameter => parameter.Definition.Name == parameterName);
+                                            .Any(parameter => parameter.Definition.Name == item.ParamName);
 
                 if (!nameIsInUse)
                 {
                     if (isAddShared)
                     {
                         DefinitionGroup dg = HelperParams.GetOrCreateSharedParamsGroup(sharedParameterFile, item.GroupName);
-                        var parameterTypeParse = (ParameterType)Enum.Parse(typeof(ParameterType), item.ParamType);
-                        var visibleParse = bool.Parse(item.Visible);
-                        ExternalDefinition externalDefinition = HelperParams.GetOrCreateSharedParamDefinition(dg, parameterTypeParse, parameterName, visibleParse);
+                        ExternalDefinition externalDefinition = HelperParams.GetOrCreateSharedParamDefinition(dg, item.ParamType, item.ParamName, item.IsVisible);
 
-                        results.AddFamilyParameterNote(familyDoc.FamilyManager.AddParameter(externalDefinition, parameterGroup, isInstance));
+                        results.AddFamilyParameterNote(familyDoc.FamilyManager.AddParameter(externalDefinition, item.ParamGroup, item.IsInstance));
                     }
                     else
                     {
-                        results.AddFamilyParameterNote(familyDoc.FamilyManager.AddParameter(parameterName, parameterGroup, parameterType, isInstance));
+                        results.AddFamilyParameterNote(familyDoc.FamilyManager.AddParameter(item.ParamName, item.ParamGroup, item.ParamType, item.IsInstance));
                     }
                 }
             }

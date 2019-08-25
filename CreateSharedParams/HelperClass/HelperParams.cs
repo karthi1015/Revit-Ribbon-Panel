@@ -22,6 +22,7 @@ namespace CreateSharedParams.HelperClass
 
     using AppRvt = Autodesk.Revit.ApplicationServices.Application;
     using BindingRvt = Autodesk.Revit.DB.Binding;
+    using Excel = Microsoft.Office.Interop.Excel;
 
     /// <summary>
     /// The helper parameters.
@@ -199,11 +200,7 @@ namespace CreateSharedParams.HelperClass
         /// <returns>
         /// The <see cref="Definition"/>.
         /// </returns>
-        public static ExternalDefinition GetOrCreateSharedParamDefinition(
-            DefinitionGroup defGrp,
-            ParameterType parType,
-            string parName,
-            bool visible)
+        public static ExternalDefinition GetOrCreateSharedParamDefinition(DefinitionGroup defGrp, ParameterType parType, string parName, bool visible)
         {
             try
             {
@@ -229,13 +226,7 @@ namespace CreateSharedParams.HelperClass
         /// <param name="visible">parameter UI Visibility (relevant only when Creation takes place)</param>
         /// <param name="instanceBinding">parameter Binding: Instance or Type (relevant only when Creation takes place)</param>
         /// <returns>The <see cref="Parameter"/></returns>
-        public static Parameter GetOrCreateElemSharedParam(
-            Element elem,
-            string paramName,
-            string grpName,
-            ParameterType paramType,
-            bool visible,
-            bool instanceBinding)
+        public static Parameter GetOrCreateElemSharedParam(Element elem, string paramName, string grpName, ParameterType paramType, bool visible, bool instanceBinding)
         {
             try
             {
@@ -247,14 +238,7 @@ namespace CreateSharedParams.HelperClass
                 }
 
                 // If here, need to create it...
-                BindSharedParamResult res = BindSharedParam(
-                    elem.Document,
-                    elem.Category,
-                    paramName,
-                    grpName,
-                    paramType,
-                    visible,
-                    instanceBinding);
+                BindSharedParamResult res = BindSharedParam(elem.Document, elem.Category, paramName, grpName, paramType, visible, instanceBinding);
                 if ((res != BindSharedParamResult.ESuccessfullyBound) && (res != BindSharedParamResult.EAlreadyBound))
                 {
                     return null;
@@ -297,14 +281,7 @@ namespace CreateSharedParams.HelperClass
         /// <returns>
         /// The <see cref="BindSharedParamResult"/>.
         /// </returns>
-        public static BindSharedParamResult BindSharedParam(
-            Document doc,
-            Category cat,
-            string paramName,
-            string grpName,
-            ParameterType paramType,
-            bool visible,
-            bool instanceBinding)
+        public static BindSharedParamResult BindSharedParam(Document doc, Category cat, string paramName, string grpName, ParameterType paramType, bool visible, bool instanceBinding)
         {
             try
             {
@@ -385,9 +362,7 @@ namespace CreateSharedParams.HelperClass
                     return BindSharedParamResult.ESuccessfullyBound;
                 }
 
-                return doc.ParameterBindings.ReInsert(definition, bind)
-                           ? BindSharedParamResult.ESuccessfullyBound
-                           : BindSharedParamResult.EFailed;
+                return doc.ParameterBindings.ReInsert(definition, bind) ? BindSharedParamResult.ESuccessfullyBound : BindSharedParamResult.EFailed;
             }
             catch (Exception ex)
             {
@@ -402,54 +377,52 @@ namespace CreateSharedParams.HelperClass
         /// The load excel method.
         /// </summary>
         /// <returns>
-        /// The <see cref="List"/>.
+        /// The <see cref="List{T}"/>.
         /// </returns>
         public static List<SharedParameter> LoadExcel()
         {
-            // open the Excel file and get the specified worksheet
-            var excelApp = new Microsoft.Office.Interop.Excel.Application();
+            List<SharedParameter> myRows = null;
 
-            // open the excel
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            string excelFilePath = null;
+            OpenFileDialog openFileDialog = new OpenFileDialog { Filter = "Excel Files|*.xls;*.xlsx", FilterIndex = 1, RestoreDirectory = true };
+
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                excelFilePath = openFileDialog.FileName;
+                myRows = new List<SharedParameter>();
+                var excelApp = new Excel.Application();
+                var excelFilePath = openFileDialog.FileName;
+
+                // open the excel
+                var excelWorkBook = excelApp.Workbooks.Open(excelFilePath);
+
+                // get the first sheet of the excel
+                var excelWorkSheet = (Excel.Worksheet)excelWorkBook.Worksheets.Item[1];
+                var range = excelWorkSheet.UsedRange;
+                int rowCount = range.Rows.Count;
+
+                // traverse all the row in the excel
+                for (int rowCnt = 3; rowCnt <= rowCount; rowCnt++)
+                {
+                    var myRow = new SharedParameter
+                                {
+                                    ParamName = (string)(range.Cells[rowCnt, 1] as Excel.Range)?.Value2.ToString(),
+                                    GroupName = (string)(range.Cells[rowCnt, 2] as Excel.Range)?.Value2.ToString(),
+                                    ParamType = (ParameterType)Enum.Parse(typeof(ParameterType), (string)(range.Cells[rowCnt, 4] as Excel.Range)?.Value2.ToString() ?? throw new InvalidOperationException()),
+                                    IsVisible = bool.Parse((string)(range.Cells[rowCnt, 6] as Excel.Range)?.Value2.ToString() ?? throw new InvalidOperationException()),
+                                    Category = (BuiltInCategory)Enum.Parse(typeof(BuiltInCategory), (string)(range.Cells[rowCnt, 8] as Excel.Range)?.Value2.ToString() ?? throw new InvalidOperationException()),
+                                    ParamGroup = (BuiltInParameterGroup)Enum.Parse(typeof(BuiltInParameterGroup), (string)(range.Cells[rowCnt, 10] as Excel.Range)?.Value2.ToString() ?? throw new InvalidOperationException()),
+                                    IsInstance = bool.Parse((string)(range.Cells[rowCnt, 12] as Excel.Range)?.Value2.ToString() ?? throw new InvalidOperationException())
+                                };
+
+                    myRows.Add(myRow);
+                }
+
+                // release the resources
+                excelWorkBook.Close(true);
+                excelApp.Quit();
+                Marshal.ReleaseComObject(excelWorkSheet);
+                Marshal.ReleaseComObject(excelWorkBook);
+                Marshal.ReleaseComObject(excelApp);
             }
-
-            var excelWorkBook = excelApp.Workbooks.Open(excelFilePath);
-
-            // get the first sheet of the excel
-            var excelWorkSheet = (Microsoft.Office.Interop.Excel.Worksheet)excelWorkBook.Worksheets.Item[1];
-
-            var range = excelWorkSheet.UsedRange;
-            int rowCount = range.Rows.Count;
-
-            var myRows = new List<SharedParameter>();
-
-            // traverse all the row in the excel
-            for (int rowCnt = 3; rowCnt <= rowCount; rowCnt++)
-            {
-                var myRow = new SharedParameter
-                            {
-                                ParamName = (string)(range.Cells[rowCnt, 1] as Microsoft.Office.Interop.Excel.Range)?.Value2.ToString(),
-                                GroupName = (string)(range.Cells[rowCnt, 2] as Microsoft.Office.Interop.Excel.Range)?.Value2.ToString(),
-                                ParamType = (string)(range.Cells[rowCnt, 4] as Microsoft.Office.Interop.Excel.Range)?.Value2.ToString(),
-                                Visible = (string)(range.Cells[rowCnt, 6] as Microsoft.Office.Interop.Excel.Range)?.Value2.ToString(),
-                                Category = (string)(range.Cells[rowCnt, 8] as Microsoft.Office.Interop.Excel.Range)?.Value2.ToString(),
-                                ParamGroup = (string)(range.Cells[rowCnt, 10] as Microsoft.Office.Interop.Excel.Range)?.Value2.ToString(),
-                                Instance = (string)(range.Cells[rowCnt, 12] as Microsoft.Office.Interop.Excel.Range)?.Value2.ToString(),
-                            };
-
-                myRows.Add(myRow);
-            }
-
-            // release the resources
-            excelWorkBook.Close(true);
-            excelApp.Quit();
-            Marshal.ReleaseComObject(excelWorkSheet);
-            Marshal.ReleaseComObject(excelWorkBook);
-            Marshal.ReleaseComObject(excelApp);
 
             return myRows;
         }
