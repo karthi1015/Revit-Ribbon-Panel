@@ -123,7 +123,7 @@ namespace AddFamilyParameters.VM
 
             if (isAddShared)
             {
-                sharedParameterFile = HelperParams.GetOrCreateSharedParamsFile(familyDoc, familyDoc.Application);
+                sharedParameterFile = HelperParams.GetOrCreateSharedParamsFile(revitDocument, familyDoc.Application);
             }
 
             foreach (var item in dataList)

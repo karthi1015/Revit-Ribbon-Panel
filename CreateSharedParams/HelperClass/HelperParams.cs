@@ -125,42 +125,34 @@ namespace CreateSharedParams.HelperClass
         /// </returns>
         public static DefinitionFile GetOrCreateSharedParamsFile(Document doc, AppRvt app)
         {
-            try
+            // Get file
+            DefinitionFile df = app.OpenSharedParameterFile();
+
+            if (df == null)
             {
-                // Get file
-                DefinitionFile df = app.OpenSharedParameterFile();
+                var docFilePath = Path.GetDirectoryName(doc.PathName);
 
-                if (df == null)
+                // Create file if not set yet (ie after Revit installed and no Shared params used so far)
+                var fileName = docFilePath + $"\\{Path.GetFileName(doc.PathName)}_SharedParameterFile.txt";
+
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine("# This is a Revit shared parameter file.");
+                sb.AppendLine("# Do not edit manually.");
+                sb.AppendLine("*META	VERSION	MINVERSION");
+                sb.AppendLine("META	2	1");
+                sb.AppendLine("*GROUP	ID	NAME");
+                sb.AppendLine("*PARAM	GUID	NAME	DATATYPE	DATACATEGORY	GROUP	VISIBLE	DESCRIPTION	USERMODIFIABLE");
+
+                using (StreamWriter stream = new StreamWriter(fileName))
                 {
-                    var docFilePath = Path.GetDirectoryName(doc.PathName);
-
-                    // Create file if not set yet (ie after Revit installed and no Shared params used so far)
-                    var fileName = docFilePath + "\\MyRevitSharedParams.txt";
-
-                    StringBuilder sb = new StringBuilder();
-                    sb.AppendLine("# This is a Revit shared parameter file.");
-                    sb.AppendLine("# Do not edit manually.");
-                    sb.AppendLine("*META	VERSION	MINVERSION");
-                    sb.AppendLine("META	2	1");
-                    sb.AppendLine("*GROUP	ID	NAME");
-                    sb.AppendLine("*PARAM	GUID	NAME	DATATYPE	DATACATEGORY	GROUP	VISIBLE	DESCRIPTION	USERMODIFIABLE");
-
-                    using (StreamWriter stream = new StreamWriter(fileName))
-                    {
-                        stream.WriteLine(sb.ToString());
-                    }
-
-                    app.SharedParametersFilename = fileName;
-                    df = app.OpenSharedParameterFile();
+                    stream.WriteLine(sb.ToString());
                 }
 
-                return df;
+                app.SharedParametersFilename = fileName;
+                df = app.OpenSharedParameterFile();
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show("ERROR: Failed to get or create Shared Params File: " + ex.Message);
-                return null;
-            }
+
+            return df;
         }
 
         /// <summary>
