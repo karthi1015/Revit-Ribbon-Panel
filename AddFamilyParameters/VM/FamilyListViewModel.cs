@@ -18,9 +18,7 @@ namespace AddFamilyParameters.VM
     using AddFamilyParameters.HelperClass;
     using AddFamilyParameters.M;
 
-    using Autodesk.Revit.ApplicationServices;
     using Autodesk.Revit.DB;
-    using Autodesk.Revit.UI;
 
     using CreateSharedParams.HelperClass;
     using CreateSharedParams.Models;
@@ -140,28 +138,16 @@ namespace AddFamilyParameters.VM
                 {
                     if (isAddShared)
                     {
-                        DefinitionGroup dg = HelperParams.GetOrCreateSharedParamsGroup(
-                            sharedParameterFile,
-                            item.GroupName);
+                        DefinitionGroup dg = HelperParams.GetOrCreateSharedParamsGroup(sharedParameterFile, item.GroupName);
                         var parameterTypeParse = (ParameterType)Enum.Parse(typeof(ParameterType), item.ParamType);
                         var visibleParse = bool.Parse(item.Visible);
-                        ExternalDefinition externalDefinition = HelperParams.GetOrCreateSharedParamDefinition(
-                            dg,
-                            parameterTypeParse,
-                            parameterName,
-                            visibleParse);
+                        ExternalDefinition externalDefinition = HelperParams.GetOrCreateSharedParamDefinition(dg, parameterTypeParse, parameterName, visibleParse);
 
-                        results.AddFamilyParameterNote(
-                            familyDoc.FamilyManager.AddParameter(externalDefinition, parameterGroup, isInstance));
+                        results.AddFamilyParameterNote(familyDoc.FamilyManager.AddParameter(externalDefinition, parameterGroup, isInstance));
                     }
                     else
                     {
-                        results.AddFamilyParameterNote(
-                            familyDoc.FamilyManager.AddParameter(
-                                parameterName,
-                                parameterGroup,
-                                parameterType,
-                                isInstance));
+                        results.AddFamilyParameterNote(familyDoc.FamilyManager.AddParameter(parameterName, parameterGroup, parameterType, isInstance));
                     }
                 }
             }
@@ -169,9 +155,11 @@ namespace AddFamilyParameters.VM
 
         private static Dictionary<string, List<Family>> FindFamilyTypes()
         {
-            return new FilteredElementCollector(revitDocument)
-                  .WherePasses(new ElementClassFilter(typeof(Family))).Cast<Family>()
-                  .GroupBy(e => e.FamilyCategory.Name).OrderBy(e => e.Key).ToDictionary(e => e.Key, e => e.ToList());
+            return new FilteredElementCollector(revitDocument).WherePasses(new ElementClassFilter(typeof(Family)))
+                                                              .Cast<Family>()
+                                                              .GroupBy(e => e.FamilyCategory.Name)
+                                                              .OrderBy(e => e.Key)
+                                                              .ToDictionary(e => e.Key, e => e.ToList());
         }
 
         private static void InitializeFamilyCategoryCollection(Dictionary<string, List<Family>> source)

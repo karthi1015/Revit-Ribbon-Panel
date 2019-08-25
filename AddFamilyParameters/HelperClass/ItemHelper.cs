@@ -22,17 +22,12 @@ namespace AddFamilyParameters.HelperClass
         /// <summary>
         /// The is checked property.
         /// </summary>
-        public static readonly DependencyProperty IsCheckedProperty = DependencyProperty.RegisterAttached(
-            "IsChecked",
-            typeof(bool?),
-            typeof(ItemHelper),
-            new PropertyMetadata(false, new PropertyChangedCallback(OnIsCheckedPropertyChanged)));
+        public static readonly DependencyProperty IsCheckedProperty = DependencyProperty.RegisterAttached("IsChecked", typeof(bool?), typeof(ItemHelper), new PropertyMetadata(false, new PropertyChangedCallback(OnIsCheckedPropertyChanged)));
 
         /// <summary>
         /// The parent property.
         /// </summary>
-        public static readonly DependencyProperty ParentProperty =
-            DependencyProperty.RegisterAttached("Parent", typeof(object), typeof(ItemHelper));
+        public static readonly DependencyProperty ParentProperty = DependencyProperty.RegisterAttached("Parent", typeof(object), typeof(ItemHelper));
 
         /// <summary>
         /// The set is checked.
