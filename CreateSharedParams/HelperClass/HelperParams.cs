@@ -379,15 +379,15 @@ namespace CreateSharedParams.HelperClass
         /// <returns>
         /// The <see cref="List{T}"/>.
         /// </returns>
-        public static List<SharedParameter> LoadExcel()
+        public static List<RevitParameter> LoadExcel()
         {
-            List<SharedParameter> myRows = null;
+            List<RevitParameter> myRows = null;
 
             OpenFileDialog openFileDialog = new OpenFileDialog { Filter = "Excel Files|*.xls;*.xlsx", FilterIndex = 1, RestoreDirectory = true };
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                myRows = new List<SharedParameter>();
+                myRows = new List<RevitParameter>();
                 var excelApp = new Excel.Application();
                 var excelFilePath = openFileDialog.FileName;
 
@@ -402,7 +402,7 @@ namespace CreateSharedParams.HelperClass
                 // traverse all the row in the excel
                 for (int rowCnt = 3; rowCnt <= rowCount; rowCnt++)
                 {
-                    var myRow = new SharedParameter
+                    var myRow = new RevitParameter
                                 {
                                     ParamName = (string)(range.Cells[rowCnt, 1] as Excel.Range)?.Value2.ToString(),
                                     GroupName = (string)(range.Cells[rowCnt, 2] as Excel.Range)?.Value2.ToString(),

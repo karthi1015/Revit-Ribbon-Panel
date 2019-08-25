@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("CreateSharedParams")]
 [assembly: AssemblyDescription("Revit Add-In Description for CreateSharedParams")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Autodesk Inc.")]
+[assembly: AssemblyCompany("PMTech")]
 [assembly: AssemblyProduct("CreateSharedParams Revit C# .NET Add-In")]
-[assembly: AssemblyCopyright("Copyright 2018 (C) Jeremy Tammik, Autodesk Inc.")]
+[assembly: AssemblyCopyright("Copyright 2019 (C)Andrew Kozhevnikov, PMTech")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

@@ -116,7 +116,7 @@ namespace AddFamilyParameters.VM
 
         private static void AddFamilyParameters(Document familyDoc, AddFamilyParametersResult results, bool isAddShared)
         {
-            List<SharedParameter> dataList = HelperParams.LoadExcel();
+            List<RevitParameter> dataList = HelperParams.LoadExcel();
             DefinitionFile sharedParameterFile = null;
 
             if (isAddShared)

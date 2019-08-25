@@ -77,7 +77,7 @@
   <ItemGroup>
     <Compile Include="CreateSharedParameter.cs" />
     <Compile Include="HelperClass\HelperParams.cs" />
-    <Compile Include="Models\SharedParameter.cs" />
+    <Compile Include="Models\RevitParameter.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

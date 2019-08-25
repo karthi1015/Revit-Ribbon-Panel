@@ -43,7 +43,7 @@ namespace CreateSharedParams
             {
                 DefinitionFile sharedParameterFile = HelperParams.GetOrCreateSharedParamsFile(doc, app);
 
-                List<SharedParameter> dataList = HelperParams.LoadExcel();
+                List<RevitParameter> dataList = HelperParams.LoadExcel();
 
                 bool showResult = false;
 

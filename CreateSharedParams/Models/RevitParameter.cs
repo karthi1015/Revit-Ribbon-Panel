@@ -1,6 +1,6 @@
 // --------------------------------------------------------------------------------------------------------------------
-// <copyright file="SharedParameter.cs" company="PMtech">
-//   PMtech
+// <copyright file="RevitParameter.cs" company="PMTech">
+//   PMTech
 // </copyright>
 // <summary>
 //   My customized model
@@ -14,7 +14,7 @@ namespace CreateSharedParams.Models
     /// <summary>
     /// My customized model
     /// </summary>
-    public class SharedParameter
+    public class RevitParameter
     {
         /// <summary>
         /// Gets or sets the shared parameter name.

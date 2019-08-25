@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("PMTech Revit Ribbon Panel")]
 [assembly: AssemblyDescription("Revit Add-In Description for PMTech Revit Ribbon Panel")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Autodesk Inc.")]
+[assembly: AssemblyCompany("PMTech LLC")]
 [assembly: AssemblyProduct("PMTech Revit Ribbon Panel Revit C# .NET Add-In")]
-[assembly: AssemblyCopyright("Copyright 2018 (C) Jeremy Tammik, Autodesk Inc.")]
+[assembly: AssemblyCopyright("Copyright 2019 (C)Andrew Kozhevnikov, PMTech")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
