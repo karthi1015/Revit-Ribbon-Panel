@@ -14,7 +14,7 @@ namespace AddFamilyParameters.HelperClass
         /// <summary>
         /// List of text note type names and updated flags.
         /// </summary>
-        private List<TextNoteTypeResult> textNoteTypeResults;
+        private List<AddParameterResult> textNoteTypeResults;
 
         public SetParametersInFamilyResult(Element f)
         {
@@ -64,10 +64,10 @@ namespace AddFamilyParameters.HelperClass
         {
             if (this.textNoteTypeResults == null)
             {
-                this.textNoteTypeResults = new List<TextNoteTypeResult>();
+                this.textNoteTypeResults = new List<AddParameterResult>();
             }
 
-            TextNoteTypeResult r = new TextNoteTypeResult { Name = fam.Name, Updated = updated };
+            AddParameterResult r = new AddParameterResult { Name = fam.Name, Updated = updated };
             this.textNoteTypeResults.Add(r);
         }
 
@@ -84,13 +84,13 @@ namespace AddFamilyParameters.HelperClass
                 int numTotal = this.textNoteTypeResults.Count;
                 int numUpdated = this.NumberOfUpdatedTextNoteTypes;
 
-                s += $"{numTotal} parameters processed, " + $"{numUpdated} updated";
+                s += $"{numTotal} Families processed, " + $"{numUpdated} updated";
             }
 
             return s;
         }
 
-        private class TextNoteTypeResult
+        private class AddParameterResult
         {
             public string Name { get; set; }
 

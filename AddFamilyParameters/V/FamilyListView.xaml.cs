@@ -14,6 +14,9 @@
     using Autodesk.Revit.DB;
     using Autodesk.Revit.UI;
 
+    using CreateSharedParams.HelperClass;
+    using CreateSharedParams.Models;
+
     /// <summary>
     /// The family list window.
     /// </summary>
@@ -49,12 +52,7 @@
 
         private void ButtonLoadParametersClick(object sender, RoutedEventArgs e)
         {
-            List<Family> fam = (from familyCategory in this.Families
-                                from item in familyCategory.Members
-                                where ItemHelper.GetIsChecked(item) == true
-                                select item.Family).ToList();
-
-            var results = this.familyListViewModel.AddFamilyParameters(fam);
+            var results = FamilyListViewModel.AddFamilyParameters(this.Families);
 
             SetParametersInFamilyResult.ShowResultsDialog(results);
         }
