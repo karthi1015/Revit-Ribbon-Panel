@@ -23,7 +23,6 @@ namespace PMTech_Revit_Ribbon_Panel
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
 
-    using Autodesk.Revit.DB;
     using Autodesk.Revit.UI;
 
     /// <summary>
@@ -31,11 +30,9 @@ namespace PMTech_Revit_Ribbon_Panel
     /// </summary>
     public class App : IExternalApplication
     {
-        private readonly string addSharedParamsPath =
-            Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\CreateSharedParams.dll";
+        private readonly string addSharedParamsPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\CreateSharedParams.dll";
 
-        private readonly string addFamilyParametersPath =
-            Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\AddFamilyParameters.dll";
+        private readonly string addFamilyParametersPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\AddFamilyParameters.dll";
 
         private const string RibbonTab = "PMTech";
 
@@ -72,22 +69,14 @@ namespace PMTech_Revit_Ribbon_Panel
             }
 
             // get the image for the button
-            Image img = Properties.Resources.icons8_add_property_32;
+            Image img = Properties.Resources.icons8_add_to_collection_32;
             ImageSource imageSource = this.GetImageSource(img);
 
             // create the button data
-            PushButtonData btnData =
-                new PushButtonData(
-                    "Add shared parameters",
-                    "Add shared parameters",
-                    this.addSharedParamsPath,
-                    "CreateSharedParams.CreateSharedParameter")
-                {
-                    ToolTip = "Batch add shared parameters from excel file",
-                    LongDescription = "Batch add shared parameters from excel file",
-                    Image = imageSource,
-                    LargeImage = imageSource
-                };
+            PushButtonData btnData = new PushButtonData("Add shared parameters", "Add shared parameters", this.addSharedParamsPath, "CreateSharedParams.CreateSharedParameter")
+                                     {
+                                         ToolTip = "Batch add shared parameters from excel file", LongDescription = "Batch add shared parameters from excel file", Image = imageSource, LargeImage = imageSource
+                                     };
 
             // add the button to the ribbon
             PushButton button = panel.AddItem(btnData) as PushButton;
@@ -98,18 +87,10 @@ namespace PMTech_Revit_Ribbon_Panel
             ImageSource image2Source = this.GetImageSource(img2);
 
             // create the button data
-            PushButtonData btn2Data =
-                new PushButtonData(
-                    "Add family parameters",
-                    "Add family parameters",
-                    this.addFamilyParametersPath,
-                    "AddFamilyParameters.Command")
-                {
-                    ToolTip = "Batch add family parameters from excel file",
-                    LongDescription = "Batch add family parameters from excel file",
-                    Image = image2Source,
-                    LargeImage = image2Source
-                };
+            PushButtonData btn2Data = new PushButtonData("Add family parameters", "Add family parameters", this.addFamilyParametersPath, "AddFamilyParameters.Command")
+                                      {
+                                          ToolTip = "Batch add family parameters from excel file", LongDescription = "Batch add family parameters from excel file", Image = image2Source, LargeImage = image2Source
+                                      };
 
             // add the button to the ribbon
             PushButton button2 = panel.AddItem(btn2Data) as PushButton;

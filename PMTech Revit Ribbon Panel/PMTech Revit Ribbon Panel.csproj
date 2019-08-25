@@ -83,6 +83,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="PMTech Revit Ribbon Panel.addin" />
+    <None Include="Resources\icons8-add-to-collection-32.png" />
     <None Include="Resources\icons8-add-property-32.png" />
     <None Include="Resources\icons8-add-property-50.png" />
     <None Include="Resources\AddProperty.bmp" />

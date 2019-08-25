@@ -14,7 +14,6 @@ namespace AddFamilyParameters.VM
     using System.Collections.ObjectModel;
     using System.Diagnostics;
     using System.Linq;
-    using System.Threading.Tasks;
 
     using AddFamilyParameters.HelperClass;
     using AddFamilyParameters.M;
@@ -67,10 +66,7 @@ namespace AddFamilyParameters.VM
         /// </exception>
         public static void AddFamilyParameters(ObservableCollection<FamilyCategory> families, bool isAddShared)
         {
-            List<Family> fam = (from familyCategory in families
-                                from item in familyCategory.Members
-                                where ItemHelper.GetIsChecked(item) == true
-                                select item.Family).ToList();
+            List<Family> fam = (from familyCategory in families from item in familyCategory.Members where ItemHelper.GetIsChecked(item) == true select item.Family).ToList();
 
             if (fam.Count == 0)
             {
@@ -78,63 +74,65 @@ namespace AddFamilyParameters.VM
             }
 
             List<AddFamilyParametersResult> results = new List<AddFamilyParametersResult>();
+            List<RevitParameter> dataList = HelperParams.LoadExcel();
 
-            foreach (Family family in fam)
+            if (dataList != null)
             {
-                var r1 = new AddFamilyParametersResult(family);
-
-                Document familyDoc;
-
-                if (family.IsEditable)
+                foreach (Family family in fam)
                 {
-                    r1.FamilyDocument = familyDoc = revitDocument.EditFamily(family);
-                }
-                else
-                {
-                    r1.Skipped = true;
+                    var r1 = new AddFamilyParametersResult(family);
+
+                    Document familyDoc;
+
+                    if (family.IsEditable)
+                    {
+                        r1.FamilyDocument = familyDoc = revitDocument.EditFamily(family);
+                    }
+                    else
+                    {
+                        r1.Skipped = true;
+                        results.Add(r1);
+                        Debug.Print("Family '{0}' is not editable", family.Name);
+                        continue;
+                    }
+
+                    using (Transaction t = new Transaction(familyDoc))
+                    {
+                        t.Start($"editing {family.Name}");
+
+                        try
+                        {
+                            AddFamilyParameters(familyDoc, dataList, r1, isAddShared);
+                        }
+                        catch (Exception e)
+                        {
+                            TaskDialog.Show("Add Family Parameters", e.Message);
+                            break;
+                        }
+
+                        t.Commit();
+                    }
+
                     results.Add(r1);
-                    Debug.Print("Family '{0}' is not editable", family.Name);
-                    continue;
                 }
 
-                using (Transaction t = new Transaction(familyDoc))
+                if (results.Count != 0)
                 {
-                    t.Start($"editing {family.Name}");
+                    FamilyLoadingOptions opt = new FamilyLoadingOptions();
 
-                    try
+                    foreach (var r in results)
                     {
-                        AddFamilyParameters(familyDoc, r1, isAddShared);
-                    }
-                    catch (Exception e)
-                    {
-                        TaskDialog.Show("Add Family Parameters", e.Message);
-                        break;
+                        r.FamilyDocument.LoadFamily(revitDocument, opt);
+                        r.FamilyDocument.Close(false);
                     }
 
-                    t.Commit();
+                    AddFamilyParametersResult.ShowResultsDialog(results);
                 }
-
-                results.Add(r1);
-            }
-
-            if (results.Count != 0)
-            {
-                FamilyLoadingOptions opt = new FamilyLoadingOptions();
-
-                foreach (var r in results)
-                {
-                    r.FamilyDocument.LoadFamily(revitDocument, opt);
-                    r.FamilyDocument.Close(false);
-                }
-
-                AddFamilyParametersResult.ShowResultsDialog(results);
             }
         }
 
-        private static void AddFamilyParameters(Document familyDoc, AddFamilyParametersResult results, bool isAddShared)
+        private static void AddFamilyParameters(Document familyDoc, List<RevitParameter> dataList, AddFamilyParametersResult results, bool isAddShared)
         {
-            List<RevitParameter> dataList = HelperParams.LoadExcel();
-
             DefinitionFile sharedParameterFile = null;
 
             if (isAddShared)
@@ -144,8 +142,7 @@ namespace AddFamilyParameters.VM
 
             foreach (var item in dataList)
             {
-                bool nameIsInUse = familyDoc.FamilyManager.Parameters.Cast<FamilyParameter>()
-                                            .Any(parameter => parameter.Definition.Name == item.ParamName);
+                bool nameIsInUse = familyDoc.FamilyManager.Parameters.Cast<FamilyParameter>().Any(parameter => parameter.Definition.Name == item.ParamName);
 
                 if (!nameIsInUse)
                 {
@@ -166,11 +163,7 @@ namespace AddFamilyParameters.VM
 
         private static Dictionary<string, List<Family>> FindFamilyTypes()
         {
-            return new FilteredElementCollector(revitDocument).WherePasses(new ElementClassFilter(typeof(Family)))
-                                                              .Cast<Family>()
-                                                              .GroupBy(e => e.FamilyCategory.Name)
-                                                              .OrderBy(e => e.Key)
-                                                              .ToDictionary(e => e.Key, e => e.ToList());
+            return new FilteredElementCollector(revitDocument).WherePasses(new ElementClassFilter(typeof(Family))).Cast<Family>().GroupBy(e => e.FamilyCategory.Name).OrderBy(e => e.Key).ToDictionary(e => e.Key, e => e.ToList());
         }
 
         private static void InitializeFamilyCategoryCollection(Dictionary<string, List<Family>> source)

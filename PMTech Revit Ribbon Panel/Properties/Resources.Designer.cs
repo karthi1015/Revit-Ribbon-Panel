@@ -73,9 +73,9 @@ namespace PMTech_Revit_Ribbon_Panel.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap icons8_add_property_50 {
+        internal static System.Drawing.Bitmap icons8_add_to_collection_32 {
             get {
-                object obj = ResourceManager.GetObject("icons8_add_property_50", resourceCulture);
+                object obj = ResourceManager.GetObject("icons8_add_to_collection_32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

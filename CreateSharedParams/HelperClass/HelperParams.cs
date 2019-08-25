@@ -305,7 +305,7 @@ namespace CreateSharedParams.HelperClass
                     if (paramName.Equals(def.Name, StringComparison.CurrentCultureIgnoreCase))
                     {
                         // Check for category match - Size is always 1!
-                        if (elemBind.Categories.Contains(cat))
+                        if ((elemBind != null) && elemBind.Categories.Contains(cat))
                         {
                             // Check Param Type
                             if (paramType != def.ParameterType)
@@ -335,9 +335,12 @@ namespace CreateSharedParams.HelperClass
                         }
 
                         // If here, no category match, hence must store "other" cats for re-inserting
-                        foreach (Category catOld in elemBind.Categories)
+                        if (elemBind != null)
                         {
-                            catSet.Insert(catOld); // 1 only, but no index...
+                            foreach (Category catOld in elemBind.Categories)
+                            {
+                                catSet.Insert(catOld); // 1 only, but no index...
+                            }
                         }
                     }
                 }
@@ -408,18 +411,26 @@ namespace CreateSharedParams.HelperClass
                 // traverse all the row in the excel
                 for (int rowCnt = 3; rowCnt <= rowCount; rowCnt++)
                 {
-                    var myRow = new RevitParameter
-                                {
-                                    ParamName = (string)(range.Cells[rowCnt, 1] as Excel.Range)?.Value2.ToString(),
-                                    GroupName = (string)(range.Cells[rowCnt, 2] as Excel.Range)?.Value2.ToString(),
-                                    ParamType = (ParameterType)Enum.Parse(typeof(ParameterType), (string)(range.Cells[rowCnt, 4] as Excel.Range)?.Value2.ToString() ?? throw new InvalidOperationException()),
-                                    IsVisible = bool.Parse((string)(range.Cells[rowCnt, 6] as Excel.Range)?.Value2.ToString() ?? throw new InvalidOperationException()),
-                                    Category = (BuiltInCategory)Enum.Parse(typeof(BuiltInCategory), (string)(range.Cells[rowCnt, 8] as Excel.Range)?.Value2.ToString() ?? throw new InvalidOperationException()),
-                                    ParamGroup = (BuiltInParameterGroup)Enum.Parse(typeof(BuiltInParameterGroup), (string)(range.Cells[rowCnt, 10] as Excel.Range)?.Value2.ToString() ?? throw new InvalidOperationException()),
-                                    IsInstance = bool.Parse((string)(range.Cells[rowCnt, 12] as Excel.Range)?.Value2.ToString() ?? throw new InvalidOperationException())
-                                };
+                    try
+                    {
+                        var myRow = new RevitParameter
+                                    {
+                                        ParamName = (string)(range.Cells[rowCnt, 1] as Excel.Range)?.Value2.ToString(),
+                                        GroupName = (string)(range.Cells[rowCnt, 2] as Excel.Range)?.Value2.ToString(),
+                                        ParamType = (ParameterType)Enum.Parse(typeof(ParameterType), (string)(range.Cells[rowCnt, 4] as Excel.Range)?.Value2.ToString() ?? throw new InvalidOperationException("Can't read this file, probably wrong data format")),
+                                        IsVisible = bool.Parse((string)(range.Cells[rowCnt, 6] as Excel.Range)?.Value2.ToString() ?? throw new InvalidOperationException()),
+                                        Category = (BuiltInCategory)Enum.Parse(typeof(BuiltInCategory), (string)(range.Cells[rowCnt, 8] as Excel.Range)?.Value2.ToString() ?? throw new InvalidOperationException("Can't read this file, probably wrong data format")),
+                                        ParamGroup = (BuiltInParameterGroup)Enum.Parse(typeof(BuiltInParameterGroup), (string)(range.Cells[rowCnt, 10] as Excel.Range)?.Value2.ToString() ?? throw new InvalidOperationException("Can't read this file, probably wrong data format")),
+                                        IsInstance = bool.Parse((string)(range.Cells[rowCnt, 12] as Excel.Range)?.Value2.ToString() ?? throw new InvalidOperationException("Can't read this file, probably wrong data format"))
+                                    };
 
-                    myRows.Add(myRow);
+                        myRows.Add(myRow);
+                    }
+                    catch
+                    {
+                        TaskDialog.Show("Read excel", "Can't read this file, probably wrong data format");
+                        break;
+                    }
                 }
 
                 // release the resources
