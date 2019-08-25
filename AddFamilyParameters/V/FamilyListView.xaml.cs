@@ -22,8 +22,6 @@
     /// </summary>
     public partial class FamilyListView : Window
     {
-        private readonly FamilyListViewModel familyListViewModel;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="FamilyListView"/> class.
         /// </summary>
@@ -36,8 +34,8 @@
             {
                 this.InitializeComponent();
 
-                this.familyListViewModel = new FamilyListViewModel(doc);
-                this.Families = this.familyListViewModel.FamCategoriesList;
+                FamilyListViewModel familyListViewModel = new FamilyListViewModel(doc);
+                this.Families = familyListViewModel.FamCategoriesList;
             }
             catch (Exception e)
             {
@@ -52,9 +50,13 @@
 
         private void ButtonLoadParametersClick(object sender, RoutedEventArgs e)
         {
-            var results = FamilyListViewModel.AddFamilyParameters(this.Families);
-
-            SetParametersInFamilyResult.ShowResultsDialog(results);
+            List<SetParametersInFamilyResult> results = null;
+            var isChecked = this.CheckBoxAddShared.IsChecked;
+            if ((isChecked != null) && !(bool)isChecked)
+            {
+                results = FamilyListViewModel.AddFamilyParameters(this.Families);
+                SetParametersInFamilyResult.ShowResultsDialog(results);
+            }
         }
     }
 }

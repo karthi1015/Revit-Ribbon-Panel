@@ -37,16 +37,6 @@ namespace AddFamilyParameters.HelperClass
         /// </summary>
         public bool Skipped { get; set; }
 
-        public bool NeedsReload => this.NumberOfUpdatedTextNoteTypes > 0;
-
-        private int NumberOfUpdatedTextNoteTypes
-        {
-            get
-            {
-                return this.textNoteTypeResults?.Count(r => r.Updated) ?? 0;
-            }
-        }
-
         public static void ShowResultsDialog(List<SetParametersInFamilyResult> results)
         {
             TaskDialog d = new TaskDialog("Add parameter") { MainInstruction = $"{results.Count} families processed." };
@@ -60,14 +50,14 @@ namespace AddFamilyParameters.HelperClass
             d.Show();
         }
 
-        public void AddTextNoteType(Family fam, bool updated)
+        public void AddFamilyParameterNote(FamilyParameter parameter)
         {
             if (this.textNoteTypeResults == null)
             {
                 this.textNoteTypeResults = new List<AddParameterResult>();
             }
 
-            AddParameterResult r = new AddParameterResult { Name = fam.Name, Updated = updated };
+            AddParameterResult r = new AddParameterResult { Name = parameter.Definition.Name };
             this.textNoteTypeResults.Add(r);
         }
 
@@ -82,9 +72,8 @@ namespace AddFamilyParameters.HelperClass
             else
             {
                 int numTotal = this.textNoteTypeResults.Count;
-                int numUpdated = this.NumberOfUpdatedTextNoteTypes;
 
-                s += $"{numTotal} Families processed, " + $"{numUpdated} updated";
+                s += $"{numTotal} parameters processed";
             }
 
             return s;
@@ -93,8 +82,6 @@ namespace AddFamilyParameters.HelperClass
         private class AddParameterResult
         {
             public string Name { get; set; }
-
-            public bool Updated { get; set; }
         }
     }
 }

@@ -58,17 +58,28 @@
         </TreeView>
 
         <GroupBox Grid.Row="0" Margin="10,10,10,10">
-            <Button
-                Width="100"
-                Margin="10,15,10,10"
-                Padding="1"
-                HorizontalAlignment="Left"
-                Click="ButtonLoadParametersClick"
-                Content="Load" />
-
+            <Grid>
+                <Button
+                    Width="100"
+                    Height="30"
+                    Margin="10,10,10,10"
+                    Padding="1"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    Click="ButtonLoadParametersClick"
+                    Content="Add parameters" />
+                <CheckBox
+                    Name="CheckBoxAddShared"
+                    Grid.Row="0"
+                    Width="240"
+                    Margin="10,50,0,0"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    Content="Добавить в файл общих параметров" />
+            </Grid>
         </GroupBox>
         <Grid.RowDefinitions>
-            <RowDefinition Height="80" />
+            <RowDefinition Height="100" />
             <RowDefinition />
         </Grid.RowDefinitions>
     </Grid>

@@ -94,28 +94,10 @@ namespace AddFamilyParameters.VM
                 {
                     t.Start($"editing {family.Name}");
 
-                    List<SharedParameter> dataList = HelperParams.LoadExcel();
-
-                    foreach (var item in dataList)
-                    {
-                        var parameterType = (ParameterType)Enum.Parse(typeof(ParameterType), item.ParamType);
-                        var parameterGroup = (BuiltInParameterGroup)Enum.Parse(typeof(BuiltInParameterGroup), item.ParamGroup);
-                        bool isInstance = bool.Parse(item.Instance);
-                        string parameterName = item.ParamName;
-
-                        bool nameIsInUse = familyDoc.FamilyManager.Parameters.Cast<FamilyParameter>()
-                                                    .Any(parameter => parameter.Definition.Name == parameterName);
-
-                        if (!nameIsInUse)
-                        {
-                            familyDoc.FamilyManager.AddParameter(parameterName, parameterGroup, parameterType, isInstance);
-                        }
-                    }
+                    AddFamilyParameters(familyDoc, r1);
 
                     t.Commit();
                 }
-
-                r1.AddTextNoteType(family, true);
 
                 results.Add(r1);
             }
@@ -124,17 +106,14 @@ namespace AddFamilyParameters.VM
 
             foreach (var r in results)
             {
-                if (r.NeedsReload)
-                {
-                    r.FamilyDocument.LoadFamily(revitDocument, opt);
-                    r.FamilyDocument.Close(false);
-                }
+                r.FamilyDocument.LoadFamily(revitDocument, opt);
+                r.FamilyDocument.Close(false);
             }
 
             return results;
         }
 
-        private static void AddFamilyParameters(Document familyDoc)
+        private static void AddFamilyParameters(Document familyDoc, SetParametersInFamilyResult results)
         {
             List<SharedParameter> dataList = HelperParams.LoadExcel();
 
@@ -146,11 +125,11 @@ namespace AddFamilyParameters.VM
                 string parameterName = item.ParamName;
 
                 bool nameIsInUse = familyDoc.FamilyManager.Parameters.Cast<FamilyParameter>()
-                                            .Any(parameter => parameter.Definition.Name != parameterName);
+                                            .Any(parameter => parameter.Definition.Name == parameterName);
 
                 if (!nameIsInUse)
                 {
-                    familyDoc.FamilyManager.AddParameter(parameterName, parameterGroup, parameterType, isInstance);
+                    results.AddFamilyParameterNote(familyDoc.FamilyManager.AddParameter(parameterName, parameterGroup, parameterType, isInstance));
                 }
             }
         }
