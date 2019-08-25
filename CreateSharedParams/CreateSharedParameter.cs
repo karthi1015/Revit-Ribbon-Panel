@@ -47,46 +47,49 @@ namespace CreateSharedParams
 
                 bool showResult = false;
 
-                using (Transaction t = new Transaction(doc))
+                if (dataList != null)
                 {
-                    t.Start($"Adding Shared Parameters");
-
-                    foreach (var item in dataList)
+                    using (Transaction t = new Transaction(doc))
                     {
-                        DefinitionGroup dg = HelperParams.GetOrCreateSharedParamsGroup(sharedParameterFile, item.GroupName);
-                        ExternalDefinition externalDefinition = HelperParams.GetOrCreateSharedParamDefinition(dg, item.ParamType, item.ParamName, item.IsVisible);
+                        t.Start($"Adding Shared Parameters");
 
-                        Category category = doc.Settings.Categories.get_Item(item.Category);
-                        categorySet.Insert(category);
-
-                        // parameter binding
-                        Binding newIb;
-                        if (item.IsInstance)
+                        foreach (var item in dataList)
                         {
-                            newIb = app.Create.NewInstanceBinding(categorySet);
-                        }
-                        else
-                        {
-                            newIb = app.Create.NewTypeBinding(categorySet);
-                        }
+                            DefinitionGroup dg = HelperParams.GetOrCreateSharedParamsGroup(sharedParameterFile, item.GroupName);
+                            ExternalDefinition externalDefinition = HelperParams.GetOrCreateSharedParamDefinition(dg, item.ParamType, item.ParamName, item.IsVisible);
 
-                        doc.ParameterBindings.Insert(externalDefinition, newIb, item.ParamGroup);
+                            Category category = doc.Settings.Categories.get_Item(item.Category);
+                            categorySet.Insert(category);
 
-                        if (doc.ParameterBindings.Contains(externalDefinition))
-                        {
-                            if (doc.ParameterBindings.ReInsert(externalDefinition, newIb))
+                            // parameter binding
+                            Binding newIb;
+                            if (item.IsInstance)
                             {
-                                showResult = true;
+                                newIb = app.Create.NewInstanceBinding(categorySet);
+                            }
+                            else
+                            {
+                                newIb = app.Create.NewTypeBinding(categorySet);
+                            }
+
+                            doc.ParameterBindings.Insert(externalDefinition, newIb, item.ParamGroup);
+
+                            if (doc.ParameterBindings.Contains(externalDefinition))
+                            {
+                                if (doc.ParameterBindings.ReInsert(externalDefinition, newIb))
+                                {
+                                    showResult = true;
+                                }
                             }
                         }
+
+                        t.Commit();
                     }
 
-                    t.Commit();
-                }
-
-                if (showResult)
-                {
-                    TaskDialog.Show("Adding Shared Parameters", "Shared parameters have been added successfully");
+                    if (showResult)
+                    {
+                        TaskDialog.Show("Adding Shared Parameters", "Shared parameters have been added successfully");
+                    }
                 }
             }
             catch (Exception e)

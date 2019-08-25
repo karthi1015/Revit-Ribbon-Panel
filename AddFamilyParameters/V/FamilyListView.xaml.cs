@@ -16,7 +16,6 @@ namespace AddFamilyParameters.V
     using System.Text;
     using System.Windows;
 
-    using AddFamilyParameters.HelperClass;
     using AddFamilyParameters.M;
     using AddFamilyParameters.VM;
 
