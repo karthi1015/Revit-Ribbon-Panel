@@ -1,4 +1,13 @@
-﻿namespace AddFamilyParameters.V
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="FamilyListView.xaml.cs" company="PMTech">
+//   PMTech
+// </copyright>
+// <summary>
+//   The family list window.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace AddFamilyParameters.V
 {
     using System;
     using System.Collections.Generic;
@@ -13,9 +22,6 @@
 
     using Autodesk.Revit.DB;
     using Autodesk.Revit.UI;
-
-    using CreateSharedParams.HelperClass;
-    using CreateSharedParams.Models;
 
     /// <summary>
     /// The family list window.
@@ -50,13 +56,9 @@
 
         private void ButtonLoadParametersClick(object sender, RoutedEventArgs e)
         {
-            List<SetParametersInFamilyResult> results = null;
-            var isChecked = this.CheckBoxAddShared.IsChecked;
-            if ((isChecked != null) && !(bool)isChecked)
-            {
-                results = FamilyListViewModel.AddFamilyParameters(this.Families);
-                SetParametersInFamilyResult.ShowResultsDialog(results);
-            }
+            List<AddFamilyParametersResult> results = FamilyListViewModel.AddFamilyParameters(this.Families, this.CheckBoxAddShared.IsChecked ?? false);
+
+            AddFamilyParametersResult.ShowResultsDialog(results);
         }
     }
 }

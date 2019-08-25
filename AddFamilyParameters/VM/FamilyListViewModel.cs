@@ -18,6 +18,7 @@ namespace AddFamilyParameters.VM
     using AddFamilyParameters.HelperClass;
     using AddFamilyParameters.M;
 
+    using Autodesk.Revit.ApplicationServices;
     using Autodesk.Revit.DB;
     using Autodesk.Revit.UI;
 
@@ -59,22 +60,24 @@ namespace AddFamilyParameters.VM
         /// <param name="families">
         /// Collection of family categories
         /// </param>
+        /// <param name="isAddShared">
+        /// The is Add Shared.
+        /// </param>
         /// <returns>
         /// The <see cref="List{T}"/>.
         /// </returns>
-        public static List<SetParametersInFamilyResult> AddFamilyParameters(
-            ObservableCollection<FamilyCategory> families)
+        public static List<AddFamilyParametersResult> AddFamilyParameters(ObservableCollection<FamilyCategory> families, bool isAddShared)
         {
             List<Family> fam = (from familyCategory in families
                                 from item in familyCategory.Members
                                 where ItemHelper.GetIsChecked(item) == true
                                 select item.Family).ToList();
 
-            List<SetParametersInFamilyResult> results = new List<SetParametersInFamilyResult>();
+            List<AddFamilyParametersResult> results = new List<AddFamilyParametersResult>();
 
             foreach (Family family in fam)
             {
-                var r1 = new SetParametersInFamilyResult(family);
+                var r1 = new AddFamilyParametersResult(family);
 
                 Document familyDoc;
 
@@ -94,7 +97,7 @@ namespace AddFamilyParameters.VM
                 {
                     t.Start($"editing {family.Name}");
 
-                    AddFamilyParameters(familyDoc, r1);
+                    AddFamilyParameters(familyDoc, r1, isAddShared);
 
                     t.Commit();
                 }
@@ -102,7 +105,7 @@ namespace AddFamilyParameters.VM
                 results.Add(r1);
             }
 
-            FamilyLoadOptionsMod opt = new FamilyLoadOptionsMod();
+            FamilyLoadingOptions opt = new FamilyLoadingOptions();
 
             foreach (var r in results)
             {
@@ -113,9 +116,15 @@ namespace AddFamilyParameters.VM
             return results;
         }
 
-        private static void AddFamilyParameters(Document familyDoc, SetParametersInFamilyResult results)
+        private static void AddFamilyParameters(Document familyDoc, AddFamilyParametersResult results, bool isAddShared)
         {
             List<SharedParameter> dataList = HelperParams.LoadExcel();
+            DefinitionFile sharedParameterFile = null;
+
+            if (isAddShared)
+            {
+                sharedParameterFile = HelperParams.GetOrCreateSharedParamsFile(familyDoc, familyDoc.Application);
+            }
 
             foreach (var item in dataList)
             {
@@ -129,7 +138,31 @@ namespace AddFamilyParameters.VM
 
                 if (!nameIsInUse)
                 {
-                    results.AddFamilyParameterNote(familyDoc.FamilyManager.AddParameter(parameterName, parameterGroup, parameterType, isInstance));
+                    if (isAddShared)
+                    {
+                        DefinitionGroup dg = HelperParams.GetOrCreateSharedParamsGroup(
+                            sharedParameterFile,
+                            item.GroupName);
+                        var parameterTypeParse = (ParameterType)Enum.Parse(typeof(ParameterType), item.ParamType);
+                        var visibleParse = bool.Parse(item.Visible);
+                        ExternalDefinition externalDefinition = HelperParams.GetOrCreateSharedParamDefinition(
+                            dg,
+                            parameterTypeParse,
+                            parameterName,
+                            visibleParse);
+
+                        results.AddFamilyParameterNote(
+                            familyDoc.FamilyManager.AddParameter(externalDefinition, parameterGroup, isInstance));
+                    }
+                    else
+                    {
+                        results.AddFamilyParameterNote(
+                            familyDoc.FamilyManager.AddParameter(
+                                parameterName,
+                                parameterGroup,
+                                parameterType,
+                                isInstance));
+                    }
                 }
             }
         }

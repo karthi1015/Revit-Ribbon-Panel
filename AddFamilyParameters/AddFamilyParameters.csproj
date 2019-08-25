@@ -74,12 +74,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Command.cs" />
-    <Compile Include="HelperClass\FamilyLoadOptionsMod.cs" />
+    <Compile Include="HelperClass\FamilyLoadingOptions.cs" />
     <Compile Include="M\FamilyCategory.cs" />
     <Compile Include="Interfaces\IParent.cs" />
     <Compile Include="HelperClass\ItemHelper.cs" />
     <Compile Include="M\MyFamily.cs" />
-    <Compile Include="HelperClass\SetParametersInFamilyResult.cs" />
+    <Compile Include="HelperClass\AddFamilyParametersResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VM\FamilyListViewModel.cs" />
     <Compile Include="V\FamilyListView.xaml.cs">
