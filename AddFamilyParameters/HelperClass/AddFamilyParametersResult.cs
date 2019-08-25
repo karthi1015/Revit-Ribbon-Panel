@@ -60,15 +60,18 @@ namespace AddFamilyParameters.HelperClass
         /// </param>
         public static void ShowResultsDialog(List<AddFamilyParametersResult> results)
         {
-            TaskDialog d = new TaskDialog("Add parameter") { MainInstruction = $"{results.Count} families processed." };
+            if (results != null)
+            {
+                TaskDialog d = new TaskDialog("Add parameter") { MainInstruction = $"{results.Count} families processed." };
 
-            List<string> familyResults = results.ConvertAll(r => r.ToString());
+                List<string> familyResults = results.ConvertAll(r => r.ToString());
 
-            familyResults.Sort();
+                familyResults.Sort();
 
-            d.MainContent = string.Join("\r\n", familyResults);
+                d.MainContent = string.Join("\r\n", familyResults);
 
-            d.Show();
+                d.Show();
+            }
         }
 
         /// <summary>

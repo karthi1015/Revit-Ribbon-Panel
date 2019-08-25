@@ -17,6 +17,7 @@ namespace CreateSharedParams.HelperClass
     using System.Windows.Forms;
 
     using Autodesk.Revit.DB;
+    using Autodesk.Revit.UI;
 
     using CreateSharedParams.Models;
 
@@ -398,6 +399,11 @@ namespace CreateSharedParams.HelperClass
                 var excelWorkSheet = (Excel.Worksheet)excelWorkBook.Worksheets.Item[1];
                 var range = excelWorkSheet.UsedRange;
                 int rowCount = range.Rows.Count;
+
+                if (range.Cells.Count < 12)
+                {
+                    throw new ArgumentException("There was an attempt to load a file with data of the wrong format, please try again");
+                }
 
                 // traverse all the row in the excel
                 for (int rowCnt = 3; rowCnt <= rowCount; rowCnt++)

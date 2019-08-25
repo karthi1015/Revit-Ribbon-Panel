@@ -56,9 +56,14 @@ namespace AddFamilyParameters.V
 
         private void ButtonLoadParametersClick(object sender, RoutedEventArgs e)
         {
-            List<AddFamilyParametersResult> results = FamilyListViewModel.AddFamilyParameters(this.Families, this.CheckBoxAddShared.IsChecked ?? false);
-
-            AddFamilyParametersResult.ShowResultsDialog(results);
+            try
+            {
+                FamilyListViewModel.AddFamilyParameters(this.Families, this.CheckBoxAddShared.IsChecked ?? false);
+            }
+            catch (Exception exception)
+            {
+                TaskDialog.Show("Add Family Parameters", exception.Message);
+            }
         }
     }
 }

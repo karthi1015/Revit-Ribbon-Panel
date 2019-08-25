@@ -89,9 +89,9 @@ namespace CreateSharedParams
                     TaskDialog.Show("Adding Shared Parameters", "Shared parameters have been added successfully");
                 }
             }
-            catch
+            catch (Exception e)
             {
-                // ignored
+                TaskDialog.Show("Add Shared Parameters", e.Message);
             }
         }
 

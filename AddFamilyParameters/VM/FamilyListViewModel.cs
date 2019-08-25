@@ -14,11 +14,13 @@ namespace AddFamilyParameters.VM
     using System.Collections.ObjectModel;
     using System.Diagnostics;
     using System.Linq;
+    using System.Threading.Tasks;
 
     using AddFamilyParameters.HelperClass;
     using AddFamilyParameters.M;
 
     using Autodesk.Revit.DB;
+    using Autodesk.Revit.UI;
 
     using CreateSharedParams.HelperClass;
     using CreateSharedParams.Models;
@@ -56,20 +58,24 @@ namespace AddFamilyParameters.VM
         /// The add family parameters.
         /// </summary>
         /// <param name="families">
-        /// Collection of family categories
+        /// The families.
         /// </param>
         /// <param name="isAddShared">
-        /// The is Add Shared.
+        /// The is add shared.
         /// </param>
-        /// <returns>
-        /// The <see cref="List{T}"/>.
-        /// </returns>
-        public static List<AddFamilyParametersResult> AddFamilyParameters(ObservableCollection<FamilyCategory> families, bool isAddShared)
+        /// <exception cref="ArgumentException">Throws when no families are checked
+        /// </exception>
+        public static void AddFamilyParameters(ObservableCollection<FamilyCategory> families, bool isAddShared)
         {
             List<Family> fam = (from familyCategory in families
                                 from item in familyCategory.Members
                                 where ItemHelper.GetIsChecked(item) == true
                                 select item.Family).ToList();
+
+            if (fam.Count == 0)
+            {
+                throw new ArgumentException("Please, check families you want to add parameters in");
+            }
 
             List<AddFamilyParametersResult> results = new List<AddFamilyParametersResult>();
 
@@ -95,7 +101,15 @@ namespace AddFamilyParameters.VM
                 {
                     t.Start($"editing {family.Name}");
 
-                    AddFamilyParameters(familyDoc, r1, isAddShared);
+                    try
+                    {
+                        AddFamilyParameters(familyDoc, r1, isAddShared);
+                    }
+                    catch (Exception e)
+                    {
+                        TaskDialog.Show("Add Family Parameters", e.Message);
+                        break;
+                    }
 
                     t.Commit();
                 }
@@ -103,20 +117,24 @@ namespace AddFamilyParameters.VM
                 results.Add(r1);
             }
 
-            FamilyLoadingOptions opt = new FamilyLoadingOptions();
-
-            foreach (var r in results)
+            if (results.Count != 0)
             {
-                r.FamilyDocument.LoadFamily(revitDocument, opt);
-                r.FamilyDocument.Close(false);
-            }
+                FamilyLoadingOptions opt = new FamilyLoadingOptions();
 
-            return results;
+                foreach (var r in results)
+                {
+                    r.FamilyDocument.LoadFamily(revitDocument, opt);
+                    r.FamilyDocument.Close(false);
+                }
+
+                AddFamilyParametersResult.ShowResultsDialog(results);
+            }
         }
 
         private static void AddFamilyParameters(Document familyDoc, AddFamilyParametersResult results, bool isAddShared)
         {
             List<RevitParameter> dataList = HelperParams.LoadExcel();
+
             DefinitionFile sharedParameterFile = null;
 
             if (isAddShared)
