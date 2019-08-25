@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="IParent.cs" company="">
-//   
+// <copyright file="IParent.cs" company="PMTech">
+//   PMTech
 // </copyright>
 // <summary>
 //   Defines the IParent type.
