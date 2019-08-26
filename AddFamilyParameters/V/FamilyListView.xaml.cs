@@ -65,9 +65,13 @@ namespace AddFamilyParameters.V
 
         private void ButtonUncheckAllClick(object sender, RoutedEventArgs e)
         {
-            foreach (var family in this.Families)
+            foreach (var familyCategory in this.Families)
             {
-                ItemHelper.SetIsChecked(family, false);
+                ItemHelper.SetIsChecked(familyCategory, false);
+                foreach (var family in familyCategory.Members)
+                {
+                    ItemHelper.SetIsChecked(family, false);
+                }
             }
         }
     }
