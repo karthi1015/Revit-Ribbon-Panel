@@ -40,7 +40,6 @@ namespace PMTech_Revit_Ribbon_Panel
 
         public Result OnStartup(UIControlledApplication a)
         {
-            // get the ribbon tab
             try
             {
                 a.CreateRibbonTab(RibbonTab);

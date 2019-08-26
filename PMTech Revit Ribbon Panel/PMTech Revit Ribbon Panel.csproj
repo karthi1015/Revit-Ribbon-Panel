@@ -57,6 +57,12 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>PMTech_Revit_Ribbon_Panel.pfx</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />
     <Reference Include="RevitAPI">
@@ -83,9 +89,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="PMTech Revit Ribbon Panel.addin" />
+    <None Include="PMTech_Revit_Ribbon_Panel.pfx" />
     <None Include="Resources\icons8-add-to-collection-32.png" />
     <None Include="Resources\icons8-add-property-32.png" />
-    <None Include="Resources\icons8-add-property-50.png" />
     <None Include="Resources\AddProperty.bmp" />
     <None Include="Settings.StyleCop" />
   </ItemGroup>
