@@ -13,6 +13,7 @@ namespace AddFamilyParameters.V
     using System.Collections.ObjectModel;
     using System.Windows;
 
+    using AddFamilyParameters.HelperClass;
     using AddFamilyParameters.M;
     using AddFamilyParameters.VM;
 
@@ -59,6 +60,14 @@ namespace AddFamilyParameters.V
             catch (Exception exception)
             {
                 TaskDialog.Show("Add Family Parameters", exception.Message);
+            }
+        }
+
+        private void ButtonUncheckAllClick(object sender, RoutedEventArgs e)
+        {
+            foreach (var family in this.Families)
+            {
+                ItemHelper.SetIsChecked(family, false);
             }
         }
     }
