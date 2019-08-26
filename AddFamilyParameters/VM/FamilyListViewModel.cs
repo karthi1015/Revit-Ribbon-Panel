@@ -49,7 +49,7 @@ namespace AddFamilyParameters.VM
         }
 
         /// <summary>
-        /// The fam categories list.
+        /// The family categories list.
         /// </summary>
         public ObservableCollection<FamilyCategory> FamCategoriesList => famCategories;
 
@@ -66,7 +66,10 @@ namespace AddFamilyParameters.VM
         /// </exception>
         public static void AddFamilyParameters(ObservableCollection<FamilyCategory> families, bool isAddShared)
         {
-            List<Family> fam = (from familyCategory in families from item in familyCategory.Members where ItemHelper.GetIsChecked(item) == true select item.Family).ToList();
+            List<Family> fam = (from familyCategory in families
+                                from item in familyCategory.Members
+                                where ItemHelper.GetIsChecked(item) == true
+                                select item.Family).ToList();
 
             if (fam.Count == 0)
             {
@@ -149,7 +152,8 @@ namespace AddFamilyParameters.VM
                     if (isAddShared)
                     {
                         DefinitionGroup dg = HelperParams.GetOrCreateSharedParamsGroup(sharedParameterFile, item.GroupName);
-                        ExternalDefinition externalDefinition = HelperParams.GetOrCreateSharedParamDefinition(dg, item.ParamType, item.ParamName, item.IsVisible);
+                        ExternalDefinition externalDefinition =
+                            HelperParams.GetOrCreateSharedParamDefinition(dg, item.ParamType, item.ParamName, item.IsVisible);
 
                         results.AddFamilyParameterNote(familyDoc.FamilyManager.AddParameter(externalDefinition, item.ParamGroup, item.IsInstance));
                     }
@@ -163,7 +167,11 @@ namespace AddFamilyParameters.VM
 
         private static Dictionary<string, List<Family>> FindFamilyTypes()
         {
-            return new FilteredElementCollector(revitDocument).WherePasses(new ElementClassFilter(typeof(Family))).Cast<Family>().GroupBy(e => e.FamilyCategory.Name).OrderBy(e => e.Key).ToDictionary(e => e.Key, e => e.ToList());
+            return new FilteredElementCollector(revitDocument).WherePasses(new ElementClassFilter(typeof(Family)))
+                                                              .Cast<Family>()
+                                                              .GroupBy(e => e.FamilyCategory.Name)
+                                                              .OrderBy(e => e.Key)
+                                                              .ToDictionary(e => e.Key, e => e.ToList());
         }
 
         private static void InitializeFamilyCategoryCollection(Dictionary<string, List<Family>> source)

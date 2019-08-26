@@ -127,7 +127,6 @@ namespace CreateSharedParams.HelperClass
         /// </returns>
         public static DefinitionFile GetOrCreateSharedParamsFile(Document doc, AppRvt app)
         {
-            // Get file
             DefinitionFile df = app.OpenSharedParameterFile();
 
             if (df == null)
@@ -227,7 +226,13 @@ namespace CreateSharedParams.HelperClass
         /// <param name="visible">parameter UI Visibility (relevant only when Creation takes place)</param>
         /// <param name="instanceBinding">parameter Binding: Instance or Type (relevant only when Creation takes place)</param>
         /// <returns>The <see cref="Parameter"/></returns>
-        public static Parameter GetOrCreateElemSharedParam(Element elem, string paramName, string grpName, ParameterType paramType, bool visible, bool instanceBinding)
+        public static Parameter GetOrCreateElemSharedParam(
+            Element elem,
+            string paramName,
+            string grpName,
+            ParameterType paramType,
+            bool visible,
+            bool instanceBinding)
         {
             try
             {
@@ -282,7 +287,14 @@ namespace CreateSharedParams.HelperClass
         /// <returns>
         /// The <see cref="BindSharedParamResult"/>.
         /// </returns>
-        public static BindSharedParamResult BindSharedParam(Document doc, Category cat, string paramName, string grpName, ParameterType paramType, bool visible, bool instanceBinding)
+        public static BindSharedParamResult BindSharedParam(
+            Document doc,
+            Category cat,
+            string paramName,
+            string grpName,
+            ParameterType paramType,
+            bool visible,
+            bool instanceBinding)
         {
             try
             {
@@ -414,15 +426,30 @@ namespace CreateSharedParams.HelperClass
                     try
                     {
                         var myRow = new RevitParameter
-                                    {
-                                        ParamName = (string)(range.Cells[rowCnt, 1] as Excel.Range)?.Value2.ToString(),
-                                        GroupName = (string)(range.Cells[rowCnt, 2] as Excel.Range)?.Value2.ToString(),
-                                        ParamType = (ParameterType)Enum.Parse(typeof(ParameterType), (string)(range.Cells[rowCnt, 4] as Excel.Range)?.Value2.ToString() ?? throw new InvalidOperationException("Can't read this file, probably wrong data format")),
-                                        IsVisible = bool.Parse((string)(range.Cells[rowCnt, 6] as Excel.Range)?.Value2.ToString() ?? throw new InvalidOperationException()),
-                                        Category = (BuiltInCategory)Enum.Parse(typeof(BuiltInCategory), (string)(range.Cells[rowCnt, 8] as Excel.Range)?.Value2.ToString() ?? throw new InvalidOperationException("Can't read this file, probably wrong data format")),
-                                        ParamGroup = (BuiltInParameterGroup)Enum.Parse(typeof(BuiltInParameterGroup), (string)(range.Cells[rowCnt, 10] as Excel.Range)?.Value2.ToString() ?? throw new InvalidOperationException("Can't read this file, probably wrong data format")),
-                                        IsInstance = bool.Parse((string)(range.Cells[rowCnt, 12] as Excel.Range)?.Value2.ToString() ?? throw new InvalidOperationException("Can't read this file, probably wrong data format"))
-                                    };
+                        {
+                            ParamName = (string)(range.Cells[rowCnt, 1] as Excel.Range)?.Value2.ToString(),
+                            GroupName = (string)(range.Cells[rowCnt, 2] as Excel.Range)?.Value2.ToString(),
+                            ParamType =
+                                            (ParameterType)Enum.Parse(
+                                                typeof(ParameterType),
+                                                (string)(range.Cells[rowCnt, 4] as Excel.Range)?.Value2.ToString()
+                                                ?? throw new InvalidOperationException("Can't read this file, probably wrong data format")),
+                            IsVisible =
+                                            bool.Parse(
+                                                (string)(range.Cells[rowCnt, 6] as Excel.Range)?.Value2.ToString() ?? throw new InvalidOperationException()),
+                            Category =
+                                            (BuiltInCategory)Enum.Parse(
+                                                typeof(BuiltInCategory),
+                                                (string)(range.Cells[rowCnt, 8] as Excel.Range)?.Value2.ToString()
+                                                ?? throw new InvalidOperationException("Can't read this file, probably wrong data format")),
+                            ParamGroup = (BuiltInParameterGroup)Enum.Parse(
+                                            typeof(BuiltInParameterGroup),
+                                            (string)(range.Cells[rowCnt, 10] as Excel.Range)?.Value2.ToString()
+                                            ?? throw new InvalidOperationException("Can't read this file, probably wrong data format")),
+                            IsInstance = bool.Parse(
+                                            (string)(range.Cells[rowCnt, 12] as Excel.Range)?.Value2.ToString()
+                                            ?? throw new InvalidOperationException("Can't read this file, probably wrong data format"))
+                        };
 
                         myRows.Add(myRow);
                     }

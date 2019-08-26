@@ -23,6 +23,9 @@ namespace CreateSharedParams
     using CreateSharedParams.HelperClass;
     using CreateSharedParams.Models;
 
+    /// <summary>
+    /// The create shared parameter.
+    /// </summary>
     [Transaction(TransactionMode.Manual)]
     [Regeneration(RegenerationOption.Manual)]
     public class CreateSharedParameter : IExternalCommand
