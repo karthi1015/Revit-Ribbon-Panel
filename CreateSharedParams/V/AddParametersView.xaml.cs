@@ -59,5 +59,10 @@ namespace CreateParams.V
             AddParametersViewModel.CreateNewSharedParametersFile();
             this.FilePathTextBox.Text = this.viewModel.SharedParametersFilePath;
         }
+
+        private void ButtonAddSharedParameters_OnClick(object sender, RoutedEventArgs e)
+        {
+            AddParametersViewModel.CreateProjectSharedParameter();
+        }
     }
 }

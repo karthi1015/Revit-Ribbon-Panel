@@ -409,7 +409,7 @@ namespace CreateParams.Utilities
 
                 if (range.Cells.Count < 12)
                 {
-                    throw new ArgumentException("There was an attempt to load a file with data of the wrong format, please try again");
+                    throw new ArgumentException("Была попытка загрузить файл с данными в неверном формате, пожалуйста, попытайтесь еще раз");
                 }
 
                 // traverse all the row in the excel
@@ -426,26 +426,26 @@ namespace CreateParams.Utilities
                                             GroupName = (string)(range.Cells[rowCnt, 2] as Microsoft.Office.Interop.Excel.Range)?.Value2.ToString(),
                                             ParamType = (ParameterType)Enum.Parse(
                                                 typeof(ParameterType),
-                                                paramType ?? throw new InvalidOperationException("Can't read this file, probably wrong data format")),
+                                                paramType ?? throw new InvalidOperationException("Невозможно прочитать данный файл, неверный формат данных")),
                                             IsVisible = bool.Parse(
                                                 (string)(range.Cells[rowCnt, 6] as Microsoft.Office.Interop.Excel.Range)?.Value2.ToString()
                                                 ?? throw new InvalidOperationException()),
                                             Category = (BuiltInCategory)Enum.Parse(
                                                 typeof(BuiltInCategory),
-                                                category ?? throw new InvalidOperationException("Can't read this file, probably wrong data format")),
+                                                category ?? throw new InvalidOperationException("Невозможно прочитать данный файл, неверный формат данных")),
                                             ParamGroup = (BuiltInParameterGroup)Enum.Parse(
                                                 typeof(BuiltInParameterGroup),
-                                                paramGroup ?? throw new InvalidOperationException("Can't read this file, probably wrong data format")),
+                                                paramGroup ?? throw new InvalidOperationException("Невозможно прочитать данный файл, неверный формат данных")),
                                             IsInstance = bool.Parse(
                                                 (string)(range.Cells[rowCnt, 12] as Microsoft.Office.Interop.Excel.Range)?.Value2.ToString()
-                                                ?? throw new InvalidOperationException("Can't read this file, probably wrong data format"))
+                                                ?? throw new InvalidOperationException("Невозможно прочитать данный файл, неверный формат данных"))
                                         };
 
                         myRows.Add(myRow);
                     }
                     catch
                     {
-                        TaskDialog.Show("Read excel", "Can't read this file, probably wrong data format");
+                        TaskDialog.Show("Read excel", "Невозможно прочитать данный файл, неверный формат данных");
                         break;
                     }
                 }

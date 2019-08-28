@@ -9,11 +9,20 @@
 
 namespace CreateParams.VM
 {
+    using System;
+    using System.Collections.Generic;
     using System.IO;
     using System.Text;
     using System.Windows.Forms;
 
     using Autodesk.Revit.DB;
+    using Autodesk.Revit.UI;
+
+    using CreateParams.M;
+    using CreateParams.Utilities;
+
+    using Application = Autodesk.Revit.ApplicationServices.Application;
+    using Binding = Autodesk.Revit.DB.Binding;
 
     /// <summary>
     /// The add parameters view model.
@@ -44,12 +53,12 @@ namespace CreateParams.VM
         public static void SetNewSharedParameterFile()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog()
-                                                {
-                                                    Filter = "Text Files|*.txt",
-                                                    FilterIndex = 1,
-                                                    RestoreDirectory = true,
-                                                    Title = "Задать файл общих параметров"
-                                                };
+            {
+                Filter = "Text Files|*.txt",
+                FilterIndex = 1,
+                RestoreDirectory = true,
+                Title = "Задать файл общих параметров"
+            };
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
@@ -64,12 +73,12 @@ namespace CreateParams.VM
         public static void CreateNewSharedParametersFile()
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog()
-                                                {
-                                                    Filter = "Text Files|*.txt",
-                                                    FilterIndex = 1,
-                                                    RestoreDirectory = true,
-                                                    Title = "Создать файл общих параметров"
-                                                };
+            {
+                Filter = "Text Files|*.txt",
+                FilterIndex = 1,
+                RestoreDirectory = true,
+                Title = "Создать файл общих параметров"
+            };
 
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
@@ -89,6 +98,79 @@ namespace CreateParams.VM
                 }
 
                 revitDocument.Application.SharedParametersFilename = fileName;
+            }
+        }
+
+        /// <summary>
+        /// The create project shared parameters.
+        /// </summary>
+        public static void CreateProjectSharedParameter()
+        {
+            Application app = revitDocument.Application;
+            CategorySet categorySet = app.Create.NewCategorySet();
+            DefinitionFile sharedParameterFile = app.OpenSharedParameterFile();
+
+            if (sharedParameterFile == null || sharedParameterFile.Filename == string.Empty)
+            {
+                TaskDialog.Show("Adding Project Parameters", "Выбранный файл общих параметров не существует. Пожалуйста, выберите другой файл или создайте новый");
+            }
+            else
+            {
+                try
+                {
+                    List<RevitParameter> dataList = ParamsHelper.LoadExcel();
+
+                    bool showResult = false;
+
+                    if (dataList != null)
+                    {
+                        using (Transaction t = new Transaction(revitDocument))
+                        {
+                            t.Start($"Adding Project Parameters from Excel");
+
+                            foreach (var item in dataList)
+                            {
+                                DefinitionGroup dg = ParamsHelper.GetOrCreateSharedParamsGroup(sharedParameterFile, item.GroupName);
+                                ExternalDefinition externalDefinition = ParamsHelper.GetOrCreateSharedParamDefinition(dg, item.ParamType, item.ParamName, item.IsVisible);
+
+                                Category category = revitDocument.Settings.Categories.get_Item(item.Category);
+                                categorySet.Insert(category);
+
+                                // parameter binding
+                                Binding newIb;
+                                if (item.IsInstance)
+                                {
+                                    newIb = app.Create.NewInstanceBinding(categorySet);
+                                }
+                                else
+                                {
+                                    newIb = app.Create.NewTypeBinding(categorySet);
+                                }
+
+                                revitDocument.ParameterBindings.Insert(externalDefinition, newIb, item.ParamGroup);
+
+                                if (revitDocument.ParameterBindings.Contains(externalDefinition))
+                                {
+                                    if (revitDocument.ParameterBindings.ReInsert(externalDefinition, newIb))
+                                    {
+                                        showResult = true;
+                                    }
+                                }
+                            }
+
+                            t.Commit();
+                        }
+
+                        if (showResult)
+                        {
+                            TaskDialog.Show("Adding Project Parameters", "Параметры были успешно добавлены");
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    TaskDialog.Show("Adding Project Parameters", e.Message);
+                }
             }
         }
     }
