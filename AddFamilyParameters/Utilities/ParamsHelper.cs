@@ -390,7 +390,8 @@ namespace AddFamilyParameters.Utilities
                                                 {
                                                     Filter = "Excel Files|*.xls;*.xlsx",
                                                     FilterIndex = 1,
-                                                    RestoreDirectory = true
+                                                    RestoreDirectory = true,
+                                                    Title = "Загрузка файла Excel с данными о параметрах"
                                                 };
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
