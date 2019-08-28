@@ -225,13 +225,7 @@ namespace CreateParams.Utilities
         /// <param name="visible">parameter UI Visibility (relevant only when Creation takes place)</param>
         /// <param name="instanceBinding">parameter Binding: Instance or Type (relevant only when Creation takes place)</param>
         /// <returns>The <see cref="Parameter"/></returns>
-        public static Parameter GetOrCreateElemSharedParam(
-            Element elem,
-            string paramName,
-            string grpName,
-            ParameterType paramType,
-            bool visible,
-            bool instanceBinding)
+        public static Parameter GetOrCreateElemSharedParam(Element elem, string paramName, string grpName, ParameterType paramType, bool visible, bool instanceBinding)
         {
             try
             {
@@ -287,13 +281,7 @@ namespace CreateParams.Utilities
         /// The <see cref="ParamsHelper.BindSharedParamResult"/>.
         /// </returns>
         public static BindSharedParamResult BindSharedParam(
-            Document doc,
-            Category cat,
-            string paramName,
-            string grpName,
-            ParameterType paramType,
-            bool visible,
-            bool instanceBinding)
+            Document doc, Category cat, string paramName, string grpName, ParameterType paramType, bool visible, bool instanceBinding)
         {
             try
             {
@@ -398,7 +386,12 @@ namespace CreateParams.Utilities
         {
             List<RevitParameter> myRows = null;
 
-            OpenFileDialog openFileDialog = new OpenFileDialog { Filter = "Excel Files|*.xls;*.xlsx", FilterIndex = 1, RestoreDirectory = true };
+            OpenFileDialog openFileDialog = new OpenFileDialog
+                                                {
+                                                    Filter = "Excel Files|*.xls;*.xlsx",
+                                                    FilterIndex = 1,
+                                                    RestoreDirectory = true
+                                                };
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
@@ -424,31 +417,29 @@ namespace CreateParams.Utilities
                 {
                     try
                     {
+                        string paramType = (string)(range.Cells[rowCnt, 4] as Microsoft.Office.Interop.Excel.Range)?.Value2.ToString();
+                        string category = (string)(range.Cells[rowCnt, 8] as Microsoft.Office.Interop.Excel.Range)?.Value2.ToString();
+                        string paramGroup = (string)(range.Cells[rowCnt, 10] as Microsoft.Office.Interop.Excel.Range)?.Value2.ToString();
                         var myRow = new RevitParameter
-                        {
-                            ParamName = (string)(range.Cells[rowCnt, 1] as Microsoft.Office.Interop.Excel.Range)?.Value2.ToString(),
-                            GroupName = (string)(range.Cells[rowCnt, 2] as Microsoft.Office.Interop.Excel.Range)?.Value2.ToString(),
-                            ParamType =
-                                            (ParameterType)Enum.Parse(
+                                        {
+                                            ParamName = (string)(range.Cells[rowCnt, 1] as Microsoft.Office.Interop.Excel.Range)?.Value2.ToString(),
+                                            GroupName = (string)(range.Cells[rowCnt, 2] as Microsoft.Office.Interop.Excel.Range)?.Value2.ToString(),
+                                            ParamType = (ParameterType)Enum.Parse(
                                                 typeof(ParameterType),
-                                                (string)(range.Cells[rowCnt, 4] as Microsoft.Office.Interop.Excel.Range)?.Value2.ToString()
-                                                ?? throw new InvalidOperationException("Can't read this file, probably wrong data format")),
-                            IsVisible =
-                                            bool.Parse(
-                                                (string)(range.Cells[rowCnt, 6] as Microsoft.Office.Interop.Excel.Range)?.Value2.ToString() ?? throw new InvalidOperationException()),
-                            Category =
-                                            (BuiltInCategory)Enum.Parse(
+                                                paramType ?? throw new InvalidOperationException("Can't read this file, probably wrong data format")),
+                                            IsVisible = bool.Parse(
+                                                (string)(range.Cells[rowCnt, 6] as Microsoft.Office.Interop.Excel.Range)?.Value2.ToString()
+                                                ?? throw new InvalidOperationException()),
+                                            Category = (BuiltInCategory)Enum.Parse(
                                                 typeof(BuiltInCategory),
-                                                (string)(range.Cells[rowCnt, 8] as Microsoft.Office.Interop.Excel.Range)?.Value2.ToString()
-                                                ?? throw new InvalidOperationException("Can't read this file, probably wrong data format")),
-                            ParamGroup = (BuiltInParameterGroup)Enum.Parse(
-                                            typeof(BuiltInParameterGroup),
-                                            (string)(range.Cells[rowCnt, 10] as Microsoft.Office.Interop.Excel.Range)?.Value2.ToString()
-                                            ?? throw new InvalidOperationException("Can't read this file, probably wrong data format")),
-                            IsInstance = bool.Parse(
-                                            (string)(range.Cells[rowCnt, 12] as Microsoft.Office.Interop.Excel.Range)?.Value2.ToString()
-                                            ?? throw new InvalidOperationException("Can't read this file, probably wrong data format"))
-                        };
+                                                category ?? throw new InvalidOperationException("Can't read this file, probably wrong data format")),
+                                            ParamGroup = (BuiltInParameterGroup)Enum.Parse(
+                                                typeof(BuiltInParameterGroup),
+                                                paramGroup ?? throw new InvalidOperationException("Can't read this file, probably wrong data format")),
+                                            IsInstance = bool.Parse(
+                                                (string)(range.Cells[rowCnt, 12] as Microsoft.Office.Interop.Excel.Range)?.Value2.ToString()
+                                                ?? throw new InvalidOperationException("Can't read this file, probably wrong data format"))
+                                        };
 
                         myRows.Add(myRow);
                     }
@@ -469,6 +460,5 @@ namespace CreateParams.Utilities
 
             return myRows;
         }
-
     }
 }

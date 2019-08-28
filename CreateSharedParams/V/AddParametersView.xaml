@@ -20,18 +20,18 @@
                 <ColumnDefinition Width="100*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <Grid Grid.Column="0">
+            <Grid Grid.Column="0" DataContext="Add">
                 <Label Content="Текущий файл общих параметров проекта" Margin="10,5,10,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
                 <TextBox x:Name="FilePathTextBox"
                          Margin="10,31,5,0"
                          VerticalAlignment="Top"
                          HorizontalContentAlignment="Stretch"
                          IsEnabled="False"
-                         TextWrapping="Wrap"  />
-
+                         TextWrapping="Wrap"
+                         />
             </Grid>
-            <Button Content="Обзор" Grid.Column="1" HorizontalAlignment="Right" Margin="5,30,95,00" VerticalAlignment="Top" Width="75"/>
-            <Button Content="Создать" Grid.Column="1" HorizontalAlignment="Right" Margin="0,30,10,0" VerticalAlignment="Top" Width="75"/>
+            <Button Name="ButtonBrowseSharedParameterFile" Content="Обзор" Grid.Column="1" HorizontalAlignment="Right" Margin="5,30,95,00" VerticalAlignment="Top" Width="75" Click="ButtonBrowseSharedParameterFile_OnClick"/>
+            <Button Name="ButtonCreateSharedParameterFile" Content="Создать" Grid.Column="1" HorizontalAlignment="Right" Margin="0,30,10,0" VerticalAlignment="Top" Width="75" Click="ButtonCreateSharedParameterFile_OnClick"/>
         </Grid>
     </Grid>
 </Window>

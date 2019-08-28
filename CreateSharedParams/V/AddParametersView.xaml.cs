@@ -33,6 +33,8 @@ namespace CreateParams.V
     /// </summary>
     public partial class AddParametersView : Window
     {
+        private readonly AddParametersViewModel viewModel;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AddParametersView"/> class.
         /// </summary>
@@ -42,8 +44,20 @@ namespace CreateParams.V
         public AddParametersView(Document doc)
         {
             this.InitializeComponent();
-            AddParametersViewModel viewModel = new AddParametersViewModel(doc);
-            this.FilePathTextBox.Text = viewModel.SharedParametersFilePath;
+            this.viewModel = new AddParametersViewModel(doc);
+            this.FilePathTextBox.Text = this.viewModel.SharedParametersFilePath;
+        }
+
+        private void ButtonBrowseSharedParameterFile_OnClick(object sender, RoutedEventArgs e)
+        {
+            AddParametersViewModel.SetNewSharedParameterFile();
+            this.FilePathTextBox.Text = this.viewModel.SharedParametersFilePath;
+        }
+
+        private void ButtonCreateSharedParameterFile_OnClick(object sender, RoutedEventArgs e)
+        {
+            AddParametersViewModel.CreateNewSharedParametersFile();
+            this.FilePathTextBox.Text = this.viewModel.SharedParametersFilePath;
         }
     }
 }
