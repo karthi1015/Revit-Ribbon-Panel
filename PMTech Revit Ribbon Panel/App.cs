@@ -59,9 +59,9 @@ namespace PMTech_Revit_Ribbon_Panel
             ImageSource imageSource = this.GetImageSource(img);
 
             // create the button data
-            PushButtonData btnData = new PushButtonData("Add shared parameters", "Add shared parameters", this.createParamsPath, "CreateParams.Command")
+            PushButtonData btnData = new PushButtonData("Add shared parameters", "Добавить параметры", this.createParamsPath, "CreateParams.Command")
                                      {
-                                         ToolTip = "Пакетное добавление параметров в проект и в семейства по excel файлу", LongDescription = "Разработчик: Кожевников Андрей Олегович", Image = imageSource, LargeImage = imageSource
+                                         ToolTip = "Пакетное добавление параметров в проект или в семейства по excel файлу", LongDescription = "Разработчик: Кожевников Андрей Олегович", Image = imageSource, LargeImage = imageSource
                                      };
 
             // add the button to the ribbon
