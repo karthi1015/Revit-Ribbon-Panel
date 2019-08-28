@@ -41,8 +41,10 @@ namespace CreateParams.V
         public AddParametersView(Document doc)
         {
             this.InitializeComponent();
+
             Image img = Properties.Resources.icons8_add_property_32;
             this.Icon = this.GetImageSource(img);
+
             this.revitDocument = doc;
             this.viewModel = new AddParametersViewModel(doc);
             

@@ -54,10 +54,10 @@ namespace CreateParams.VM
         {
             OpenFileDialog openFileDialog = new OpenFileDialog()
             {
-                Filter = "Text Files|*.txt",
+                Filter = @"Text Files|*.txt",
                 FilterIndex = 1,
                 RestoreDirectory = true,
-                Title = "Задать файл общих параметров"
+                Title = @"Задать файл общих параметров"
             };
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
@@ -74,10 +74,10 @@ namespace CreateParams.VM
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog()
             {
-                Filter = "Text Files|*.txt",
+                Filter = @"Text Files|*.txt",
                 FilterIndex = 1,
                 RestoreDirectory = true,
-                Title = "Создать файл общих параметров"
+                Title = @"Создать файл общих параметров"
             };
 
             if (saveFileDialog.ShowDialog() == DialogResult.OK)

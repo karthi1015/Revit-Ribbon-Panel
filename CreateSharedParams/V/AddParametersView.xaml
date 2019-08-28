@@ -6,9 +6,9 @@
         xmlns:local="clr-namespace:CreateParams.V"
         mc:Ignorable="d"
         Width="700"
-        Height="135"
+        Height="140"
         MinWidth="700"
-        MinHeight="135"
+        MinHeight="140"
         WindowStartupLocation="CenterScreen" Title="Добавление параметров">
     <Grid>
         <Grid.RowDefinitions>
