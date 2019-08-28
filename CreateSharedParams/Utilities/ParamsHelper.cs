@@ -1,13 +1,13 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="HelperParams.cs" company="PMTech">
+// <copyright file="ParamsHelper.cs" company="PMTech">
 //   PMTech
 // </copyright>
 // <summary>
-//   The helper parameters.
+//   The parameters helper.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace CreateSharedParams.HelperClass
+namespace CreateParams.Utilities
 {
     using System;
     using System.Collections.Generic;
@@ -19,16 +19,15 @@ namespace CreateSharedParams.HelperClass
     using Autodesk.Revit.DB;
     using Autodesk.Revit.UI;
 
-    using CreateSharedParams.Models;
+    using CreateParams.M;
 
-    using AppRvt = Autodesk.Revit.ApplicationServices.Application;
-    using BindingRvt = Autodesk.Revit.DB.Binding;
-    using Excel = Microsoft.Office.Interop.Excel;
+    using Application = Autodesk.Revit.ApplicationServices.Application;
+    using Binding = Autodesk.Revit.DB.Binding;
 
     /// <summary>
-    /// The helper parameters.
+    /// The parameters helper.
     /// </summary>
-    public static class HelperParams
+    public class ParamsHelper
     {
         /// <summary>
         /// The bind shared parameter result.
@@ -125,7 +124,7 @@ namespace CreateSharedParams.HelperClass
         /// <returns>
         /// The <see cref="DefinitionFile"/>.
         /// </returns>
-        public static DefinitionFile GetOrCreateSharedParamsFile(Document doc, AppRvt app)
+        public static DefinitionFile GetOrCreateSharedParamsFile(Document doc, Application app)
         {
             DefinitionFile df = app.OpenSharedParameterFile();
 
@@ -285,7 +284,7 @@ namespace CreateSharedParams.HelperClass
         /// The instance binding.
         /// </param>
         /// <returns>
-        /// The <see cref="BindSharedParamResult"/>.
+        /// The <see cref="ParamsHelper.BindSharedParamResult"/>.
         /// </returns>
         public static BindSharedParamResult BindSharedParam(
             Document doc,
@@ -299,7 +298,7 @@ namespace CreateSharedParams.HelperClass
             try
             {
                 // generic
-                AppRvt app = doc.Application;
+                Application app = doc.Application;
 
                 // This is needed already here to store old ones for re-inserting
                 CategorySet catSet = app.Create.NewCategorySet();
@@ -362,7 +361,7 @@ namespace CreateSharedParams.HelperClass
                 DefinitionGroup defGrp = GetOrCreateSharedParamsGroup(defFile, grpName);
                 Definition definition = GetOrCreateSharedParamDefinition(defGrp, paramType, paramName, visible);
                 catSet.Insert(cat);
-                BindingRvt bind = null;
+                Binding bind = null;
                 if (instanceBinding)
                 {
                     bind = app.Create.NewInstanceBinding(catSet);
@@ -404,14 +403,14 @@ namespace CreateSharedParams.HelperClass
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 myRows = new List<RevitParameter>();
-                var excelApp = new Excel.Application();
+                var excelApp = new Microsoft.Office.Interop.Excel.Application();
                 var excelFilePath = openFileDialog.FileName;
 
                 // open the excel
                 var excelWorkBook = excelApp.Workbooks.Open(excelFilePath);
 
                 // get the first sheet of the excel
-                var excelWorkSheet = (Excel.Worksheet)excelWorkBook.Worksheets.Item[1];
+                var excelWorkSheet = (Microsoft.Office.Interop.Excel.Worksheet)excelWorkBook.Worksheets.Item[1];
                 var range = excelWorkSheet.UsedRange;
                 int rowCount = range.Rows.Count;
 
@@ -427,27 +426,27 @@ namespace CreateSharedParams.HelperClass
                     {
                         var myRow = new RevitParameter
                         {
-                            ParamName = (string)(range.Cells[rowCnt, 1] as Excel.Range)?.Value2.ToString(),
-                            GroupName = (string)(range.Cells[rowCnt, 2] as Excel.Range)?.Value2.ToString(),
+                            ParamName = (string)(range.Cells[rowCnt, 1] as Microsoft.Office.Interop.Excel.Range)?.Value2.ToString(),
+                            GroupName = (string)(range.Cells[rowCnt, 2] as Microsoft.Office.Interop.Excel.Range)?.Value2.ToString(),
                             ParamType =
                                             (ParameterType)Enum.Parse(
                                                 typeof(ParameterType),
-                                                (string)(range.Cells[rowCnt, 4] as Excel.Range)?.Value2.ToString()
+                                                (string)(range.Cells[rowCnt, 4] as Microsoft.Office.Interop.Excel.Range)?.Value2.ToString()
                                                 ?? throw new InvalidOperationException("Can't read this file, probably wrong data format")),
                             IsVisible =
                                             bool.Parse(
-                                                (string)(range.Cells[rowCnt, 6] as Excel.Range)?.Value2.ToString() ?? throw new InvalidOperationException()),
+                                                (string)(range.Cells[rowCnt, 6] as Microsoft.Office.Interop.Excel.Range)?.Value2.ToString() ?? throw new InvalidOperationException()),
                             Category =
                                             (BuiltInCategory)Enum.Parse(
                                                 typeof(BuiltInCategory),
-                                                (string)(range.Cells[rowCnt, 8] as Excel.Range)?.Value2.ToString()
+                                                (string)(range.Cells[rowCnt, 8] as Microsoft.Office.Interop.Excel.Range)?.Value2.ToString()
                                                 ?? throw new InvalidOperationException("Can't read this file, probably wrong data format")),
                             ParamGroup = (BuiltInParameterGroup)Enum.Parse(
                                             typeof(BuiltInParameterGroup),
-                                            (string)(range.Cells[rowCnt, 10] as Excel.Range)?.Value2.ToString()
+                                            (string)(range.Cells[rowCnt, 10] as Microsoft.Office.Interop.Excel.Range)?.Value2.ToString()
                                             ?? throw new InvalidOperationException("Can't read this file, probably wrong data format")),
                             IsInstance = bool.Parse(
-                                            (string)(range.Cells[rowCnt, 12] as Excel.Range)?.Value2.ToString()
+                                            (string)(range.Cells[rowCnt, 12] as Microsoft.Office.Interop.Excel.Range)?.Value2.ToString()
                                             ?? throw new InvalidOperationException("Can't read this file, probably wrong data format"))
                         };
 
@@ -470,5 +469,6 @@ namespace CreateSharedParams.HelperClass
 
             return myRows;
         }
+
     }
 }

@@ -13,8 +13,8 @@
     <ProjectGuid>{4F3E7B19-C615-43F4-AB05-1D9695A6C30F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CreateSharedParams</RootNamespace>
-    <AssemblyName>CreateSharedParams</AssemblyName>
+    <RootNamespace>CreateParams</RootNamespace>
+    <AssemblyName>CreateParams</AssemblyName>
     <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -79,10 +79,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CreateSharedParameter.cs" />
-    <Compile Include="HelperClass\HelperParams.cs" />
-    <Compile Include="Models\RevitParameter.cs" />
+    <Compile Include="M\RevitParameter.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\ParamsHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="Microsoft.Office.Interop.Excel">
@@ -107,7 +107,10 @@
   <ItemGroup>
     <None Include="Settings.StyleCop" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="VM\" />
+    <Folder Include="V\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

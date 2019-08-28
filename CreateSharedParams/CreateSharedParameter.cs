@@ -10,7 +10,7 @@
 // ReSharper disable StyleCop.SA1600
 // ReSharper disable StyleCop.SA1402
 
-namespace CreateSharedParams
+namespace CreateParams
 {
     using System;
     using System.Collections.Generic;
@@ -20,8 +20,8 @@ namespace CreateSharedParams
     using Autodesk.Revit.DB;
     using Autodesk.Revit.UI;
 
-    using CreateSharedParams.HelperClass;
-    using CreateSharedParams.Models;
+    using CreateParams.M;
+    using CreateParams.Utilities;
 
     /// <summary>
     /// The create shared parameter.
@@ -44,9 +44,9 @@ namespace CreateSharedParams
             CategorySet categorySet = app.Create.NewCategorySet();
             try
             {
-                DefinitionFile sharedParameterFile = HelperParams.GetOrCreateSharedParamsFile(doc, app);
+                DefinitionFile sharedParameterFile = ParamsHelper.GetOrCreateSharedParamsFile(doc, app);
 
-                List<RevitParameter> dataList = HelperParams.LoadExcel();
+                List<RevitParameter> dataList = ParamsHelper.LoadExcel();
 
                 bool showResult = false;
 
@@ -58,8 +58,8 @@ namespace CreateSharedParams
 
                         foreach (var item in dataList)
                         {
-                            DefinitionGroup dg = HelperParams.GetOrCreateSharedParamsGroup(sharedParameterFile, item.GroupName);
-                            ExternalDefinition externalDefinition = HelperParams.GetOrCreateSharedParamDefinition(dg, item.ParamType, item.ParamName, item.IsVisible);
+                            DefinitionGroup dg = ParamsHelper.GetOrCreateSharedParamsGroup(sharedParameterFile, item.GroupName);
+                            ExternalDefinition externalDefinition = ParamsHelper.GetOrCreateSharedParamDefinition(dg, item.ParamType, item.ParamName, item.IsVisible);
 
                             Category category = doc.Settings.Categories.get_Item(item.Category);
                             categorySet.Insert(category);

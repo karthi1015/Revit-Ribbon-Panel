@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("CreateSharedParams")]
-[assembly: AssemblyDescription("Revit Add-In Description for CreateSharedParams")]
+[assembly: AssemblyTitle("CreateParams")]
+[assembly: AssemblyDescription("Revit Add-In Description for CreateParams")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("PMTech")]
-[assembly: AssemblyProduct("CreateSharedParams Revit C# .NET Add-In")]
+[assembly: AssemblyProduct("CreateParams Revit C# .NET Add-In")]
 [assembly: AssemblyCopyright("Copyright 2019 (C)Andrew Kozhevnikov, PMTech")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

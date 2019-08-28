@@ -7,7 +7,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace CreateSharedParams.Models
+namespace CreateParams.M
 {
     using Autodesk.Revit.DB;
 

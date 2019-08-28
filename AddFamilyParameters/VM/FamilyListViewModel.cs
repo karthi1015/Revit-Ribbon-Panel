@@ -21,8 +21,8 @@ namespace AddFamilyParameters.VM
     using Autodesk.Revit.DB;
     using Autodesk.Revit.UI;
 
-    using CreateSharedParams.HelperClass;
-    using CreateSharedParams.Models;
+    using CreateParams.M;
+    using CreateParams.Utilities;
 
     /// <summary>
     /// The family list view model.
@@ -77,7 +77,7 @@ namespace AddFamilyParameters.VM
             }
 
             List<AddFamilyParametersResult> results = new List<AddFamilyParametersResult>();
-            List<RevitParameter> dataList = HelperParams.LoadExcel();
+            List<RevitParameter> dataList = ParamsHelper.LoadExcel();
 
             if (dataList != null)
             {
@@ -140,7 +140,7 @@ namespace AddFamilyParameters.VM
 
             if (isAddShared)
             {
-                sharedParameterFile = HelperParams.GetOrCreateSharedParamsFile(revitDocument, familyDoc.Application);
+                sharedParameterFile = ParamsHelper.GetOrCreateSharedParamsFile(revitDocument, familyDoc.Application);
             }
 
             foreach (var item in dataList)
@@ -151,9 +151,9 @@ namespace AddFamilyParameters.VM
                 {
                     if (isAddShared)
                     {
-                        DefinitionGroup dg = HelperParams.GetOrCreateSharedParamsGroup(sharedParameterFile, item.GroupName);
+                        DefinitionGroup dg = ParamsHelper.GetOrCreateSharedParamsGroup(sharedParameterFile, item.GroupName);
                         ExternalDefinition externalDefinition =
-                            HelperParams.GetOrCreateSharedParamDefinition(dg, item.ParamType, item.ParamName, item.IsVisible);
+                            ParamsHelper.GetOrCreateSharedParamDefinition(dg, item.ParamType, item.ParamName, item.IsVisible);
 
                         results.AddFamilyParameterNote(familyDoc.FamilyManager.AddParameter(externalDefinition, item.ParamGroup, item.IsInstance));
                     }

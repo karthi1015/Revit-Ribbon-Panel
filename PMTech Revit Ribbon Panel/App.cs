@@ -30,7 +30,7 @@ namespace PMTech_Revit_Ribbon_Panel
     /// </summary>
     public class App : IExternalApplication
     {
-        private readonly string addSharedParamsPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\CreateSharedParams.dll";
+        private readonly string addSharedParamsPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\CreateParams.dll";
 
         private readonly string addFamilyParametersPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\AddFamilyParameters.dll";
 
@@ -72,7 +72,7 @@ namespace PMTech_Revit_Ribbon_Panel
             ImageSource imageSource = this.GetImageSource(img);
 
             // create the button data
-            PushButtonData btnData = new PushButtonData("Add shared parameters", "Add shared parameters", this.addSharedParamsPath, "CreateSharedParams.CreateSharedParameter")
+            PushButtonData btnData = new PushButtonData("Add shared parameters", "Add shared parameters", this.addSharedParamsPath, "CreateParams.CreateSharedParameter")
                                      {
                                          ToolTip = "Batch add shared parameters from excel file", LongDescription = "Batch add shared parameters from excel file", Image = imageSource, LargeImage = imageSource
                                      };
