@@ -77,12 +77,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Command.cs" />
-    <Compile Include="HelperClass\FamilyLoadingOptions.cs" />
+    <Compile Include="Utilities\FamilyLoadingOptions.cs" />
+    <Compile Include="Utilities\ParamsHelper.cs" />
     <Compile Include="M\FamilyCategory.cs" />
     <Compile Include="Interfaces\IParent.cs" />
-    <Compile Include="HelperClass\ItemHelper.cs" />
+    <Compile Include="Utilities\ItemHelper.cs" />
     <Compile Include="M\MyFamily.cs" />
-    <Compile Include="HelperClass\AddFamilyParametersResult.cs" />
+    <Compile Include="Utilities\AddFamilyParametersResult.cs" />
+    <Compile Include="M\RevitParameter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VM\FamilyListViewModel.cs" />
     <Compile Include="V\FamilyListView.xaml.cs">
@@ -97,12 +99,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CreateSharedParams\CreateParams.csproj">
-      <Project>{4f3e7b19-c615-43f4-ab05-1d9695a6c30f}</Project>
-      <Name>CreateParams</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

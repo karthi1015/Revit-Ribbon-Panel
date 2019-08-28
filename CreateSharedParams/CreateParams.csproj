@@ -114,7 +114,12 @@
   <ItemGroup>
     <None Include="Settings.StyleCop" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\AddFamilyParameters\AddFamilyParameters.csproj">
+      <Project>{4415c418-3f5c-49fa-a95c-c4d70398b6cf}</Project>
+      <Name>AddFamilyParameters</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <Page Include="V\AddParametersView.xaml">
       <SubType>Designer</SubType>
