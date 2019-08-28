@@ -19,6 +19,7 @@ namespace PMTech_Revit_Ribbon_Panel
     using System.Drawing;
     using System.Drawing.Imaging;
     using System.IO;
+    using System.Linq;
     using System.Reflection;
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
@@ -50,36 +51,26 @@ namespace PMTech_Revit_Ribbon_Panel
             }
 
             // Get o create the panel
-            RibbonPanel panel = null;
             List<RibbonPanel> panels = a.GetRibbonPanels(RibbonTab);
-            foreach (var ribbonPanel in panels)
-            {
-                if (ribbonPanel.Name == RibbonPanel)
-                {
-                    panel = ribbonPanel;
-                    break;
-                }
-            }
+            RibbonPanel panel = panels.FirstOrDefault(ribbonPanel => ribbonPanel.Name == RibbonPanel) ?? a.CreateRibbonPanel(RibbonTab, RibbonPanel);
 
             // If couldn't find the panel, create it
-            if (panel == null)
-            {
-                panel = a.CreateRibbonPanel(RibbonTab, RibbonPanel);
-            }
 
             // get the image for the button
             Image img = Properties.Resources.icons8_add_to_collection_32;
             ImageSource imageSource = this.GetImageSource(img);
 
             // create the button data
-            PushButtonData btnData = new PushButtonData("Add shared parameters", "Add shared parameters", this.addSharedParamsPath, "CreateParams.CreateSharedParameter")
+            PushButtonData btnData = new PushButtonData("Add shared parameters", "Add shared parameters", this.addSharedParamsPath, "CreateParams.Command")
                                      {
                                          ToolTip = "Batch add shared parameters from excel file", LongDescription = "Batch add shared parameters from excel file", Image = imageSource, LargeImage = imageSource
                                      };
 
             // add the button to the ribbon
-            PushButton button = panel.AddItem(btnData) as PushButton;
-            button.Enabled = true;
+            if (panel.AddItem(btnData) is PushButton button)
+            {
+                button.Enabled = true;
+            }
 
             // get the image for the button
             Image img2 = Properties.Resources.icons8_add_property_32;
@@ -92,8 +83,10 @@ namespace PMTech_Revit_Ribbon_Panel
                                       };
 
             // add the button to the ribbon
-            PushButton button2 = panel.AddItem(btn2Data) as PushButton;
-            button2.Enabled = true;
+            if (panel.AddItem(btn2Data) is PushButton button2)
+            {
+                button2.Enabled = true;
+            }
 
             return Result.Succeeded;
         }

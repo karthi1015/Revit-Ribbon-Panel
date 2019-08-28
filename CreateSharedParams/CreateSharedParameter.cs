@@ -26,9 +26,7 @@ namespace CreateParams
     /// <summary>
     /// The create shared parameter.
     /// </summary>
-    [Transaction(TransactionMode.Manual)]
-    [Regeneration(RegenerationOption.Manual)]
-    public class CreateSharedParameter : IExternalCommand
+    public class CreateSharedParameter
     {
         /// <summary>
         /// The create project shared parameters.
@@ -99,18 +97,6 @@ namespace CreateParams
             {
                 TaskDialog.Show("Add Shared Parameters", e.Message);
             }
-        }
-
-        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
-        {
-            UIApplication uiapp = commandData.Application;
-            UIDocument uidoc = uiapp.ActiveUIDocument;
-            Application app = uiapp.Application;
-            Document doc = uidoc.Document;
-
-            CreateProjectSharedParameter(doc, app);
-
-            return Result.Succeeded;
         }
     }
 }
