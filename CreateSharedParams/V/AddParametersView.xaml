@@ -9,7 +9,7 @@
         Height="135"
         MinWidth="700"
         MinHeight="135"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen" Title="Добавление параметров">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
