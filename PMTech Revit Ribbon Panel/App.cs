@@ -31,9 +31,7 @@ namespace PMTech_Revit_Ribbon_Panel
     /// </summary>
     public class App : IExternalApplication
     {
-        private readonly string addSharedParamsPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\CreateParams.dll";
-
-        private readonly string addFamilyParametersPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\AddFamilyParameters.dll";
+        private readonly string createParamsPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\CreateParams.dll";
 
         private const string RibbonTab = "PMTech";
 
@@ -57,35 +55,19 @@ namespace PMTech_Revit_Ribbon_Panel
             // If couldn't find the panel, create it
 
             // get the image for the button
-            Image img = Properties.Resources.icons8_add_to_collection_32;
+            Image img = Properties.Resources.icons8_add_property_32;
             ImageSource imageSource = this.GetImageSource(img);
 
             // create the button data
-            PushButtonData btnData = new PushButtonData("Add shared parameters", "Add shared parameters", this.addSharedParamsPath, "CreateParams.Command")
+            PushButtonData btnData = new PushButtonData("Add shared parameters", "Add shared parameters", this.createParamsPath, "CreateParams.Command")
                                      {
-                                         ToolTip = "Batch add shared parameters from excel file", LongDescription = "Batch add shared parameters from excel file", Image = imageSource, LargeImage = imageSource
+                                         ToolTip = "Пакетное добавление параметров в проект и в семейства по excel файлу", LongDescription = "Разработчик: Кожевников Андрей Олегович", Image = imageSource, LargeImage = imageSource
                                      };
 
             // add the button to the ribbon
             if (panel.AddItem(btnData) is PushButton button)
             {
                 button.Enabled = true;
-            }
-
-            // get the image for the button
-            Image img2 = Properties.Resources.icons8_add_property_32;
-            ImageSource image2Source = this.GetImageSource(img2);
-
-            // create the button data
-            PushButtonData btn2Data = new PushButtonData("Add family parameters", "Add family parameters", this.addFamilyParametersPath, "AddFamilyParameters.Command")
-                                      {
-                                          ToolTip = "Batch add family parameters from excel file", LongDescription = "Batch add family parameters from excel file", Image = image2Source, LargeImage = image2Source
-                                      };
-
-            // add the button to the ribbon
-            if (panel.AddItem(btn2Data) is PushButton button2)
-            {
-                button2.Enabled = true;
             }
 
             return Result.Succeeded;

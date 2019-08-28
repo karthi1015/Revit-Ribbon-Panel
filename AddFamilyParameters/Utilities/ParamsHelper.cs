@@ -7,7 +7,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace CreateParams.Utilities
+namespace AddFamilyParameters.Utilities
 {
     using System;
     using System.Collections.Generic;
@@ -16,10 +16,10 @@ namespace CreateParams.Utilities
     using System.Text;
     using System.Windows.Forms;
 
+    using AddFamilyParameters.M;
+
     using Autodesk.Revit.DB;
     using Autodesk.Revit.UI;
-
-    using CreateParams.M;
 
     using Application = Autodesk.Revit.ApplicationServices.Application;
     using Binding = Autodesk.Revit.DB.Binding;

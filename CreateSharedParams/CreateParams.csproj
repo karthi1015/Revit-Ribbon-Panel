@@ -82,10 +82,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Command.cs" />
-    <Compile Include="M\RevitParameter.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utilities\ParamsHelper.cs" />
     <Compile Include="VM\AddParametersViewModel.cs" />
     <Compile Include="V\AddParametersView.xaml.cs">
       <DependentUpon>AddParametersView.xaml</DependentUpon>

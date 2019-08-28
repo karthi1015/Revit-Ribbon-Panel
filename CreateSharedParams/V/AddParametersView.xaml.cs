@@ -9,21 +9,7 @@
 
 namespace CreateParams.V
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using System.Windows;
-    using System.Windows.Controls;
-    using System.Windows.Data;
-    using System.Windows.Documents;
-    using System.Windows.Input;
-    using System.Windows.Interop;
-    using System.Windows.Media;
-    using System.Windows.Media.Imaging;
-    using System.Windows.Navigation;
-    using System.Windows.Shapes;
 
     using AddFamilyParameters.V;
 
@@ -38,7 +24,8 @@ namespace CreateParams.V
     {
         private readonly AddParametersViewModel viewModel;
 
-        private readonly FamilyListView familyListView;
+        private readonly Document revitDocument;
+        private FamilyListView familyListView;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AddParametersView"/> class.
@@ -49,8 +36,9 @@ namespace CreateParams.V
         public AddParametersView(Document doc)
         {
             this.InitializeComponent();
+            this.revitDocument = doc;
             this.viewModel = new AddParametersViewModel(doc);
-            this.familyListView = new FamilyListView(doc);
+            
             this.FilePathTextBox.Text = this.viewModel.SharedParametersFilePath;
         }
 
@@ -73,7 +61,10 @@ namespace CreateParams.V
 
         private void ButtonAddFamilyParameters_OnClick(object sender, RoutedEventArgs e)
         {
-            this.familyListView.Owner = this;
+            this.familyListView = new FamilyListView(this.revitDocument)
+                                      {
+                                          Owner = this
+                                      };
 
             this.familyListView.ShowDialog();
         }

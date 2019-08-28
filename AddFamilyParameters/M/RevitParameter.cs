@@ -7,7 +7,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace CreateParams.M
+namespace AddFamilyParameters.M
 {
     using Autodesk.Revit.DB;
 

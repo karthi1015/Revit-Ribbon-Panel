@@ -15,11 +15,11 @@ namespace CreateParams.VM
     using System.Text;
     using System.Windows.Forms;
 
+    using AddFamilyParameters.M;
+    using AddFamilyParameters.Utilities;
+
     using Autodesk.Revit.DB;
     using Autodesk.Revit.UI;
-
-    using CreateParams.M;
-    using CreateParams.Utilities;
 
     using Application = Autodesk.Revit.ApplicationServices.Application;
     using Binding = Autodesk.Revit.DB.Binding;

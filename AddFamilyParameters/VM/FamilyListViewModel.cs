@@ -17,12 +17,10 @@ namespace AddFamilyParameters.VM
 
     using AddFamilyParameters.HelperClass;
     using AddFamilyParameters.M;
+    using AddFamilyParameters.Utilities;
 
     using Autodesk.Revit.DB;
     using Autodesk.Revit.UI;
-
-    using CreateParams.M;
-    using CreateParams.Utilities;
 
     /// <summary>
     /// The family list view model.
@@ -53,6 +51,8 @@ namespace AddFamilyParameters.VM
         /// </summary>
         public ObservableCollection<FamilyCategory> FamCategoriesList => famCategories;
 
+        private static DefinitionFile SharedParameterFile => revitDocument.Application.OpenSharedParameterFile();
+
         /// <summary>
         /// The add family parameters.
         /// </summary>
@@ -73,7 +73,12 @@ namespace AddFamilyParameters.VM
 
             if (fam.Count == 0)
             {
-                throw new ArgumentException("Please, check families you want to add parameters in");
+                throw new ArgumentException("Пожалуйста, выберите семейства, в которые вы хотите добавить параметры");
+            }
+
+            if (isAddShared && (SharedParameterFile == null || SharedParameterFile.Filename == string.Empty))
+            {
+                throw new ArgumentException("Выбранный файл общих параметров не существует. Пожалуйста, выберите другой файл или создайте новый");
             }
 
             List<AddFamilyParametersResult> results = new List<AddFamilyParametersResult>();
@@ -136,13 +141,6 @@ namespace AddFamilyParameters.VM
 
         private static void AddFamilyParameters(Document familyDoc, List<RevitParameter> dataList, AddFamilyParametersResult results, bool isAddShared)
         {
-            DefinitionFile sharedParameterFile = null;
-
-            if (isAddShared)
-            {
-                sharedParameterFile = ParamsHelper.GetOrCreateSharedParamsFile(revitDocument, familyDoc.Application);
-            }
-
             foreach (var item in dataList)
             {
                 bool nameIsInUse = familyDoc.FamilyManager.Parameters.Cast<FamilyParameter>().Any(parameter => parameter.Definition.Name == item.ParamName);
@@ -151,11 +149,16 @@ namespace AddFamilyParameters.VM
                 {
                     if (isAddShared)
                     {
-                        DefinitionGroup dg = ParamsHelper.GetOrCreateSharedParamsGroup(sharedParameterFile, item.GroupName);
-                        ExternalDefinition externalDefinition =
-                            ParamsHelper.GetOrCreateSharedParamDefinition(dg, item.ParamType, item.ParamName, item.IsVisible);
+                        if (SharedParameterFile == null || SharedParameterFile.Filename == string.Empty)
+                        {
+                            throw new ArgumentException("Выбранный файл общих параметров не существует. Пожалуйста, выберите другой файл или создайте новый");
+                        }
 
-                        results.AddFamilyParameterNote(familyDoc.FamilyManager.AddParameter(externalDefinition, item.ParamGroup, item.IsInstance));
+                        DefinitionGroup dg = ParamsHelper.GetOrCreateSharedParamsGroup(SharedParameterFile, item.GroupName);
+                            ExternalDefinition externalDefinition =
+                                ParamsHelper.GetOrCreateSharedParamDefinition(dg, item.ParamType, item.ParamName, item.IsVisible);
+
+                            results.AddFamilyParameterNote(familyDoc.FamilyManager.AddParameter(externalDefinition, item.ParamGroup, item.IsInstance));
                     }
                     else
                     {
