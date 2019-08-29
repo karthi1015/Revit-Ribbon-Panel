@@ -13,8 +13,8 @@ namespace AddFamilyParameters.V
     using System.Collections.ObjectModel;
     using System.Windows;
 
-    using AddFamilyParameters.HelperClass;
     using AddFamilyParameters.M;
+    using AddFamilyParameters.Utilities;
     using AddFamilyParameters.VM;
 
     using Autodesk.Revit.DB;

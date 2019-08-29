@@ -15,7 +15,6 @@ namespace AddFamilyParameters.VM
     using System.Diagnostics;
     using System.Linq;
 
-    using AddFamilyParameters.HelperClass;
     using AddFamilyParameters.M;
     using AddFamilyParameters.Utilities;
 

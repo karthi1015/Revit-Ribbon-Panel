@@ -20,7 +20,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-using System;
+
 // ReSharper disable InheritdocConsiderUsage
 
 #pragma warning disable 1591
@@ -31,9 +31,11 @@ using System;
 // ReSharper disable MemberCanBeProtected.Global
 // ReSharper disable InconsistentNaming
 
-namespace CreateSharedParams.Annotations
+namespace CreateParams.Properties
 {
-  /// <summary>
+    using System;
+
+    /// <summary>
   /// Indicates that the value of the marked element could be <c>null</c> sometimes,
   /// so checking for <c>null</c> is required before its usage.
   /// </summary>
@@ -127,7 +129,7 @@ namespace CreateSharedParams.Annotations
     /// </param>
     public StringFormatMethodAttribute([NotNull] string formatParameterName)
     {
-      FormatParameterName = formatParameterName;
+      this.FormatParameterName = formatParameterName;
     }
 
     [NotNull] public string FormatParameterName { get; }
@@ -167,7 +169,7 @@ namespace CreateSharedParams.Annotations
   {
     public ValueProviderAttribute([NotNull] string name)
     {
-      Name = name;
+      this.Name = name;
     }
 
     [NotNull] public string Name { get; }
@@ -231,7 +233,7 @@ namespace CreateSharedParams.Annotations
     public NotifyPropertyChangedInvocatorAttribute() { }
     public NotifyPropertyChangedInvocatorAttribute([NotNull] string parameterName)
     {
-      ParameterName = parameterName;
+      this.ParameterName = parameterName;
     }
 
     [CanBeNull] public string ParameterName { get; }
@@ -289,8 +291,8 @@ namespace CreateSharedParams.Annotations
 
     public ContractAnnotationAttribute([NotNull] string contract, bool forceFullStates)
     {
-      Contract = contract;
-      ForceFullStates = forceFullStates;
+      this.Contract = contract;
+      this.ForceFullStates = forceFullStates;
     }
 
     [NotNull] public string Contract { get; }
@@ -314,7 +316,7 @@ namespace CreateSharedParams.Annotations
 
     public LocalizationRequiredAttribute(bool required)
     {
-      Required = required;
+      this.Required = required;
     }
 
     public bool Required { get; }
@@ -360,7 +362,7 @@ namespace CreateSharedParams.Annotations
   {
     public BaseTypeRequiredAttribute([NotNull] Type baseType)
     {
-      BaseType = baseType;
+      this.BaseType = baseType;
     }
 
     [NotNull] public Type BaseType { get; }
@@ -384,8 +386,8 @@ namespace CreateSharedParams.Annotations
 
     public UsedImplicitlyAttribute(ImplicitUseKindFlags useKindFlags, ImplicitUseTargetFlags targetFlags)
     {
-      UseKindFlags = useKindFlags;
-      TargetFlags = targetFlags;
+      this.UseKindFlags = useKindFlags;
+      this.TargetFlags = targetFlags;
     }
 
     public ImplicitUseKindFlags UseKindFlags { get; }
@@ -413,8 +415,8 @@ namespace CreateSharedParams.Annotations
 
     public MeansImplicitUseAttribute(ImplicitUseKindFlags useKindFlags, ImplicitUseTargetFlags targetFlags)
     {
-      UseKindFlags = useKindFlags;
-      TargetFlags = targetFlags;
+      this.UseKindFlags = useKindFlags;
+      this.TargetFlags = targetFlags;
     }
 
     [UsedImplicitly] public ImplicitUseKindFlags UseKindFlags { get; }
@@ -469,7 +471,7 @@ namespace CreateSharedParams.Annotations
 
     public PublicAPIAttribute([NotNull] string comment)
     {
-      Comment = comment;
+      this.Comment = comment;
     }
 
     [CanBeNull] public string Comment { get; }
@@ -515,7 +517,7 @@ namespace CreateSharedParams.Annotations
 
     public MustUseReturnValueAttribute([NotNull] string justification)
     {
-      Justification = justification;
+      this.Justification = justification;
     }
 
     [CanBeNull] public string Justification { get; }
@@ -552,7 +554,7 @@ namespace CreateSharedParams.Annotations
 
     public PathReferenceAttribute([NotNull, PathReference] string basePath)
     {
-      BasePath = basePath;
+      this.BasePath = basePath;
     }
 
     [CanBeNull] public string BasePath { get; }
@@ -643,7 +645,7 @@ namespace CreateSharedParams.Annotations
   {
     public AspMvcAreaMasterLocationFormatAttribute([NotNull] string format)
     {
-      Format = format;
+      this.Format = format;
     }
 
     [NotNull] public string Format { get; }
@@ -654,7 +656,7 @@ namespace CreateSharedParams.Annotations
   {
     public AspMvcAreaPartialViewLocationFormatAttribute([NotNull] string format)
     {
-      Format = format;
+      this.Format = format;
     }
 
     [NotNull] public string Format { get; }
@@ -665,7 +667,7 @@ namespace CreateSharedParams.Annotations
   {
     public AspMvcAreaViewLocationFormatAttribute([NotNull] string format)
     {
-      Format = format;
+      this.Format = format;
     }
 
     [NotNull] public string Format { get; }
@@ -676,7 +678,7 @@ namespace CreateSharedParams.Annotations
   {
     public AspMvcMasterLocationFormatAttribute([NotNull] string format)
     {
-      Format = format;
+      this.Format = format;
     }
 
     [NotNull] public string Format { get; }
@@ -687,7 +689,7 @@ namespace CreateSharedParams.Annotations
   {
     public AspMvcPartialViewLocationFormatAttribute([NotNull] string format)
     {
-      Format = format;
+      this.Format = format;
     }
 
     [NotNull] public string Format { get; }
@@ -698,7 +700,7 @@ namespace CreateSharedParams.Annotations
   {
     public AspMvcViewLocationFormatAttribute([NotNull] string format)
     {
-      Format = format;
+      this.Format = format;
     }
 
     [NotNull] public string Format { get; }
@@ -717,7 +719,7 @@ namespace CreateSharedParams.Annotations
 
     public AspMvcActionAttribute([NotNull] string anonymousProperty)
     {
-      AnonymousProperty = anonymousProperty;
+      this.AnonymousProperty = anonymousProperty;
     }
 
     [CanBeNull] public string AnonymousProperty { get; }
@@ -735,7 +737,7 @@ namespace CreateSharedParams.Annotations
 
     public AspMvcAreaAttribute([NotNull] string anonymousProperty)
     {
-      AnonymousProperty = anonymousProperty;
+      this.AnonymousProperty = anonymousProperty;
     }
 
     [CanBeNull] public string AnonymousProperty { get; }
@@ -754,7 +756,7 @@ namespace CreateSharedParams.Annotations
 
     public AspMvcControllerAttribute([NotNull] string anonymousProperty)
     {
-      AnonymousProperty = anonymousProperty;
+      this.AnonymousProperty = anonymousProperty;
     }
 
     [CanBeNull] public string AnonymousProperty { get; }
@@ -857,7 +859,7 @@ namespace CreateSharedParams.Annotations
 
     public HtmlElementAttributesAttribute([NotNull] string name)
     {
-      Name = name;
+      this.Name = name;
     }
 
     [CanBeNull] public string Name { get; }
@@ -868,7 +870,7 @@ namespace CreateSharedParams.Annotations
   {
     public HtmlAttributeValueAttribute([NotNull] string name)
     {
-      Name = name;
+      this.Name = name;
     }
 
     [NotNull] public string Name { get; }
@@ -914,7 +916,7 @@ namespace CreateSharedParams.Annotations
   {
     public CollectionAccessAttribute(CollectionAccessType collectionAccessType)
     {
-      CollectionAccessType = collectionAccessType;
+      this.CollectionAccessType = collectionAccessType;
     }
 
     public CollectionAccessType CollectionAccessType { get; }
@@ -955,7 +957,7 @@ namespace CreateSharedParams.Annotations
   {
     public AssertionConditionAttribute(AssertionConditionType conditionType)
     {
-      ConditionType = conditionType;
+      this.ConditionType = conditionType;
     }
 
     public AssertionConditionType ConditionType { get; }
@@ -1052,8 +1054,8 @@ namespace CreateSharedParams.Annotations
   {
     public AspChildControlTypeAttribute([NotNull] string tagName, [NotNull] Type controlType)
     {
-      TagName = tagName;
-      ControlType = controlType;
+      this.TagName = tagName;
+      this.ControlType = controlType;
     }
 
     [NotNull] public string TagName { get; }
@@ -1075,7 +1077,7 @@ namespace CreateSharedParams.Annotations
   {
     public AspRequiredAttributeAttribute([NotNull] string attribute)
     {
-      Attribute = attribute;
+      this.Attribute = attribute;
     }
 
     [NotNull] public string Attribute { get; }
@@ -1088,7 +1090,7 @@ namespace CreateSharedParams.Annotations
 
     public AspTypePropertyAttribute(bool createConstructorReferences)
     {
-      CreateConstructorReferences = createConstructorReferences;
+      this.CreateConstructorReferences = createConstructorReferences;
     }
   }
 
@@ -1097,7 +1099,7 @@ namespace CreateSharedParams.Annotations
   {
     public RazorImportNamespaceAttribute([NotNull] string name)
     {
-      Name = name;
+      this.Name = name;
     }
 
     [NotNull] public string Name { get; }
@@ -1108,8 +1110,8 @@ namespace CreateSharedParams.Annotations
   {
     public RazorInjectionAttribute([NotNull] string type, [NotNull] string fieldName)
     {
-      Type = type;
-      FieldName = fieldName;
+      this.Type = type;
+      this.FieldName = fieldName;
     }
 
     [NotNull] public string Type { get; }
@@ -1122,7 +1124,7 @@ namespace CreateSharedParams.Annotations
   {
     public RazorDirectiveAttribute([NotNull] string directive)
     {
-      Directive = directive;
+      this.Directive = directive;
     }
 
     [NotNull] public string Directive { get; }
@@ -1133,12 +1135,12 @@ namespace CreateSharedParams.Annotations
   {
       public RazorPageBaseTypeAttribute([NotNull] string baseType)
       {
-        BaseType = baseType;
+        this.BaseType = baseType;
       }
       public RazorPageBaseTypeAttribute([NotNull] string baseType, string pageName)
       {
-          BaseType = baseType;
-          PageName = pageName;
+          this.BaseType = baseType;
+          this.PageName = pageName;
       }
 
       [NotNull] public string BaseType { get; }

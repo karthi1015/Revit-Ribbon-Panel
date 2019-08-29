@@ -54,21 +54,21 @@ namespace CreateParams.V
         private BitmapImage GetImageSource(Image img)
         {
             BitmapImage bmp = new BitmapImage();
-
+        
             using (MemoryStream ms = new MemoryStream())
             {
                 img.Save(ms, ImageFormat.Png);
                 ms.Position = 0;
-
+        
                 bmp.BeginInit();
-
+        
                 bmp.CacheOption = BitmapCacheOption.OnLoad;
                 bmp.UriSource = null;
                 bmp.StreamSource = ms;
-
+        
                 bmp.EndInit();
             }
-
+        
             return bmp;
         }
 

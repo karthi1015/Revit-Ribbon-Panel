@@ -7,7 +7,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace AddFamilyParameters.HelperClass
+namespace AddFamilyParameters.Utilities
 {
     using System.Linq;
     using System.Windows;

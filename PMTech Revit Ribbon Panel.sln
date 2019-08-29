@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29209.62
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PMTech Revit Ribbon Panel", "PMTech Revit Ribbon Panel\PMTech Revit Ribbon Panel.csproj", "{8B41BF79-71A8-40E5-BCB8-E3F9FF5D0235}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreateParams", "CreateSharedParams\CreateParams.csproj", "{4F3E7B19-C615-43F4-AB05-1D9695A6C30F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreateParams", "CreateParams\CreateParams.csproj", "{4F3E7B19-C615-43F4-AB05-1D9695A6C30F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AddFamilyParameters", "AddFamilyParameters\AddFamilyParameters.csproj", "{4415C418-3F5C-49FA-A95C-C4D70398B6CF}"
 EndProject

@@ -7,7 +7,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace AddFamilyParameters.HelperClass
+namespace AddFamilyParameters.Utilities
 {
     using Autodesk.Revit.DB;
 
