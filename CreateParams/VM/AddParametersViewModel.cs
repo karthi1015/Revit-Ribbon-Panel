@@ -1,13 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="AddParametersViewModel.cs" company="PMTech">
-//   PMTech
-// </copyright>
-// <summary>
-//   The add parameters view model.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace CreateParams.VM
+﻿namespace CreateParams.VM
 {
     using System;
     using System.Collections.Generic;
