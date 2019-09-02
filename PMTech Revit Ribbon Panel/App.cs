@@ -31,7 +31,7 @@ namespace PMTech_Revit_Ribbon_Panel
     /// </summary>
     public class App : IExternalApplication
     {
-        private readonly string createParamsPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\CreateParams.dll";
+        private readonly string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
         private const string RibbonTab = "PMTech";
 
@@ -52,24 +52,54 @@ namespace PMTech_Revit_Ribbon_Panel
             List<RibbonPanel> panels = a.GetRibbonPanels(RibbonTab);
             RibbonPanel panel = panels.FirstOrDefault(ribbonPanel => ribbonPanel.Name == RibbonPanel) ?? a.CreateRibbonPanel(RibbonTab, RibbonPanel);
 
-            // If couldn't find the panel, create it
-
+            // ----------------------------
+            // ---Button Add shared parameters---
+            // ----------------------------
             // get the image for the button
             Image img = Properties.Resources.icons8_add_property_32;
             ImageSource imageSource = this.GetImageSource(img);
 
             // create the button data
-            PushButtonData btnData = new PushButtonData("Add shared parameters", "Добавить параметры", this.createParamsPath, "CreateParams.Command")
+            var addSharedBtnData = new PushButtonData("Add shared parameters", "Добавить параметры", this.path + "\\CreateParams.dll", "CreateParams.Command")
                                      {
-                                         ToolTip = "Пакетное добавление параметров в проект или в семейства по excel файлу", LongDescription = "Разработчик: Кожевников Андрей Олегович", Image = imageSource, LargeImage = imageSource
+                                         ToolTip = "Пакетное добавление параметров в проект или в семейства по excel файлу",
+                                         LongDescription = "Разработчик: Кожевников Андрей Олегович",
+                                         Image = imageSource,
+                                         LargeImage = imageSource
                                      };
 
             // add the button to the ribbon
-            if (panel.AddItem(btnData) is PushButton button)
+            if (panel.AddItem(addSharedBtnData) is PushButton addSharedButton)
             {
-                button.Enabled = true;
+                addSharedButton.Enabled = true;
             }
 
+            // ----------------------------
+            // ---Button Add shared parameters---
+            // ----------------------------
+
+            // ----------------------------
+            // ---Button get parameters---
+            // ----------------------------
+            img = Properties.Resources.icons8_add_to_collection_32;
+            imageSource = this.GetImageSource(img);
+
+            var exportParametersBtnData = new PushButtonData("Export parameters", "Экспортировать параметры", this.path + "\\FindParameters.dll", "FindParameters.Command")
+                                     {
+                                         ToolTip = "Экспорт параметров элементов модели в excel",
+                                         LongDescription = "Разработчик: Кожевников Андрей Олегович",
+                                         Image = imageSource,
+                                         LargeImage = imageSource
+                                     };
+
+            if (panel.AddItem(exportParametersBtnData) is PushButton exportParametersButton)
+            {
+                exportParametersButton.Enabled = true;
+            }
+
+            // ----------------------------
+            // ---Button get parameters---
+            // ----------------------------
             return Result.Succeeded;
         }
 

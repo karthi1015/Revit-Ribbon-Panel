@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreateParams", "CreateParam
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AddFamilyParameters", "AddFamilyParameters\AddFamilyParameters.csproj", "{4415C418-3F5C-49FA-A95C-C4D70398B6CF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FindParameters", "FindParameters\FindParameters.csproj", "{7E5C1081-736C-43E0-B70E-3B84D318D1B4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,18 @@ Global
 		{4415C418-3F5C-49FA-A95C-C4D70398B6CF}.x64|Any CPU.Build.0 = Debug|x64
 		{4415C418-3F5C-49FA-A95C-C4D70398B6CF}.x64|x64.ActiveCfg = Release|x64
 		{4415C418-3F5C-49FA-A95C-C4D70398B6CF}.x64|x64.Build.0 = Release|x64
+		{7E5C1081-736C-43E0-B70E-3B84D318D1B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E5C1081-736C-43E0-B70E-3B84D318D1B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E5C1081-736C-43E0-B70E-3B84D318D1B4}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7E5C1081-736C-43E0-B70E-3B84D318D1B4}.Debug|x64.Build.0 = Debug|Any CPU
+		{7E5C1081-736C-43E0-B70E-3B84D318D1B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E5C1081-736C-43E0-B70E-3B84D318D1B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E5C1081-736C-43E0-B70E-3B84D318D1B4}.Release|x64.ActiveCfg = Release|Any CPU
+		{7E5C1081-736C-43E0-B70E-3B84D318D1B4}.Release|x64.Build.0 = Release|Any CPU
+		{7E5C1081-736C-43E0-B70E-3B84D318D1B4}.x64|Any CPU.ActiveCfg = Release|Any CPU
+		{7E5C1081-736C-43E0-B70E-3B84D318D1B4}.x64|Any CPU.Build.0 = Release|Any CPU
+		{7E5C1081-736C-43E0-B70E-3B84D318D1B4}.x64|x64.ActiveCfg = Release|Any CPU
+		{7E5C1081-736C-43E0-B70E-3B84D318D1B4}.x64|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
