@@ -1,17 +1,3 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright company="PMTech" file="App.cs">
-//   PMTech
-// </copyright>
-// <summary>
-//   
-// </summary>
-// 
-// --------------------------------------------------------------------------------------------------------------------
-
-// ReSharper disable StyleCop.SA1600
-
-// ReSharper disable StyleCop.SA1203
-
 namespace PMTech_Revit_Ribbon_Panel
 {
     using System;
@@ -26,16 +12,13 @@ namespace PMTech_Revit_Ribbon_Panel
 
     using Autodesk.Revit.UI;
 
-    /// <summary>
-    /// The app.
-    /// </summary>
     public class App : IExternalApplication
     {
-        private readonly string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-
         private const string RibbonTab = "PMTech";
 
         private const string RibbonPanel = "PMTech Tools";
+
+        private readonly string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
         public Result OnStartup(UIControlledApplication a)
         {
@@ -57,7 +40,7 @@ namespace PMTech_Revit_Ribbon_Panel
             // ----------------------------
             // get the image for the button
             Image img = Properties.Resources.icons8_add_property_32;
-            ImageSource imageSource = this.GetImageSource(img);
+            ImageSource imageSource = GetImageSource(img);
 
             // create the button data
             var addSharedBtnData = new PushButtonData("Add shared parameters", "Добавить параметры", this.path + "\\CreateParams.dll", "CreateParams.Command")
@@ -81,12 +64,12 @@ namespace PMTech_Revit_Ribbon_Panel
             // ----------------------------
             // ---Button get parameters---
             // ----------------------------
-            img = Properties.Resources.icons8_add_to_collection_32;
-            imageSource = this.GetImageSource(img);
+            img = Properties.Resources.icons8_export_csv_32;
+            imageSource = GetImageSource(img);
 
-            var exportParametersBtnData = new PushButtonData("Export parameters", "Экспортировать параметры", this.path + "\\FindParameters.dll", "FindParameters.Command")
+            var exportParametersBtnData = new PushButtonData("Export model", "Выгрузить модель", this.path + "\\FindParameters.dll", "FindParameters.Command")
                                      {
-                                         ToolTip = "Экспорт параметров элементов модели в excel",
+                                         ToolTip = "Выгрузить модель в excel",
                                          LongDescription = "Разработчик: Кожевников Андрей Олегович",
                                          Image = imageSource,
                                          LargeImage = imageSource
@@ -108,11 +91,11 @@ namespace PMTech_Revit_Ribbon_Panel
             return Result.Succeeded;
         }
 
-        private BitmapImage GetImageSource(Image img)
+        private static BitmapImage GetImageSource(Image img)
         {
-            BitmapImage bmp = new BitmapImage();
+            var bmp = new BitmapImage();
 
-            using (MemoryStream ms = new MemoryStream())
+            using (var ms = new MemoryStream())
             {
                 img.Save(ms, ImageFormat.Png);
                 ms.Position = 0;

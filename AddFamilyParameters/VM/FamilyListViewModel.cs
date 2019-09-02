@@ -39,7 +39,6 @@ namespace AddFamilyParameters.VM
         public FamilyListViewModel(Document doc)
         {
             revitDocument = doc;
-
             Dictionary<string, List<Family>> famDictionary = FindFamilyTypes();
 
             InitializeFamilyCategoryCollection(famDictionary);
@@ -58,9 +57,7 @@ namespace AddFamilyParameters.VM
         /// <param name="families">
         /// The families.
         /// </param>
-        /// <param name="isAddShared">
-        /// The is add shared.
-        /// </param>
+        /// <param name="isAddShared"></param>
         /// <exception cref="ArgumentException">Throws when no families are checked
         /// </exception>
         public static void AddFamilyParameters(ObservableCollection<FamilyCategory> families, bool isAddShared)
@@ -75,41 +72,41 @@ namespace AddFamilyParameters.VM
                 throw new ArgumentException("Пожалуйста, выберите семейства, в которые вы хотите добавить параметры");
             }
 
-            if (isAddShared && (SharedParameterFile == null || SharedParameterFile.Filename == string.Empty))
+            if (isAddShared && ((SharedParameterFile == null) || (SharedParameterFile.Filename == string.Empty)))
             {
                 throw new ArgumentException("Выбранный файл общих параметров не существует. Пожалуйста, выберите другой файл или создайте новый");
             }
 
-            List<AddFamilyParametersResult> results = new List<AddFamilyParametersResult>();
+            var results = new List<AddFamilyParametersResult>();
             List<RevitParameter> dataList = ParamsHelper.LoadExcel();
 
             if (dataList != null)
             {
                 foreach (Family family in fam)
                 {
-                    var r1 = new AddFamilyParametersResult(family);
+                    var familyParametersResult = new AddFamilyParametersResult(family);
 
                     Document familyDoc;
 
                     if (family.IsEditable)
                     {
-                        r1.FamilyDocument = familyDoc = revitDocument.EditFamily(family);
+                        familyParametersResult.FamilyDocument = familyDoc = revitDocument.EditFamily(family);
                     }
                     else
                     {
-                        r1.Skipped = true;
-                        results.Add(r1);
+                        familyParametersResult.Skipped = true;
+                        results.Add(familyParametersResult);
                         Debug.Print("Family '{0}' is not editable", family.Name);
                         continue;
                     }
 
-                    using (Transaction t = new Transaction(familyDoc))
+                    using (var t = new Transaction(familyDoc))
                     {
                         t.Start($"editing {family.Name}");
 
                         try
                         {
-                            AddFamilyParameters(familyDoc, dataList, r1, isAddShared);
+                            AddFamilyParameters(familyDoc, dataList, familyParametersResult, isAddShared);
                         }
                         catch (Exception e)
                         {
@@ -120,12 +117,12 @@ namespace AddFamilyParameters.VM
                         t.Commit();
                     }
 
-                    results.Add(r1);
+                    results.Add(familyParametersResult);
                 }
 
                 if (results.Count != 0)
                 {
-                    FamilyLoadingOptions opt = new FamilyLoadingOptions();
+                    var opt = new FamilyLoadingOptions();
 
                     foreach (var r in results)
                     {
@@ -138,31 +135,33 @@ namespace AddFamilyParameters.VM
             }
         }
 
-        private static void AddFamilyParameters(Document familyDoc, List<RevitParameter> dataList, AddFamilyParametersResult results, bool isAddShared)
+        public static void AddFamilyParameters(Document familyDoc, List<RevitParameter> dataList, AddFamilyParametersResult results, bool isAddShared)
         {
             foreach (var item in dataList)
             {
                 bool nameIsInUse = familyDoc.FamilyManager.Parameters.Cast<FamilyParameter>().Any(parameter => parameter.Definition.Name == item.ParamName);
 
-                if (!nameIsInUse)
+                if (nameIsInUse)
                 {
-                    if (isAddShared)
-                    {
-                        if (SharedParameterFile == null || SharedParameterFile.Filename == string.Empty)
-                        {
-                            throw new ArgumentException("Выбранный файл общих параметров не существует. Пожалуйста, выберите другой файл или создайте новый");
-                        }
+                    continue;
+                }
 
-                        DefinitionGroup dg = ParamsHelper.GetOrCreateSharedParamsGroup(SharedParameterFile, item.GroupName);
-                            ExternalDefinition externalDefinition =
-                                ParamsHelper.GetOrCreateSharedParamDefinition(dg, item.ParamType, item.ParamName, item.IsVisible);
-
-                            results.AddFamilyParameterNote(familyDoc.FamilyManager.AddParameter(externalDefinition, item.ParamGroup, item.IsInstance));
-                    }
-                    else
+                if (isAddShared)
+                {
+                    if ((SharedParameterFile == null) || (SharedParameterFile.Filename == string.Empty))
                     {
-                        results.AddFamilyParameterNote(familyDoc.FamilyManager.AddParameter(item.ParamName, item.ParamGroup, item.ParamType, item.IsInstance));
+                        throw new ArgumentException("Выбранный файл общих параметров не существует. Пожалуйста, выберите другой файл или создайте новый");
                     }
+
+                    DefinitionGroup dg = ParamsHelper.GetOrCreateSharedParamsGroup(SharedParameterFile, item.GroupName);
+                    ExternalDefinition externalDefinition =
+                        ParamsHelper.GetOrCreateSharedParamDefinition(dg, item.ParamType, item.ParamName, item.IsVisible);
+
+                    results.AddFamilyParameterNote(familyDoc.FamilyManager.AddParameter(externalDefinition, item.ParamGroup, item.IsInstance));
+                }
+                else
+                {
+                    results.AddFamilyParameterNote(familyDoc.FamilyManager.AddParameter(item.ParamName, item.ParamGroup, item.ParamType, item.IsInstance));
                 }
             }
         }

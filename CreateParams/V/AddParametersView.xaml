@@ -6,9 +6,9 @@
         xmlns:local="clr-namespace:CreateParams.V"
         mc:Ignorable="d"
         Width="700"
-        Height="140"
+        Height="160"
         MinWidth="700"
-        MinHeight="140"
+        MinHeight="160"
         WindowStartupLocation="CenterScreen" Title="Добавление параметров">
     <Grid>
         <Grid.RowDefinitions>
@@ -23,7 +23,7 @@
             <Grid Grid.Column="0" DataContext="Add">
                 <Label Content="Текущий файл общих параметров проекта" Margin="10,5,10,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
                 <TextBox x:Name="FilePathTextBox"
-                         Margin="10,31,5,0"
+                         Margin="10,31,5,5"
                          VerticalAlignment="Top"
                          HorizontalContentAlignment="Stretch"
                          IsEnabled="False"/>
@@ -32,8 +32,15 @@
             <Button Name="ButtonCreateSharedParameterFile" Content="Создать" Grid.Column="1" HorizontalAlignment="Right" Margin="0,30,10,0" VerticalAlignment="Top" Width="75" Click="ButtonCreateSharedParameterFile_OnClick"/>
         </Grid>
         <Grid Grid.Row="1">
+            <CheckBox
+                Name="CheckBoxAddShared"
+                Width="240"
+                Margin="10,10,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Content="Добавить параметры как общие" />
             <Button Content="Добавить параметры проекта" Name="ButtonAddSharedParameters" Click="ButtonAddSharedParameters_OnClick"
-                    HorizontalAlignment="Left" Margin="10,10,0,0" Padding="4,4,4,4" VerticalAlignment="Top" Height="32">
+                    HorizontalAlignment="Left" Margin="10,30,0,0" Padding="4,4,4,4" VerticalAlignment="Top" Height="32">
                 <Button.ToolTip>
                     <ToolTip>
                         Добавляет параметры элементам по специальному Excel. Если в выбранном ФОП нет данных параметров, то они будут добавлены.
@@ -43,7 +50,7 @@
                 </Button.ToolTip>
             </Button>
             <Button Content="Добавить параметры в семейства" x:Name="ButtonAddFamilyParameters" Click="ButtonAddFamilyParameters_OnClick"
-                HorizontalAlignment="Left" Margin="205,10,0,0" Padding="4,4,4,4" VerticalAlignment="Top" Height="32">
+                HorizontalAlignment="Left" Margin="225,30,0,0" Padding="4,4,4,4" VerticalAlignment="Top" Height="32">
                 <Button.ToolTip>
                     <ToolTip Content="Добавляет параметры в семейства по специальному Excel."/>
                 </Button.ToolTip>

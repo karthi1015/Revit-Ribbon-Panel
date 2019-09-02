@@ -25,17 +25,21 @@ namespace AddFamilyParameters.V
     /// </summary>
     public partial class FamilyListView : Window
     {
+        private static bool isAddSharedChecked;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="FamilyListView"/> class.
         /// </summary>
         /// <param name="doc">
         /// The doc.
         /// </param>
-        public FamilyListView(Document doc)
+        /// <param name="isAddShared"></param>
+        public FamilyListView(Document doc, bool isAddShared)
         {
             try
             {
                 this.InitializeComponent();
+                isAddSharedChecked = isAddShared;
 
                 FamilyListViewModel familyListViewModel = new FamilyListViewModel(doc);
                 this.Families = familyListViewModel.FamCategoriesList;
@@ -55,7 +59,7 @@ namespace AddFamilyParameters.V
         {
             try
             {
-                FamilyListViewModel.AddFamilyParameters(this.Families, this.CheckBoxAddShared.IsChecked ?? false);
+                FamilyListViewModel.AddFamilyParameters(this.Families, isAddSharedChecked);
             }
             catch (Exception exception)
             {

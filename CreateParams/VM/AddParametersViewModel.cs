@@ -93,76 +93,93 @@
         }
 
         /// <summary>
-        /// The create project shared parameters.
+        /// Create project parameters.
         /// </summary>
-        public static void CreateProjectSharedParameter()
+        public static void CreateProjectParameter(bool isAddShared)
         {
-            Application app = revitDocument.Application;
-            CategorySet categorySet = app.Create.NewCategorySet();
-            DefinitionFile sharedParameterFile = app.OpenSharedParameterFile();
+            DefinitionFile sharedParameterFile = revitDocument.Application.OpenSharedParameterFile();
 
-            if (sharedParameterFile == null || sharedParameterFile.Filename == string.Empty)
+            if (isAddShared && ((sharedParameterFile == null) || (sharedParameterFile.Filename == string.Empty)))
             {
-                TaskDialog.Show("Adding Project Parameters", "Выбранный файл общих параметров не существует. Пожалуйста, выберите другой файл или создайте новый");
+                throw new ArgumentException("Выбранный файл общих параметров не существует. Пожалуйста, выберите другой файл или создайте новый");
             }
-            else
+
+            try
             {
-                try
+                List<RevitParameter> dataList = ParamsHelper.LoadExcel();
+
+                if (dataList == null)
                 {
-                    List<RevitParameter> dataList = ParamsHelper.LoadExcel();
+                    return;
+                }
 
-                    bool showResult = false;
+                var showResult = false;
+                using (var t = new Transaction(revitDocument))
+                {
+                    t.Start($"Adding Project Parameters from Excel");
 
-                    if (dataList != null)
+                    if (revitDocument.IsFamilyDocument)
                     {
-                        using (Transaction t = new Transaction(revitDocument))
-                        {
-                            t.Start($"Adding Project Parameters from Excel");
+                        AddFamilyParameters.VM.FamilyListViewModel.AddFamilyParameters(revitDocument, dataList, new AddFamilyParametersResult(revitDocument.OwnerFamily), isAddShared);
+                    }
+                    else
+                    {
+                        showResult = AddDocumentParameters(dataList, sharedParameterFile);
+                    }
+                    
+                    t.Commit();
+                }
 
-                            foreach (var item in dataList)
-                            {
-                                DefinitionGroup dg = ParamsHelper.GetOrCreateSharedParamsGroup(sharedParameterFile, item.GroupName);
-                                ExternalDefinition externalDefinition = ParamsHelper.GetOrCreateSharedParamDefinition(dg, item.ParamType, item.ParamName, item.IsVisible);
+                if (showResult)
+                {
+                    TaskDialog.Show("Adding Project Parameters", "Параметры были успешно добавлены");
+                }
+            }
+            catch (Exception e)
+            {
+                TaskDialog.Show("Adding Project Parameters", e.Message);
+            }
+        }
 
-                                Category category = revitDocument.Settings.Categories.get_Item(item.Category);
-                                categorySet.Insert(category);
+        private static bool AddDocumentParameters(List<RevitParameter> dataList, DefinitionFile sharedParameterFile)
+        {
+            CategorySet categorySet = revitDocument.Application.Create.NewCategorySet();
+            bool showResult = false;
 
-                                // parameter binding
-                                Binding newIb;
-                                if (item.IsInstance)
-                                {
-                                    newIb = app.Create.NewInstanceBinding(categorySet);
-                                }
-                                else
-                                {
-                                    newIb = app.Create.NewTypeBinding(categorySet);
-                                }
+            foreach (var item in dataList)
+            {
+                DefinitionGroup dg = ParamsHelper.GetOrCreateSharedParamsGroup(sharedParameterFile, item.GroupName);
+                ExternalDefinition externalDefinition = ParamsHelper.GetOrCreateSharedParamDefinition(
+                    dg,
+                    item.ParamType,
+                    item.ParamName,
+                    item.IsVisible);
 
-                                revitDocument.ParameterBindings.Insert(externalDefinition, newIb, item.ParamGroup);
+                Category category = revitDocument.Settings.Categories.get_Item(item.Category);
+                categorySet.Insert(category);
 
-                                if (revitDocument.ParameterBindings.Contains(externalDefinition))
-                                {
-                                    if (revitDocument.ParameterBindings.ReInsert(externalDefinition, newIb))
-                                    {
-                                        showResult = true;
-                                    }
-                                }
-                            }
+                Binding newIb;
+                if (item.IsInstance)
+                {
+                    newIb = revitDocument.Application.Create.NewInstanceBinding(categorySet);
+                }
+                else
+                {
+                    newIb = revitDocument.Application.Create.NewTypeBinding(categorySet);
+                }
 
-                            t.Commit();
-                        }
+                revitDocument.ParameterBindings.Insert(externalDefinition, newIb, item.ParamGroup);
 
-                        if (showResult)
-                        {
-                            TaskDialog.Show("Adding Project Parameters", "Параметры были успешно добавлены");
-                        }
+                if (revitDocument.ParameterBindings.Contains(externalDefinition))
+                {
+                    if (revitDocument.ParameterBindings.ReInsert(externalDefinition, newIb))
+                    {
+                        showResult = true;
                     }
                 }
-                catch (Exception e)
-                {
-                    TaskDialog.Show("Adding Project Parameters", e.Message);
-                }
             }
+
+            return showResult;
         }
     }
 }

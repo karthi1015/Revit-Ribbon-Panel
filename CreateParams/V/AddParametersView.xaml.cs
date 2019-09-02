@@ -1,19 +1,9 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="AddParametersView.xaml.cs" company="PMTech">
-//   PMTech
-// </copyright>
-// <summary>
-//   Interaction logic for AddParametersView.xaml
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace CreateParams.V
+﻿namespace CreateParams.V
 {
     using System.Drawing;
     using System.Drawing.Imaging;
     using System.IO;
     using System.Windows;
-    using System.Windows.Media;
     using System.Windows.Media.Imaging;
 
     using AddFamilyParameters.V;
@@ -22,9 +12,6 @@ namespace CreateParams.V
 
     using CreateParams.VM;
 
-    /// <summary>
-    /// Interaction logic for AddParametersView
-    /// </summary>
     public partial class AddParametersView : Window
     {
         private readonly AddParametersViewModel viewModel;
@@ -55,7 +42,7 @@ namespace CreateParams.V
         {
             BitmapImage bmp = new BitmapImage();
         
-            using (MemoryStream ms = new MemoryStream())
+            using (var ms = new MemoryStream())
             {
                 img.Save(ms, ImageFormat.Png);
                 ms.Position = 0;
@@ -86,12 +73,12 @@ namespace CreateParams.V
 
         private void ButtonAddSharedParameters_OnClick(object sender, RoutedEventArgs e)
         {
-            AddParametersViewModel.CreateProjectSharedParameter();
+            AddParametersViewModel.CreateProjectParameter(this.CheckBoxAddShared.IsChecked ?? false);
         }
 
         private void ButtonAddFamilyParameters_OnClick(object sender, RoutedEventArgs e)
         {
-            this.familyListView = new FamilyListView(this.revitDocument)
+            this.familyListView = new FamilyListView(this.revitDocument, this.CheckBoxAddShared.IsChecked ?? false)
                                       {
                                           Owner = this
                                       };
