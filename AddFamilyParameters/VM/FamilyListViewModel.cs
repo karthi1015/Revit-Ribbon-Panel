@@ -148,12 +148,12 @@ namespace AddFamilyParameters.VM
 
                 if (isAddShared)
                 {
-                    if ((SharedParameterFile == null) || (SharedParameterFile.Filename == string.Empty))
+                    if ((familyDoc.Application.OpenSharedParameterFile() == null) || (familyDoc.Application.OpenSharedParameterFile().Filename == string.Empty))
                     {
                         throw new ArgumentException("Выбранный файл общих параметров не существует. Пожалуйста, выберите другой файл или создайте новый");
                     }
 
-                    DefinitionGroup dg = ParamsHelper.GetOrCreateSharedParamsGroup(SharedParameterFile, item.GroupName);
+                    DefinitionGroup dg = ParamsHelper.GetOrCreateSharedParamsGroup(familyDoc.Application.OpenSharedParameterFile(), item.GroupName);
                     ExternalDefinition externalDefinition =
                         ParamsHelper.GetOrCreateSharedParamDefinition(dg, item.ParamType, item.ParamName, item.IsVisible);
 

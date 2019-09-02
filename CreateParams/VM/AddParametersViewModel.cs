@@ -116,11 +116,12 @@
                 var showResult = false;
                 using (var t = new Transaction(revitDocument))
                 {
-                    t.Start($"Adding Project Parameters from Excel");
+                    t.Start($"Adding Parameters from Excel");
 
                     if (revitDocument.IsFamilyDocument)
                     {
                         AddFamilyParameters.VM.FamilyListViewModel.AddFamilyParameters(revitDocument, dataList, new AddFamilyParametersResult(revitDocument.OwnerFamily), isAddShared);
+                        showResult = true;
                     }
                     else
                     {
