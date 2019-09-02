@@ -61,7 +61,8 @@
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>PMTech_Revit_Ribbon_Panel.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />
@@ -89,7 +90,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="PMTech Revit Ribbon Panel.addin" />
-    <None Include="PMTech_Revit_Ribbon_Panel.pfx" />
     <None Include="Resources\icons8-add-to-collection-32.png" />
     <None Include="Resources\icons8-add-property-32.png" />
     <None Include="Resources\AddProperty.bmp" />
@@ -113,7 +113,7 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CreateSharedParams\CreateParams.csproj">
+    <ProjectReference Include="..\CreateParams\CreateParams.csproj">
       <Project>{4f3e7b19-c615-43f4-ab05-1d9695a6c30f}</Project>
       <Name>CreateParams</Name>
     </ProjectReference>
