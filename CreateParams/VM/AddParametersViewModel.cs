@@ -43,7 +43,7 @@
         /// </summary>
         public static void SetNewSharedParameterFile()
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog()
+            var openFileDialog = new OpenFileDialog()
             {
                 Filter = @"Text Files|*.txt",
                 FilterIndex = 1,
@@ -63,7 +63,7 @@
         /// </summary>
         public static void CreateNewSharedParametersFile()
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog()
+            var saveFileDialog = new SaveFileDialog()
             {
                 Filter = @"Text Files|*.txt",
                 FilterIndex = 1,
@@ -75,7 +75,7 @@
             {
                 string fileName = saveFileDialog.FileName;
 
-                StringBuilder sb = new StringBuilder();
+                var sb = new StringBuilder();
                 sb.AppendLine("# This is a Revit shared parameter file.");
                 sb.AppendLine("# Do not edit manually.");
                 sb.AppendLine("*META	VERSION	MINVERSION");
