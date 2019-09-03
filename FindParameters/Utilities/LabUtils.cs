@@ -515,7 +515,7 @@ namespace Revit_Utilities.Utilities
             switch (param.StorageType)
             {
                 case StorageType.Double:
-                    s = RealString(param.AsDouble());
+                    s = param.AsValueString();
                     break;
 
                 case StorageType.Integer:
@@ -527,7 +527,7 @@ namespace Revit_Utilities.Utilities
                     break;
 
                 case StorageType.ElementId:
-                    s = param.AsElementId().IntegerValue.ToString();
+                    s = param.AsValueString() == string.Empty ? param.AsElementId().IntegerValue.ToString() : param.AsValueString();
                     break;
 
                 case StorageType.None:
