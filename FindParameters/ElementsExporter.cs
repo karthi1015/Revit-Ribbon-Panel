@@ -71,12 +71,15 @@
                 row["ID"] = item.Id.IntegerValue.ToString();
                 foreach (Parameter parameter in item.Parameters)
                 {
-                    if (!table.Columns.Contains(parameter.Definition.Name))
                     {
-                        table.Columns.Add(parameter.Definition.Name);
-                    }
+                        // if (parameter.Definition.ParameterGroup == BuiltInParameterGroup.PG_ADSK_MODEL_PROPERTIES)
+                        if (!table.Columns.Contains(parameter.Definition.Name))
+                        {
+                            table.Columns.Add(parameter.Definition.Name);
+                        }
 
-                    row[parameter.Definition.Name] = LabUtils.GetParameterValue(parameter);
+                        row[parameter.Definition.Name] = LabUtils.GetParameterValue(parameter);
+                    }
                 }
 
                 table.Rows.Add(row);
@@ -110,5 +113,9 @@
 
             return sortedElements;
         }
+
+        // TODO Check if element isVoid or Solid
+        // TODO if (parameter.Definition.ParameterGroup == BuiltInParameterGroup.PG_ADSK_MODEL_PROPERTIES)
+        // TODO select from BuiltInParameterGroup
     }
 }
