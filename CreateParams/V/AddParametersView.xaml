@@ -40,7 +40,7 @@
             <CheckBox
                 Name="CheckBoxAddShared"
                 Width="240"
-                Margin="0,5"
+                Margin="0,20,0,0"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Content="Добавить параметры как общие" Height="15" />
