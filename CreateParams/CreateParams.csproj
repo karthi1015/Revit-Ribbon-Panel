@@ -6,6 +6,8 @@
       None
     </ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
     <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>

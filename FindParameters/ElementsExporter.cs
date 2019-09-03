@@ -11,34 +11,48 @@
 
     using ClosedXML.Excel;
 
-    using Revit_Utilities.Utilities;
+    using FindParameters.Utilities;
 
-    public class Helper
+    /// <summary>
+    /// Elements export from a Revit document
+    /// </summary>
+    public static class ElementsExporter
     {
+        /// <summary>
+        /// Exports all elements from a Revit document
+        /// </summary>
+        /// <param name="doc"></param>
         public static void GetElementsParameters(Document doc)
         {
+            string savingPath = ResultsHelper.GetSaveFilePath();
+            if (savingPath == string.Empty)
+            {
+                return;
+            }
+
             var sw = Stopwatch.StartNew();
             Dictionary<string, List<Element>> sortedElements = GetFilteredElementsByCategory(doc);
 
             using (var workbook = new XLWorkbook())
             {
-                var ds = GetDataSet(sortedElements);
+                DataSet ds = GetDataSet(sortedElements);
                 workbook.Worksheets.Add(ds);
-                workbook.SaveAs("d:\\fileReport.xlsx");
+                workbook.SaveAs(savingPath);
             }
 
             sw.Stop();
 
+            int totalCategories = sortedElements.Count;
+            int totalElements = sortedElements.Values.Sum(list => list.Count);
             TaskDialog.Show(
                 "Parameter Export",
-                $"{sortedElements.Count} categories and a total " + $"of {sortedElements.Values.SelectMany(list => list).Distinct().Count()} elements exported "
-                                                                  + $"in {sw.Elapsed.TotalSeconds:F2} seconds.");
+                $"{totalCategories} categories and a total " + $"of {totalElements} elements exported " + $"in {sw.Elapsed.TotalSeconds:F2} seconds.");
         }
 
         private static DataSet GetDataSet(Dictionary<string, List<Element>> sortedElements)
         {
             var ds = new DataSet();
-            foreach (KeyValuePair<string, List<Element>> element in sortedElements)
+            foreach (var element in sortedElements)
             {
                 ds.Tables.Add(GetTable(element));
             }
@@ -48,11 +62,13 @@
 
         private static DataTable GetTable(KeyValuePair<string, List<Element>> element)
         {
-            DataTable table = new DataTable { TableName = element.Key };
+            var table = new DataTable { TableName = element.Key };
 
+            table.Columns.Add("ID");
             foreach (Element item in element.Value)
             {
                 DataRow row = table.NewRow();
+                row["ID"] = item.Id.IntegerValue.ToString();
                 foreach (Parameter parameter in item.Parameters)
                 {
                     if (!table.Columns.Contains(parameter.Definition.Name))
@@ -79,16 +95,17 @@
 
             foreach (Element e in els)
             {
-                if (e.Category != null)
+                if (e is FamilyInstance fs && (fs.SuperComponent != null))
                 {
-                    // If this category was not yet encountered, add it and create a new container for its elements.
-                    if (!sortedElements.ContainsKey(e.Category.Name))
-                    {
-                        sortedElements.Add(e.Category.Name, new List<Element>());
-                    }
-
-                    sortedElements[e.Category.Name].Add(e);
+                    continue;
                 }
+
+                if (!sortedElements.ContainsKey(e.Category.Name))
+                {
+                    sortedElements.Add(e.Category.Name, new List<Element>());
+                }
+
+                sortedElements[e.Category.Name].Add(e);
             }
 
             return sortedElements;

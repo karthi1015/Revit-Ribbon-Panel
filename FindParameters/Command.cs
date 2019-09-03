@@ -16,7 +16,7 @@ namespace FindParameters
             Application app = uiapp.Application;
             Document doc = uidoc.Document;
 
-            Helper.GetElementsParameters(doc);
+            ElementsExporter.GetElementsParameters(doc);
 
             return Result.Succeeded;
         }

@@ -1,4 +1,4 @@
-namespace Revit_Utilities.Utilities
+namespace FindParameters.Utilities
 {
     using System;
     using System.Collections.Generic;
@@ -18,13 +18,17 @@ namespace Revit_Utilities.Utilities
     /// </summary>
     public static class LabUtils
     {
+        public const string Caption = "Revit API Labs";
+
         public const string SharedParamFilePath = TempDir + "SharedParams.txt";
 
         private const string TempDir = "C:/tmp/";
 
-        #region Formatting and message handlers
+        private static int minBic = 0;
 
-        public const string Caption = "Revit API Labs";
+        private static int maxBic = 0;
+
+        #region Formatting and message handlers
 
         /// <summary>
         /// Return an English plural suffix 's' or
@@ -202,13 +206,10 @@ namespace Revit_Utilities.Utilities
         {
             Element e = null;
 
-            // ElementSet ss = uidoc.Selection.Elements; // 2014
-            ICollection<ElementId> ids = uidoc.Selection.GetElementIds(); // 2015
+            ICollection<ElementId> ids = uidoc.Selection.GetElementIds();
 
             if (ids.Count == 1)
             {
-                // ElementSetIterator iter = ss.ForwardIterator();
-                // iter.MoveNext();
                 Element e2 = uidoc.Document.GetElement(ids.First());
                 Type t = e2.GetType();
                 if ((t == type) || t.IsSubclassOf(type))
@@ -223,8 +224,7 @@ namespace Revit_Utilities.Utilities
                 {
                     Reference r = uidoc.Selection.PickObject(ObjectType.Element, new TypeSelectionFilter(type), $"Please pick a {type.Name} element");
 
-                    // e = r.Element; // 2011
-                    e = uidoc.Document.GetElement(r); // 2012
+                    e = uidoc.Document.GetElement(r);
                 }
                 catch (OperationCanceledException)
                 {
@@ -232,46 +232,6 @@ namespace Revit_Utilities.Utilities
             }
 
             return e;
-        }
-
-        /// <summary>
-        /// A selection filter for a specific System.Type.
-        /// </summary>
-        private class TypeSelectionFilter : ISelectionFilter
-        {
-            private readonly Type type;
-
-            public TypeSelectionFilter(Type type)
-            {
-                this.type = type;
-            }
-
-            /// <summary>
-            /// Allow an element of the specified System.Type to be selected.
-            /// </summary>
-            /// <param name="e">
-            /// The e.
-            /// </param>
-            /// <returns>
-            /// Return true for specified System.Type, false for all other elements.
-            /// </returns>
-            public bool AllowElement(Element e)
-            {
-                // return null != e.Category
-                // && e.Category.Id.IntegerValue == ( int ) _bic;
-                return e.GetType() == this.type;
-            }
-
-            /// <summary>
-            /// Allow all the reference to be selected
-            /// </summary>
-            /// <param name="refer">A candidate reference in selection operation.</param>
-            /// <param name="point">The 3D position of the mouse on the candidate reference.</param>
-            /// <returns>Return true to allow the user to select this candidate reference.</returns>
-            public bool AllowReference(Reference refer, XYZ point)
-            {
-                return true;
-            }
         }
 
         #endregion // Selection
@@ -340,22 +300,11 @@ namespace Revit_Utilities.Utilities
         }
 
         /// <summary>
-        /// Return the category of a family by asking its first symbol.
-        /// You can determine the family category from any of its symbols.
-        /// </summary>
-        private static Category FamilyCategory(Family f)
-        {
-            Document doc = f.Document;
-
-            return f.GetFamilySymbolIds().Select(id => doc.GetElement(id)).Select(symbol => symbol.Category).FirstOrDefault();
-        }
-
-        /// <summary>
         /// Return all families matching the given built-in category
         /// in the given document. Normally, one would simply use
-        /// GetElementsOfType( doc, typeof( FamilyInstance ), bic );
+        /// GetElementsOfType( doc, typeof( FamilyInstance ), built-in category );
         /// Unfortunately, this does not work, because the Category
-        /// property of families os often unimplemented, cf.
+        /// property of families is often unimplemented.
         /// </summary>
         public static IEnumerable<Family> GetFamilies(Document doc, BuiltInCategory bic)
         {
@@ -374,27 +323,27 @@ namespace Revit_Utilities.Utilities
         /// <summary>
         /// Return all families whose name matches the given family name.
         /// </summary>
-        public static IEnumerable<Family> GetFamilies(Document doc, string family_name)
+        public static IEnumerable<Family> GetFamilies(Document doc, string familyName)
         {
             FilteredElementCollector collector = new FilteredElementCollector(doc);
             collector.OfClass(typeof(Family));
 
-            return collector.Where<Element>(e => e.Name.Equals(family_name)).Cast<Family>();
+            return collector.Where<Element>(e => e.Name.Equals(familyName)).Cast<Family>();
         }
 
         /// <summary>
         /// Return all families whose name either matches or contains the given family name.
         /// </summary>
         /// <param name="doc">Revit document.</param>
-        /// <param name="family_name">Family name or substring to search for.</param>
-        /// <param name="search_for_substring">Search for substring or entire family name?</param>
+        /// <param name="familyName">Family name or substring to search for.</param>
+        /// <param name="searchForSubstring">Search for substring or entire family name?</param>
         /// <returns>Collection of families matching the search criteria.</returns>
-        public static IEnumerable<Family> GetFamilies(Document doc, string family_name, bool search_for_substring)
+        public static IEnumerable<Family> GetFamilies(Document doc, string familyName, bool searchForSubstring)
         {
             var collector = new FilteredElementCollector(doc);
             collector.OfClass(typeof(Family));
 
-            return collector.Where<Element>(e => (search_for_substring ? e.Name.Contains(family_name) : e.Name.Equals(family_name))).Cast<Family>();
+            return collector.Where<Element>(e => (searchForSubstring ? e.Name.Contains(familyName) : e.Name.Equals(familyName))).Cast<Family>();
         }
 
         /// <summary>
@@ -506,8 +455,6 @@ namespace Revit_Utilities.Utilities
 
         /// <summary>
         /// Helper to return parameter value as string.
-        /// One can also use param.AsValueString() to
-        /// get the user interface representation.
         /// </summary>
         public static string GetParameterValue(Parameter param)
         {
@@ -542,27 +489,6 @@ namespace Revit_Utilities.Utilities
             return s;
         }
 
-        static int _min_bic = 0;
-
-        static int _max_bic = 0;
-
-        static void SetMinAndMaxBuiltInCategory()
-        {
-            Array a = Enum.GetValues(typeof(BuiltInCategory));
-            _max_bic = a.Cast<int>().Max();
-            _min_bic = a.Cast<int>().Min();
-        }
-
-        static string BuiltInCategoryString(int i)
-        {
-            if (_min_bic == 0)
-            {
-                SetMinAndMaxBuiltInCategory();
-            }
-
-            return ((_min_bic < i) && (i < _max_bic)) ? " " + ((BuiltInCategory)i).ToString() : string.Empty;
-        }
-
         /// <summary>
         /// Helper to return parameter value as string, with additional
         /// support for element id to display the element type referred to.
@@ -592,6 +518,30 @@ namespace Revit_Utilities.Utilities
             }
 
             return s;
+        }
+
+        private static Category FamilyCategory(Family f)
+        {
+            Document doc = f.Document;
+
+            return f.GetFamilySymbolIds().Select(id => doc.GetElement(id)).Select(symbol => symbol.Category).FirstOrDefault();
+        }
+
+        private static void SetMinAndMaxBuiltInCategory()
+        {
+            Array a = Enum.GetValues(typeof(BuiltInCategory));
+            maxBic = a.Cast<int>().Max();
+            minBic = a.Cast<int>().Min();
+        }
+
+        private static string BuiltInCategoryString(int i)
+        {
+            if (minBic == 0)
+            {
+                SetMinAndMaxBuiltInCategory();
+            }
+
+            return ((minBic < i) && (i < maxBic)) ? " " + ((BuiltInCategory)i).ToString() : string.Empty;
         }
 
         #endregion // Helpers for parameters
@@ -691,7 +641,7 @@ namespace Revit_Utilities.Utilities
         /// <param name="defGroup">Definition group name</param>
         /// <param name="defName">Definition name</param>
         /// <returns>GUID</returns>
-        public static Guid SharedParamGUID(Application app, string defGroup, string defName)
+        public static Guid SharedParamGuid(Application app, string defGroup, string defName)
         {
             Guid guid = Guid.Empty;
             try
@@ -711,5 +661,45 @@ namespace Revit_Utilities.Utilities
         }
 
         #endregion // Helpers for shared parameters
+
+        /// <summary>
+        /// A selection filter for a specific System.Type.
+        /// </summary>
+        private class TypeSelectionFilter : ISelectionFilter
+        {
+            private readonly Type type;
+
+            public TypeSelectionFilter(Type type)
+            {
+                this.type = type;
+            }
+
+            /// <summary>
+            /// Allow an element of the specified System.Type to be selected.
+            /// </summary>
+            /// <param name="e">
+            /// The e.
+            /// </param>
+            /// <returns>
+            /// Return true for specified System.Type, false for all other elements.
+            /// </returns>
+            public bool AllowElement(Element e)
+            {
+                // return null != e.Category
+                // && e.Category.Id.IntegerValue == ( int ) _bic;
+                return e.GetType() == this.type;
+            }
+
+            /// <summary>
+            /// Allow all the reference to be selected
+            /// </summary>
+            /// <param name="refer">A candidate reference in selection operation.</param>
+            /// <param name="point">The 3D position of the mouse on the candidate reference.</param>
+            /// <returns>Return true to allow the user to select this candidate reference.</returns>
+            public bool AllowReference(Reference refer, XYZ point)
+            {
+                return true;
+            }
+        }
     }
 }

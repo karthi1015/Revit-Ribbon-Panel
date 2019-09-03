@@ -1,10 +1,6 @@
-﻿namespace Revit_Utilities.Utilities
+﻿namespace FindParameters.Utilities
 {
-    using System;
     using System.Collections.Generic;
-    using System.Data;
-    using System.IO;
-    using System.Linq;
     using System.Text;
     using System.Windows.Forms;
 
@@ -17,51 +13,16 @@
     public class ResultsHelper
     {
         /// <summary>
-        /// The write file.
-        /// </summary>
-        /// <param name="col">
-        /// The col.
-        /// </param>
-        public static void WriteFile(IEnumerable<Element> col)
-        {
-            StringBuilder sb = new StringBuilder();
-
-            foreach (Element e in col)
-            {
-                foreach (Parameter p in e.Parameters)
-                {
-                    if (p.Definition.Name.Equals("Имя семейства"))
-                    {
-                        sb.AppendLine(p.AsString());
-                    }
-                }
-            }
-
-            SaveFile(sb);
-        }
-
-        /// <summary>
         /// The save file.
         /// </summary>
-        /// <param name="sb">
-        /// The string builder.
-        /// </param>
-        public static void SaveFile(StringBuilder sb)
+        public static string GetSaveFilePath()
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog()
-                                            {
-                                                Filter = @"Text Files|*.txt", FilterIndex = 1, RestoreDirectory = true, Title = @"Создать файл общих параметров"
-                                            };
+            var saveFileDialog = new SaveFileDialog()
+                                 {
+                                     Filter = @"Excel Files|*.xlsx", FilterIndex = 1, RestoreDirectory = true, Title = @"Сохранить Excel файл"
+                                 };
 
-            if (saveFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                string fileName = saveFileDialog.FileName;
-
-                using (StreamWriter stream = new StreamWriter(fileName))
-                {
-                    stream.WriteLine(sb.ToString());
-                }
-            }
+            return saveFileDialog.ShowDialog() == DialogResult.OK ? saveFileDialog.FileName : string.Empty;
         }
 
         /// <summary>
