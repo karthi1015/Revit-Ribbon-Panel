@@ -78,5 +78,10 @@ namespace AddFamilyParameters.V
                 }
             }
         }
+
+        private void ButtonCancelClick(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
     }
 }

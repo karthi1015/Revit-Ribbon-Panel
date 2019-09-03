@@ -3,15 +3,15 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:local="clr-namespace:CreateParams.V"
         mc:Ignorable="d"
-        Width="700"
-        Height="170"
         MinWidth="700"
-        MinHeight="170"
+        MinHeight="210"
+        Width="700"
+        Height="210"
         WindowStartupLocation="CenterScreen" Title="Добавление параметров">
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
@@ -37,37 +37,43 @@
                     Click="ButtonCreateSharedParameterFile_OnClick" />
         </Grid>
         <Grid Grid.Row="1">
+            <CheckBox
+                Name="CheckBoxAddShared"
+                Width="240"
+                Margin="0,5"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Content="Добавить параметры как общие" Height="15" />
+        </Grid>
+        <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="350" />
-                <ColumnDefinition Width="335" />
+                <ColumnDefinition />
+                <ColumnDefinition  />
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Content="Параметры в проект / семейство" Name="ButtonAddSharedParameters"
-                    Click="ButtonAddSharedParameters_OnClick"
-                    HorizontalAlignment="Left" Margin="10,21,0,0" Padding="4,4,4,4" VerticalAlignment="Top" Height="32">
-                <Button.ToolTip>
-                    <ToolTip>
-                        Добавляет параметры элементам по специальному Excel. Если в выбранном ФОП нет данных параметров, то они будут добавлены.
-                        Будьте внимательны с выбранным файлом ФОП - если в качестве ФОП будет выбран какой-то неверный ФОП (например, из другой модели),
-                        то параметры будут добавлены в него.
-                    </ToolTip>
-                </Button.ToolTip>
-            </Button>
-            <GroupBox Grid.Column="1" Header="Пакетное добавление параметров в семейства">
-                <Grid>
-                    <CheckBox
-                        Name="CheckBoxAddShared"
-                        Width="240"
-                        Margin="10,10,0,0"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Top"
-                        Content="Добавить параметры как общие" Height="15" />
-
-                    <Button  Content="Параметры в семейства" x:Name="ButtonAddFamilyParameters"
-                            Click="ButtonAddFamilyParameters_OnClick"
-                            HorizontalAlignment="Left" Margin="10,30,0,0" Padding="4,4,4,4" VerticalAlignment="Top"
-                            Height="32" >
+            <GroupBox Grid.Column="0" Header="Текущий проект / семейство" Margin="10,5,10,10">
+                <Grid >
+                    <Button Grid.Column="0" Content="Добавить" Name="ButtonAddSharedParameters"
+                            Click="ButtonAddSharedParameters_OnClick"
+                            HorizontalAlignment="Left" Margin="10,10,0,5" Padding="4,4,4,4" VerticalAlignment="Top" Height="32" Width="120">
                         <Button.ToolTip>
-                            <ToolTip Content="Добавляет параметры в семейства по специальному Excel." />
+                            <ToolTip>
+                                Добавляет параметры в текущий документ по специальному Excel файлу.
+                                При добавлении параметров как "общие" будьте внимательны с выбранным файлом ФОП.
+                                При добавлении параметров в проект, параметры добавляются как "общие" независимо от того включена ли галочка.
+                            </ToolTip>
+                        </Button.ToolTip>
+                    </Button>
+                </Grid>
+            </GroupBox>
+            <GroupBox Grid.Column="1" Header="Пакетное добавление параметров в семейства" Margin="0,5,10,10">
+                <Grid >
+                    <Button Content="Выбрать семейства" x:Name="ButtonAddFamilyParameters"
+                            Click="ButtonAddFamilyParameters_OnClick"
+                            HorizontalAlignment="Left" Margin="10,10,0,5" Padding="4,4,4,4" VerticalAlignment="Top" Height="32" Width="120" >
+                        <Button.ToolTip>
+                            <ToolTip>
+                                Выбрать семейства в текущем документе для пакетного добавления параметров по специальному Excel файлу.
+                            </ToolTip>                        
                         </Button.ToolTip>
                     </Button>
                 </Grid>
@@ -87,6 +93,5 @@
             </Style.Resources>
             <Setter Property="MaxWidth" Value="500" />
         </Style>
-
     </Window.Resources>
 </Window>
