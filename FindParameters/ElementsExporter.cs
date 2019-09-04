@@ -11,7 +11,11 @@
 
     using ClosedXML.Excel;
 
+    using DocumentFormat.OpenXml.Drawing.Diagrams;
+
     using FindParameters.Utilities;
+
+    using Parameter = Autodesk.Revit.DB.Parameter;
 
     /// <summary>
     /// Elements export from a Revit document
@@ -98,7 +102,8 @@
 
             foreach (Element e in els)
             {
-                if (e is FamilyInstance fs && (fs.SuperComponent != null))
+                Parameter volume = e.get_Parameter(BuiltInParameter.HOST_VOLUME_COMPUTED);
+                if ((e is FamilyInstance fs && (fs.SuperComponent != null)) || ((volume != null) && !volume.HasValue))
                 {
                     continue;
                 }
@@ -114,7 +119,7 @@
             return sortedElements;
         }
 
-        // TODO Check if element isVoid or Solid
+        // TODO Check if element isVoid or Solid. Void elements have volume=0
         // TODO if (parameter.Definition.ParameterGroup == BuiltInParameterGroup.PG_ADSK_MODEL_PROPERTIES)
         // TODO select from BuiltInParameterGroup
     }
