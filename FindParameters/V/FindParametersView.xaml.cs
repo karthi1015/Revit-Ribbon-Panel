@@ -15,14 +15,38 @@ using System.Windows.Shapes;
 
 namespace FindParameters.V
 {
-    /// <summary>
-    /// Interaction logic for FindParametersView.xaml
-    /// </summary>
-    public partial class FindParametersView : UserControl
+    using System.Collections.ObjectModel;
+
+    using Autodesk.Revit.DB;
+
+    using FindParameters.M;
+    using FindParameters.VM;
+
+    public partial class FindParametersView : Window
     {
-        public FindParametersView()
+        public FindParametersView(Document doc)
         {
-            InitializeComponent();
+            this.InitializeComponent();
+
+            FindParametersViewModel findParametersViewModel = new FindParametersViewModel(doc);
+            this.Categories = findParametersViewModel.ParameterCategoriesList;
+        }
+
+        public List<RevitBuiltInParameterGroup> Categories { get; set; }
+
+        private void ButtonLoadParametersClick(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void ButtonCancelClick(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void ButtonUncheckAllClick(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -5,6 +5,7 @@ namespace FindParameters
     using Autodesk.Revit.UI;
 
     using FindParameters.Utilities;
+    using FindParameters.V;
 
     using Application = Autodesk.Revit.ApplicationServices.Application;
 
@@ -18,7 +19,9 @@ namespace FindParameters
             Application app = uiapp.Application;
             Document doc = uidoc.Document;
 
-            ElementsExporter.GetElementsParameters(doc);
+            // ElementsExporter.GetElementsParameters(doc);
+            FindParametersView findParametersView = new FindParametersView(doc);
+            findParametersView.ShowDialog();
 
             return Result.Succeeded;
         }

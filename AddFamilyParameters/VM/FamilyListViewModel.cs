@@ -178,7 +178,7 @@ namespace AddFamilyParameters.VM
         private static void InitializeFamilyCategoryCollection(Dictionary<string, List<Family>> source)
         {
             famCategories = new ObservableCollection<FamilyCategory>();
-            foreach (var item in source)
+            foreach (KeyValuePair<string, List<Family>> item in source)
             {
                 famCategories.Add(new FamilyCategory(item.Value) { Name = item.Key });
             }

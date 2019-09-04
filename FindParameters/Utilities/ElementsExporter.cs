@@ -15,7 +15,7 @@
     /// <summary>
     /// Elements export from a Revit document
     /// </summary>
-    public static class ElementsExporter
+    public class ElementsExporter
     {
         /// <summary>
         /// Exports all elements from a Revit document
@@ -91,7 +91,8 @@
         {
             var sortedElements = new Dictionary<string, List<Element>>();
 
-            var els = new FilteredElementCollector(doc).WhereElementIsNotElementType()
+            var els = new FilteredElementCollector(doc)
+                .WhereElementIsNotElementType()
                 .WhereElementIsViewIndependent()
                 .Where(e => (e.Category != null) && e.Category.HasMaterialQuantities);
 

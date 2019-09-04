@@ -1,5 +1,6 @@
 ﻿namespace FindParameters.M
 {
+    using System;
     using System.Windows;
 
     using Autodesk.Revit.DB;
@@ -7,13 +8,13 @@
     /// <summary>
     /// The Revit Parameter class that implements dependencyObject
     /// </summary>
-    public class RevitParameter : DependencyObject
+    public class RevitDefinition : DependencyObject
     {
-        public RevitParameter(Parameter parameter)
+        public RevitDefinition(Definition definition)
         {
-            this.Parameter = parameter;
+            this.Definition = definition;
         }
 
-        public Parameter Parameter { get; set; }
+        public Definition Definition { get; set; }
     }
 }

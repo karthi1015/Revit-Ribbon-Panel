@@ -4,6 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:FindParameters.V"
+             xmlns:m="clr-namespace:FindParameters.M"
+             xmlns:helperClass="clr-namespace:FindParameters.Utilities"
              mc:Ignorable="d" 
              Width="450"
              Height="650"
@@ -13,6 +15,80 @@
              Title="Экспорт параметров в Excel"
              >
     <Grid>
-            
+        <Grid Grid.Row="0">
+            <Button Height="25" HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                    Content="Снять выделение"
+                    Margin="10,10,10,10" Padding="4" Click="ButtonUncheckAllClick" />
+        </Grid>
+        <Grid Grid.Row="1">
+            <TreeView
+            x:Name="FamiliesTreeView"
+            Margin="10,0,10,5"
+            ItemsSource="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=Categories}">
+                <TreeView.Resources>
+                    <HierarchicalDataTemplate DataType="{x:Type m:RevitBuiltInParameterGroup}" ItemsSource="{Binding Members}">
+                        <CheckBox Content="{Binding Name}"
+                              IsChecked="{Binding Path=(helperClass:ItemHelper.IsChecked), Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                            <CheckBox.Style>
+                                <Style TargetType="{x:Type CheckBox}">
+                                    <Setter Property="Foreground" Value="Black" />
+                                    <Setter Property="Visibility" Value="Visible" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Path=(helperClass:ItemHelper.IsChecked)}"
+                                                 Value="False">
+                                            <Setter Property="Foreground" Value="LightGray" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </CheckBox.Style>
+                        </CheckBox>
+                    </HierarchicalDataTemplate>
+                    <DataTemplate DataType="{x:Type m:RevitDefinition}">
+                        <CheckBox Content="{Binding Path=Definition.Name}"
+                              IsChecked="{Binding Path=(helperClass:ItemHelper.IsChecked), Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                            <CheckBox.Style>
+                                <Style TargetType="{x:Type CheckBox}">
+                                    <Setter Property="Foreground" Value="Black" />
+                                    <Setter Property="Visibility" Value="Visible" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Path=(helperClass:ItemHelper.IsChecked)}"
+                                                 Value="False">
+                                            <Setter Property="Foreground" Value="LightGray" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </CheckBox.Style>
+                        </CheckBox>
+                    </DataTemplate>
+                </TreeView.Resources>
+                <TreeView.ItemContainerStyle>
+                    <Style TargetType="{x:Type TreeViewItem}">
+                        <Setter Property="IsExpanded" Value="True" />
+                    </Style>
+                </TreeView.ItemContainerStyle>
+            </TreeView>
+        </Grid>
+        <Grid Grid.Row="2" >
+            <Button x:Name="ButtonLoadParameters"
+                    Height="30"
+                    Margin="75,10,210,0"
+                    Padding="4"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Top"
+                    Click="ButtonLoadParametersClick"
+                    Content="ОК" Width="100" />
+            <Button x:Name="ButtonCancel"
+                Height="30"
+                Margin="210,10,75,10"
+                Padding="4"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Top"
+                Content="Отмена" Width="100" Click="ButtonCancelClick" />
+        </Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
     </Grid>
 </Window>
