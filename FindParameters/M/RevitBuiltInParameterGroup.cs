@@ -10,7 +10,7 @@
     /// <summary>
     /// The family category.
     /// </summary>
-    public class RevitBuiltInParameterGroup : DependencyObject, IParent<RevitDefinition>
+    public class RevitBuiltInParameterGroup : DependencyObject, IParent<RevitParameter>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="RevitBuiltInParameterGroup"/> class.
@@ -18,27 +18,27 @@
         /// <param name="familyList">
         /// The family list.
         /// </param>
-        public RevitBuiltInParameterGroup(IEnumerable<Definition> familyList)
+        public RevitBuiltInParameterGroup(IEnumerable<Parameter> familyList)
         {
-            this.Members = new List<RevitDefinition>();
+            this.Members = new List<RevitParameter>();
 
-            foreach (Definition definition in familyList)
+            foreach (Parameter definition in familyList)
             {
-                this.Members.Add(new RevitDefinition(definition));
+                this.Members.Add(new RevitParameter(definition));
             }
         }
 
         /// <summary>
         /// Gets or sets the members.
         /// </summary>
-        public List<RevitDefinition> Members { get; set; }
+        public List<RevitParameter> Members { get; set; }
 
         /// <summary>
         /// Gets or sets the name.
         /// </summary>
         public string Name { get; set; }
 
-        public IEnumerable<RevitDefinition> GetChildren()
+        public IEnumerable<RevitParameter> GetChildren()
         {
             return this.Members;
         }

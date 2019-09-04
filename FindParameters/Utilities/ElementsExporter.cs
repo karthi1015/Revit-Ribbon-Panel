@@ -23,7 +23,7 @@
         /// <param name="doc"></param>
         /// <param name="pickedDefinitions"></param>
         /// <param name="sortedElements"></param>
-        public static void ExportElementParameters(List<Definition> pickedDefinitions, Dictionary<string, List<Element>> sortedElements)
+        public static void ExportElementParameters(List<Parameter> pickedDefinitions, Dictionary<string, List<Element>> sortedElements)
         {
             string savingPath = ResultsHelper.GetSaveFilePath();
             if (savingPath == string.Empty)
@@ -77,7 +77,7 @@
             return sortedElements;
         }
 
-        private static DataSet GetDataSet(Dictionary<string, List<Element>> sortedElements, List<Definition> pickedDefinitions)
+        private static DataSet GetDataSet(Dictionary<string, List<Element>> sortedElements, List<Parameter> pickedDefinitions)
         {
             var ds = new DataSet();
             foreach (var element in sortedElements)
@@ -88,7 +88,7 @@
             return ds;
         }
 
-        private static DataTable GetTable(KeyValuePair<string, List<Element>> element, List<Definition> pickedDefinitions)
+        private static DataTable GetTable(KeyValuePair<string, List<Element>> element, List<Parameter> pickedDefinitions)
         {
             var table = new DataTable { TableName = element.Key };
 
@@ -99,7 +99,7 @@
                 row["ID"] = item.Id.IntegerValue.ToString();
                 foreach (Parameter parameter in item.Parameters)
                 {
-                    if (pickedDefinitions.Contains(parameter.Definition))
+                    if (pickedDefinitions.Select(p => p.Id).Contains(parameter.Id))
                     {
                         if (!table.Columns.Contains(parameter.Definition.Name))
                         {

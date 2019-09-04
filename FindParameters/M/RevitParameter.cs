@@ -7,13 +7,13 @@
     /// <summary>
     /// The Revit Parameter class that implements dependencyObject
     /// </summary>
-    public class RevitDefinition : DependencyObject
+    public class RevitParameter : DependencyObject
     {
-        public RevitDefinition(Definition definition)
+        public RevitParameter(Parameter parameter)
         {
-            this.Definition = definition;
+            this.Parameter = parameter;
         }
 
-        public Definition Definition { get; set; }
+        public Parameter Parameter { get; set; }
     }
 }

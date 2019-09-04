@@ -23,7 +23,7 @@ namespace FindParameters.VM
             revitDocument = doc;
             elements = ElementsExporter.GetFilteredElementsByCategory(doc);
 
-            Dictionary<string, List<Definition>> paramDictionary = FindParameterCategories();
+            Dictionary<string, List<Parameter>> paramDictionary = FindParameterCategories();
 
             InitializeParameterCategoryCollection(paramDictionary);
         }
@@ -32,17 +32,10 @@ namespace FindParameters.VM
 
         public static void ExportElementParameters(ObservableCollection<RevitBuiltInParameterGroup> parameterGroups, bool isChecked)
         {
-            List<Definition> pickedDefinitions = new List<Definition>();
-            foreach (RevitBuiltInParameterGroup parameterGroup in parameterGroups)
-            {
-                foreach (RevitDefinition definition in parameterGroup.Members)
-                {
-                    if (ItemHelper.GetIsChecked(definition) == true)
-                    {
-                        pickedDefinitions.Add(definition.Definition);
-                    }
-                }
-            }
+            List<Parameter> pickedDefinitions = (from parameterGroup in parameterGroups
+                                                 from definition in parameterGroup.Members
+                                                 where ItemHelper.GetIsChecked(definition) == true
+                                                 select definition.Parameter).ToList();
 
             if (pickedDefinitions.Count == 0)
             {
@@ -52,7 +45,7 @@ namespace FindParameters.VM
             ElementsExporter.ExportElementParameters(pickedDefinitions, elements);
         }
 
-        private static void InitializeParameterCategoryCollection(Dictionary<string, List<Definition>> source)
+        private static void InitializeParameterCategoryCollection(Dictionary<string, List<Parameter>> source)
         {
             parameterCategories = new ObservableCollection<RevitBuiltInParameterGroup>();
 
@@ -62,11 +55,11 @@ namespace FindParameters.VM
             }
         }
 
-        private Dictionary<string, List<Definition>> FindParameterCategories()
+        private Dictionary<string, List<Parameter>> FindParameterCategories()
         {
             return elements.Values.SelectMany(e => e)
                 .SelectMany(element => element.GetOrderedParameters(), (element, parameter) => new { element, parameter })
-                .GroupBy(t => t.parameter.Definition.ParameterGroup, t => t.parameter.Definition)
+                .GroupBy(t => t.parameter.Definition.ParameterGroup, t => t.parameter)
                 .OrderBy(e => LabelUtils.GetLabelFor(e.Key))
                 .ToDictionary(e => LabelUtils.GetLabelFor(e.Key), e => e.ToList());
         }
