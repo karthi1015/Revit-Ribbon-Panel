@@ -6,8 +6,10 @@ namespace FindParameters.V
     using System.Collections.ObjectModel;
 
     using Autodesk.Revit.DB;
+    using Autodesk.Revit.UI;
 
     using FindParameters.M;
+    using FindParameters.Utilities;
     using FindParameters.VM;
 
     public partial class FindParametersView : Window
@@ -17,24 +19,38 @@ namespace FindParameters.V
             this.InitializeComponent();
 
             FindParametersViewModel findParametersViewModel = new FindParametersViewModel(doc);
-            this.Families = findParametersViewModel.ParameterCategoriesList;
+            this.ParameterGroups = findParametersViewModel.ParameterCategoriesList;
         }
 
-        public ObservableCollection<RevitBuiltInParameterGroup> Families { get; set; }
+        public ObservableCollection<RevitBuiltInParameterGroup> ParameterGroups { get; set; }
 
         private void ButtonLoadParametersClick(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            try
+            {
+                FindParametersViewModel.ExportElementParameters(this.ParameterGroups, this.CheckBoxUseVoid.IsChecked ?? false);
+            }
+            catch (Exception exception)
+            {
+                TaskDialog.Show("Add Family Parameters", exception.Message);
+            }
         }
 
         private void ButtonCancelClick(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            this.Close();
         }
 
         private void ButtonUncheckAllClick(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            foreach (var familyCategory in this.ParameterGroups)
+            {
+                ItemHelper.SetIsChecked(familyCategory, false);
+                foreach (var family in familyCategory.Members)
+                {
+                    ItemHelper.SetIsChecked(family, false);
+                }
+            }
         }
     }
 }

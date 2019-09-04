@@ -83,6 +83,7 @@
     <Compile Include="Interfaces\IParent.cs" />
     <Compile Include="M\RevitBuiltInParameterGroup.cs" />
     <Compile Include="M\RevitDefinition.cs" />
+    <Compile Include="Utilities\ElementsExporter - Copy.cs" />
     <Compile Include="Utilities\ElementsExporter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\ItemHelper.cs" />
