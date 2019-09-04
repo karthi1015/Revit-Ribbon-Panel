@@ -4,6 +4,8 @@ namespace FindParameters
     using Autodesk.Revit.DB;
     using Autodesk.Revit.UI;
 
+    using FindParameters.Utilities;
+
     using Application = Autodesk.Revit.ApplicationServices.Application;
 
     [Transaction(TransactionMode.Manual)]

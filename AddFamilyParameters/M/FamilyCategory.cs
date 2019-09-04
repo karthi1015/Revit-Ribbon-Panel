@@ -19,7 +19,7 @@ namespace AddFamilyParameters.M
     /// <summary>
     /// The family category.
     /// </summary>
-    public class FamilyCategory : DependencyObject, IParent<object>
+    public class FamilyCategory : DependencyObject, IParent<MyFamily>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="FamilyCategory"/> class.
@@ -47,7 +47,7 @@ namespace AddFamilyParameters.M
         /// </summary>
         public string Name { get; set; }
 
-        IEnumerable<object> IParent<object>.GetChildren()
+        public IEnumerable<MyFamily> GetChildren()
         {
             return this.Members;
         }

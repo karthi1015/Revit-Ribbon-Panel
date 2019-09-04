@@ -1,6 +1,5 @@
-﻿namespace FindParameters
+﻿namespace FindParameters.Utilities
 {
-    using System;
     using System.Collections.Generic;
     using System.Data;
     using System.Diagnostics;
@@ -10,10 +9,6 @@
     using Autodesk.Revit.UI;
 
     using ClosedXML.Excel;
-
-    using DocumentFormat.OpenXml.Drawing.Diagrams;
-
-    using FindParameters.Utilities;
 
     using Parameter = Autodesk.Revit.DB.Parameter;
 
@@ -102,7 +97,7 @@
 
             foreach (Element e in els)
             {
-                Parameter volume = e.get_Parameter(BuiltInParameter.HOST_VOLUME_COMPUTED);
+                Parameter volume = e.get_Parameter(BuiltInParameter.HOST_VOLUME_COMPUTED); // Check if element isVoid or Solid. Void elements have volume=0
                 if ((e is FamilyInstance fs && (fs.SuperComponent != null)) || ((volume != null) && !volume.HasValue))
                 {
                     continue;
@@ -119,8 +114,8 @@
             return sortedElements;
         }
 
-        // TODO Check if element isVoid or Solid. Void elements have volume=0
         // TODO if (parameter.Definition.ParameterGroup == BuiltInParameterGroup.PG_ADSK_MODEL_PROPERTIES)
         // TODO select from BuiltInParameterGroup
+        // TODO select if you want void elements in table or not
     }
 }

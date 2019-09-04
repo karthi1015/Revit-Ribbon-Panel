@@ -1,0 +1,18 @@
+﻿<Window x:Class="FindParameters.V.FindParametersView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:FindParameters.V"
+             mc:Ignorable="d" 
+             Width="450"
+             Height="650"
+             MinWidth="450"
+             MinHeight="650"
+             WindowStartupLocation="CenterScreen"
+             Title="Экспорт параметров в Excel"
+             >
+    <Grid>
+            
+    </Grid>
+</Window>
