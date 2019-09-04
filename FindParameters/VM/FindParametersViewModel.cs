@@ -30,6 +30,28 @@ namespace FindParameters.VM
 
         public ObservableCollection<RevitBuiltInParameterGroup> ParameterCategoriesList => parameterCategories;
 
+        public static void ExportElementParameters(ObservableCollection<RevitBuiltInParameterGroup> parameterGroups, bool isChecked)
+        {
+            List<Definition> pickedDefinitions = new List<Definition>();
+            foreach (RevitBuiltInParameterGroup parameterGroup in parameterGroups)
+            {
+                foreach (RevitDefinition definition in parameterGroup.Members)
+                {
+                    if (ItemHelper.GetIsChecked(definition) == true)
+                    {
+                        pickedDefinitions.Add(definition.Definition);
+                    }
+                }
+            }
+
+            if (pickedDefinitions.Count == 0)
+            {
+                throw new ArgumentException("Пожалуйста, выберите семейства, в которые вы хотите добавить параметры");
+            }
+
+            ElementsExporter.ExportElementParameters(pickedDefinitions, elements);
+        }
+
         private static void InitializeParameterCategoryCollection(Dictionary<string, List<Definition>> source)
         {
             parameterCategories = new ObservableCollection<RevitBuiltInParameterGroup>();
@@ -47,21 +69,6 @@ namespace FindParameters.VM
                 .GroupBy(t => t.parameter.Definition.ParameterGroup, t => t.parameter.Definition)
                 .OrderBy(e => LabelUtils.GetLabelFor(e.Key))
                 .ToDictionary(e => LabelUtils.GetLabelFor(e.Key), e => e.ToList());
-        }
-
-        public static void ExportElementParameters(ObservableCollection<RevitBuiltInParameterGroup> families, bool isChecked)
-        {
-            List<Definition> pickedDefinitions = (from familyCategory in families
-                                    from item in familyCategory.Members
-                                    where ItemHelper.GetIsChecked(item) == true
-                                    select item.Definition).ToList();
-
-            if (pickedDefinitions.Count == 0)
-            {
-                throw new ArgumentException("Пожалуйста, выберите семейства, в которые вы хотите добавить параметры");
-            }
-
-            ElementsExporter.ExportElementParameters(revitDocument, pickedDefinitions, elements);
         }
     }
 }

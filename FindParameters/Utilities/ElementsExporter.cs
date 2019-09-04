@@ -23,7 +23,7 @@
         /// <param name="doc"></param>
         /// <param name="pickedDefinitions"></param>
         /// <param name="sortedElements"></param>
-        public static void ExportElementParameters(Document doc, List<Definition> pickedDefinitions, Dictionary<string, List<Element>> sortedElements)
+        public static void ExportElementParameters(List<Definition> pickedDefinitions, Dictionary<string, List<Element>> sortedElements)
         {
             string savingPath = ResultsHelper.GetSaveFilePath();
             if (savingPath == string.Empty)
@@ -32,7 +32,7 @@
             }
 
             var sw = Stopwatch.StartNew();
-            
+
             using (var workbook = new XLWorkbook())
             {
                 DataSet ds = GetDataSet(sortedElements, pickedDefinitions);
@@ -99,8 +99,8 @@
                 row["ID"] = item.Id.IntegerValue.ToString();
                 foreach (Parameter parameter in item.Parameters)
                 {
+                    if (pickedDefinitions.Contains(parameter.Definition))
                     {
-                        // if (parameter.Definition.ParameterGroup == BuiltInParameterGroup.PG_ADSK_MODEL_PROPERTIES)
                         if (!table.Columns.Contains(parameter.Definition.Name))
                         {
                             table.Columns.Add(parameter.Definition.Name);
