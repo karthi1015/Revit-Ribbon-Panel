@@ -1,49 +1,40 @@
-﻿using Autodesk.Revit.DB;
-using Autodesk.Revit.UI;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+
+using Autodesk.Revit.DB;
+
+using FindParameters.M;
 
 namespace FindParameters.VM
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-
-    using FindParameters.M;
-
     public class FindParametersViewModel
     {
-        private static List<RevitBuiltInParameterGroup> parameterCategories;
+        private static ObservableCollection<RevitBuiltInParameterGroup> parameterCategories;
 
         private static Document revitDocument;
 
         public FindParametersViewModel(Document doc)
         {
             revitDocument = doc;
+            Dictionary<string, List<Definition>> paramDictionary = FindParameterCategories();
 
-            Dictionary<BuiltInParameterGroup, List<Definition>> paramDictionary = FindParameterCategories();
             InitializeParameterCategoryCollection(paramDictionary);
         }
 
-        public List<RevitBuiltInParameterGroup> ParameterCategoriesList => parameterCategories;
+        public ObservableCollection<RevitBuiltInParameterGroup> ParameterCategoriesList => parameterCategories;
 
-        // private static List<BuiltInParameterGroup> FindParameterCategories()
-        // {
-        // return Enum.GetValues(typeof(BuiltInParameterGroup)).Cast<BuiltInParameterGroup>().ToList();
-        // }
-        // private static void InitializeParameterCategoryCollection(List<BuiltInParameterGroup> source)
-        // {
-        // parameterCategories = source.Select(item => new RevitDefinition() { ParamGroup = item }).OrderBy(e => e.ParamName).ToList();
-        // }
-        private static void InitializeParameterCategoryCollection(Dictionary<BuiltInParameterGroup, List<Definition>> source)
+        private static void InitializeParameterCategoryCollection(Dictionary<string, List<Definition>> source)
         {
-            parameterCategories = new List<RevitBuiltInParameterGroup>();
+            parameterCategories = new ObservableCollection<RevitBuiltInParameterGroup>();
 
-            foreach (KeyValuePair<BuiltInParameterGroup, List<Definition>> item in source)
+            foreach (var item in source)
             {
-                parameterCategories.Add(new RevitBuiltInParameterGroup(item.Value) { Name = LabelUtils.GetLabelFor(item.Key) });
+                parameterCategories.Add(new RevitBuiltInParameterGroup(item.Value) { Name = item.Key });
             }
         }
 
-        private static Dictionary<BuiltInParameterGroup, List<Definition>> FindParameterCategories()
+        private static Dictionary<string, List<Definition>> FindParameterCategories()
         {
             var sortedElements = new List<Element>();
 
@@ -65,10 +56,11 @@ namespace FindParameters.VM
                 }
             }
 
-            return sortedElements.SelectMany(element => element.GetOrderedParameters(), (element, parameter) => new { element, parameter })
+            return sortedElements
+                .SelectMany(element => element.GetOrderedParameters(), (element, parameter) => new { element, parameter })
                 .GroupBy(t => t.parameter.Definition.ParameterGroup, t => t.parameter.Definition)
                 .OrderBy(e => LabelUtils.GetLabelFor(e.Key))
-                .ToDictionary(e => e.Key, e => e.ToList());
+                .ToDictionary(e => LabelUtils.GetLabelFor(e.Key), e => e.ToList());
         }
     }
 }

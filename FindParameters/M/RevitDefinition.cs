@@ -1,6 +1,5 @@
 ﻿namespace FindParameters.M
 {
-    using System;
     using System.Windows;
 
     using Autodesk.Revit.DB;

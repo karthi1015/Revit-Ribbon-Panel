@@ -22,7 +22,7 @@ namespace AddFamilyParameters.Utilities
         /// <summary>
         /// The is checked property.
         /// </summary>
-        public static readonly DependencyProperty IsCheckedProperty = DependencyProperty.RegisterAttached("IsChecked", typeof(bool?), typeof(ItemHelper), new PropertyMetadata(false, new PropertyChangedCallback(OnIsCheckedPropertyChanged)));
+        public static readonly DependencyProperty IsCheckedProperty = DependencyProperty.RegisterAttached("IsChecked", typeof(bool?), typeof(ItemHelper), new PropertyMetadata(false, OnIsCheckedPropertyChanged));
 
         /// <summary>
         /// The parent property.

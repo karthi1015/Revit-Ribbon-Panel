@@ -20,20 +20,19 @@
         </Grid>
         <Grid Grid.Row="1">
             <TreeView
-            x:Name="FamiliesTreeView"
-            Margin="10,0,10,5"
-            ItemsSource="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=Families}">
+                Margin="10,0,10,5"
+                ItemsSource="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=Families}">
                 <TreeView.Resources>
                     <HierarchicalDataTemplate DataType="{x:Type m:FamilyCategory}" ItemsSource="{Binding Members}">
                         <CheckBox Content="{Binding Name}"
-                              IsChecked="{Binding Path=(helperClass:ItemHelper.IsChecked), Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                  IsChecked="{Binding Path=(helperClass:ItemHelper.IsChecked), Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                             <CheckBox.Style>
                                 <Style TargetType="{x:Type CheckBox}">
                                     <Setter Property="Foreground" Value="Black" />
                                     <Setter Property="Visibility" Value="Visible" />
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding Path=(helperClass:ItemHelper.IsChecked)}"
-                                                 Value="False">
+                                                     Value="False">
                                             <Setter Property="Foreground" Value="LightGray" />
                                         </DataTrigger>
                                     </Style.Triggers>
@@ -43,14 +42,14 @@
                     </HierarchicalDataTemplate>
                     <DataTemplate DataType="{x:Type m:MyFamily}">
                         <CheckBox Content="{Binding Path=Family.Name}"
-                              IsChecked="{Binding Path=(helperClass:ItemHelper.IsChecked), Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                  IsChecked="{Binding Path=(helperClass:ItemHelper.IsChecked), Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                             <CheckBox.Style>
                                 <Style TargetType="{x:Type CheckBox}">
                                     <Setter Property="Foreground" Value="Black" />
                                     <Setter Property="Visibility" Value="Visible" />
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding Path=(helperClass:ItemHelper.IsChecked)}"
-                                                 Value="False">
+                                                     Value="False">
                                             <Setter Property="Foreground" Value="LightGray" />
                                         </DataTrigger>
                                     </Style.Triggers>
@@ -66,7 +65,7 @@
                 </TreeView.ItemContainerStyle>
             </TreeView>
         </Grid>
-        <Grid Grid.Row="2" >
+        <Grid Grid.Row="2">
             <Button x:Name="ButtonLoadParameters"
                     Height="30"
                     Margin="75,10,210,0"
@@ -76,17 +75,17 @@
                     Click="ButtonLoadParametersClick"
                     Content="ОК" Width="100" />
             <Button x:Name="ButtonCancel"
-                Height="30"
-                Margin="210,10,75,10"
-                Padding="4"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Top"
-                Content="Отмена" Width="100" Click="ButtonCancelClick" />
+                    Height="30"
+                    Margin="210,10,75,10"
+                    Padding="4"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Top"
+                    Content="Отмена" Width="100" Click="ButtonCancelClick" />
         </Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition />
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
     </Grid>
 </Window>

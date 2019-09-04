@@ -22,7 +22,6 @@
         </Grid>
         <Grid Grid.Row="1">
             <TreeView
-            x:Name="FamiliesTreeView"
             Margin="10,0,10,5"
             ItemsSource="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=Categories}">
                 <TreeView.Resources>
