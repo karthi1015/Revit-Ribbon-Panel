@@ -17,10 +17,10 @@ namespace FindParameters.V
             this.InitializeComponent();
 
             FindParametersViewModel findParametersViewModel = new FindParametersViewModel(doc);
-            this.Categories = findParametersViewModel.ParameterCategoriesList;
+            this.Families = findParametersViewModel.ParameterCategoriesList;
         }
 
-        public ObservableCollection<RevitBuiltInParameterGroup> Categories { get; set; }
+        public ObservableCollection<RevitBuiltInParameterGroup> Families { get; set; }
 
         private void ButtonLoadParametersClick(object sender, RoutedEventArgs e)
         {
