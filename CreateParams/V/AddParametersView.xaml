@@ -5,15 +5,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         mc:Ignorable="d"
         MinWidth="700"
-        MinHeight="210"
-        Width="700"
-        Height="210"
-        WindowStartupLocation="CenterScreen" Title="Добавление параметров">
+        MinHeight="240"
+        WindowStartupLocation="CenterScreen" Title="Добавление параметров" Width="700" Height="240">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition />
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
@@ -73,11 +72,14 @@
                         <Button.ToolTip>
                             <ToolTip>
                                 Выбрать семейства в текущем документе для пакетного добавления параметров по специальному Excel файлу.
-                            </ToolTip>                        
+                            </ToolTip>
                         </Button.ToolTip>
                     </Button>
                 </Grid>
             </GroupBox>
+        </Grid>
+        <Grid Grid.Row="3">
+            <Label Content="v.1.3.0" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,0,0" />
         </Grid>
     </Grid>
     <Window.Resources>

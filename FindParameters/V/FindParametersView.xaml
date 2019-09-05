@@ -64,7 +64,7 @@
                 </TreeView.Resources>
                 <TreeView.ItemContainerStyle>
                     <Style TargetType="{x:Type TreeViewItem}">
-                        <Setter Property="IsExpanded" Value="False" />
+                        <Setter Property="IsExpanded" Value="True" />
                     </Style>
                 </TreeView.ItemContainerStyle>
             </TreeView>
