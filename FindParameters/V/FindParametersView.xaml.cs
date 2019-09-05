@@ -29,7 +29,7 @@ namespace FindParameters.V
         {
             try
             {
-                FindParametersViewModel.ExportElementParameters(this.ParameterGroups, this.CheckBoxUseVoid.IsChecked ?? false);
+                FindParametersViewModel.ExportElementParameters(this.ParameterGroups, this.CheckBoxUseVoid.IsChecked ?? false, this.CheckBoxUseHidden.IsChecked ?? false);
             }
             catch (Exception exception)
             {

@@ -17,11 +17,12 @@ namespace FindParameters.VM
         private static ObservableCollection<RevitBuiltInParameterGroup> parameterCategories;
 
         private static Dictionary<string, List<Element>> elements;
+        private static Document revitDocument;
 
         public FindParametersViewModel(Document doc)
         {
-            elements = ElementsExporter.GetFilteredElementsByCategory(doc);
-
+            revitDocument = doc;
+            elements = ElementsExporter.GetFilteredElementsByCategory(revitDocument);
             Dictionary<string, List<Parameter>> paramDictionary = FindParameterCategories();
 
             InitializeParameterCategoryCollection(paramDictionary);
@@ -29,7 +30,7 @@ namespace FindParameters.VM
 
         public ObservableCollection<RevitBuiltInParameterGroup> ParameterCategoriesList => parameterCategories;
 
-        public static void ExportElementParameters(ObservableCollection<RevitBuiltInParameterGroup> parameterGroups, bool isChecked)
+        public static void ExportElementParameters(ObservableCollection<RevitBuiltInParameterGroup> parameterGroups, bool isUseVoidChecked, bool isUseHidden)
         {
             List<Parameter> pickedDefinitions = (from parameterGroup in parameterGroups
                                                  from parameter in parameterGroup.Members

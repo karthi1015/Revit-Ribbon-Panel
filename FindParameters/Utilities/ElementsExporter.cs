@@ -41,11 +41,9 @@
 
             sw.Stop();
 
-            int totalCategories = sortedElements.Count;
-            int totalElements = sortedElements.Values.Sum(list => list.Count);
             TaskDialog.Show(
                 "Parameter Export",
-                $"{totalCategories} categories and a total " + $"of {totalElements} elements exported " + $"in {sw.Elapsed.TotalSeconds:F2} seconds.");
+                $"{sortedElements.Count} categories and a total " + $"of {sortedElements.Values.Sum(list => list.Count)} elements exported " + $"in {sw.Elapsed.TotalSeconds:F2} seconds.");
         }
 
         public static Dictionary<string, List<Element>> GetFilteredElementsByCategory(Document doc)
