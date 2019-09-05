@@ -1,13 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="FamilyListView.xaml.cs" company="PMTech">
-//   PMTech
-// </copyright>
-// <summary>
-//   The family list window.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace AddFamilyParameters.V
+﻿namespace AddFamilyParameters.V
 {
     using System;
     using System.Collections.ObjectModel;
@@ -15,29 +6,16 @@ namespace AddFamilyParameters.V
     using System.Windows.Controls;
 
     using AddFamilyParameters.M;
-    using AddFamilyParameters.Static_classes;
     using AddFamilyParameters.Utilities;
     using AddFamilyParameters.VM;
 
     using Autodesk.Revit.DB;
     using Autodesk.Revit.UI;
-
-    using Control = System.Windows.Controls.Control;
-
-    /// <summary>
-    /// The family list window.
-    /// </summary>
+    
     public partial class FamilyListView : Window
     {
         private static bool isAddSharedChecked;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FamilyListView"/> class.
-        /// </summary>
-        /// <param name="doc">
-        /// The doc.
-        /// </param>
-        /// <param name="isAddShared"></param>
         public FamilyListView(Document doc, bool isAddShared)
         {
             try
@@ -45,7 +23,7 @@ namespace AddFamilyParameters.V
                 this.InitializeComponent();
                 isAddSharedChecked = isAddShared;
 
-                FamilyListViewModel familyListViewModel = new FamilyListViewModel(doc);
+                var familyListViewModel = new FamilyListViewModel(doc);
                 this.Families = familyListViewModel.FamCategoriesList;
             }
             catch (Exception e)
@@ -54,9 +32,6 @@ namespace AddFamilyParameters.V
             }
         }
 
-        /// <summary>
-        /// Gets or sets the families.
-        /// </summary>
         public ObservableCollection<FamilyCategory> Families { get; set; }
 
         private void ButtonLoadParametersClick(object sender, RoutedEventArgs e)

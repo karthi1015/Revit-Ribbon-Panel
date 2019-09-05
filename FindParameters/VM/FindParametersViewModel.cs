@@ -57,9 +57,12 @@ namespace FindParameters.VM
         private static Dictionary<string, List<Parameter>> FindParameterCategories()
         {
             return elements.Values.SelectMany(e => e)
-                .SelectMany(element => element.GetOrderedParameters(), (element, parameter) => new { element, parameter })
-                .GroupBy(t => t.parameter.Definition.ParameterGroup, t => t.parameter)
-                .OrderBy(e => LabelUtils.GetLabelFor(e.Key))
+                .SelectMany(e => e.GetOrderedParameters())
+                .GroupBy(p => p.Definition.Name)
+                .Select(p => p.First())
+                .OrderBy(p => p.Definition.Name)
+                .GroupBy(p => p.Definition.ParameterGroup, p => p)
+                .OrderBy(grp => LabelUtils.GetLabelFor(grp.Key))
                 .ToDictionary(e => LabelUtils.GetLabelFor(e.Key), e => e.ToList());
         }
 
@@ -77,7 +80,7 @@ namespace FindParameters.VM
                     return false;
                 }
 
-                return x.Definition.Name == y.Definition.Name;
+                return x.Definition.Name.Equals(y.Definition.Name);
             }
 
             public int GetHashCode(Parameter obj)

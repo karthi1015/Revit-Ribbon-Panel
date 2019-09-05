@@ -79,7 +79,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Static classes\UtilityClass.cs" />
     <Compile Include="Utilities\FamilyLoadingOptions.cs" />
     <Compile Include="Utilities\ParamsHelper.cs" />
     <Compile Include="M\FamilyCategory.cs" />

@@ -16,13 +16,17 @@
     <Grid>
         <Grid Grid.Row="0">
             <CheckBox Name="CheckBoxUseVoid" Content="Учитывать полые элементы" HorizontalAlignment="Left"
-                      VerticalAlignment="Center" Margin="10,0,0,0"/>
+                      VerticalAlignment="Top" Margin="10,10,0,0"/>
             <Button Height="25" HorizontalAlignment="Right" VerticalAlignment="Bottom"
                     Content="Снять выделение"
-                    Margin="10,10,10,10" Padding="4" Click="ButtonUncheckAllClick" />
+                    Margin="10,35,10,10" Padding="4" Click="ButtonUncheckAllClick" />
+            <Button Height="25" Width="110" HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                    Margin="10,10,250,10" Content="Развернуть все" Name="ButtonExpandAll" Click="ButtonExpandAll_OnClick"/>
+            <Button Height="25" Width="110" HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                    Margin="10,10,130,10" Content="Свернуть все" Name="ButtonCollapseAll" Click="ButtonCollapseAll_OnClick"/>
         </Grid>
         <Grid Grid.Row="1">
-            <TreeView
+            <TreeView Name="CheckBoxParameterCategories"
                 Margin="10,0,10,5"
                 ItemsSource="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=ParameterGroups}">
                 <TreeView.Resources>
