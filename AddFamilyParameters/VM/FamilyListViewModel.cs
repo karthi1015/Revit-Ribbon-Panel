@@ -58,9 +58,10 @@ namespace AddFamilyParameters.VM
         /// The families.
         /// </param>
         /// <param name="isAddShared"></param>
+        /// <param name="checkProject"></param>
         /// <exception cref="ArgumentException">Throws when no families are checked
         /// </exception>
-        public static void AddFamilyParameters(ObservableCollection<FamilyCategory> families, bool isAddShared)
+        public static void AddFamilyParameters(ObservableCollection<FamilyCategory> families, bool isAddShared, bool checkProject)
         {
             List<Family> fam = (from familyCategory in families
                                 from item in familyCategory.Members
@@ -96,7 +97,6 @@ namespace AddFamilyParameters.VM
                     {
                         familyParametersResult.Skipped = true;
                         results.Add(familyParametersResult);
-                        Debug.Print("Family '{0}' is not editable", family.Name);
                         continue;
                     }
 
@@ -106,7 +106,7 @@ namespace AddFamilyParameters.VM
 
                         try
                         {
-                            AddFamilyParameters(familyDoc, dataList, familyParametersResult, isAddShared);
+                            AddFamilyParameters(familyDoc, dataList, familyParametersResult, isAddShared, checkProject);
                         }
                         catch (Exception e)
                         {
@@ -135,13 +135,32 @@ namespace AddFamilyParameters.VM
             }
         }
 
-        public static void AddFamilyParameters(Document familyDoc, List<RevitParameter> dataList, AddFamilyParametersResult results, bool isAddShared)
+        public static void AddFamilyParameters(Document familyDoc, List<RevitParameter> dataList, AddFamilyParametersResult results, bool isAddShared, bool checkProject)
         {
             foreach (var item in dataList)
             {
-                bool nameIsInUse = familyDoc.FamilyManager.Parameters.Cast<FamilyParameter>().Any(parameter => parameter.Definition.Name == item.ParamName);
+                bool nameIsInUseInFamilyManager = familyDoc.FamilyManager.Parameters.Cast<FamilyParameter>()
+                    .Any(parameter => parameter.Definition.Name == item.ParamName);
 
-                if (nameIsInUse)
+                bool nameIsInProject = false;
+
+                if (checkProject)
+                {
+                    var iter = revitDocument.ParameterBindings.ForwardIterator();
+
+                    while (iter.MoveNext())
+                    {
+                        if (iter.Key.Name == item.ParamName)
+                        {
+                            nameIsInProject = true;
+                            break;
+                        }
+                    }
+                }
+
+                bool badCategory = item.Category != (BuiltInCategory)familyDoc.OwnerFamily.FamilyCategory.Id.IntegerValue;
+
+                if (nameIsInUseInFamilyManager || badCategory || nameIsInProject)
                 {
                     continue;
                 }
@@ -154,8 +173,7 @@ namespace AddFamilyParameters.VM
                     }
 
                     DefinitionGroup dg = ParamsHelper.GetOrCreateSharedParamsGroup(familyDoc.Application.OpenSharedParameterFile(), item.GroupName);
-                    ExternalDefinition externalDefinition =
-                        ParamsHelper.GetOrCreateSharedParamDefinition(dg, item.ParamType, item.ParamName, item.IsVisible);
+                    ExternalDefinition externalDefinition = ParamsHelper.GetOrCreateSharedParamDefinition(dg, item.ParamType, item.ParamName, item.IsVisible);
 
                     results.AddFamilyParameterNote(familyDoc.FamilyManager.AddParameter(externalDefinition, item.ParamGroup, item.IsInstance));
                 }
@@ -169,10 +187,10 @@ namespace AddFamilyParameters.VM
         private static Dictionary<string, List<Family>> FindFamilyTypes()
         {
             return new FilteredElementCollector(revitDocument).WherePasses(new ElementClassFilter(typeof(Family)))
-                                                              .Cast<Family>()
-                                                              .GroupBy(e => e.FamilyCategory.Name)
-                                                              .OrderBy(e => e.Key)
-                                                              .ToDictionary(e => e.Key, e => e.ToList());
+                .Cast<Family>()
+                .GroupBy(e => e.FamilyCategory.Name)
+                .OrderBy(e => e.Key)
+                .ToDictionary(e => e.Key, e => e.ToList());
         }
 
         private static void InitializeFamilyCategoryCollection(Dictionary<string, List<Family>> source)

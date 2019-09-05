@@ -61,7 +61,7 @@ namespace AddFamilyParameters.Utilities
         {
             if (results != null)
             {
-                TaskDialog d = new TaskDialog("Add parameter") { MainInstruction = $"{results.Count} families processed." };
+                TaskDialog d = new TaskDialog("Add parameter") { MainInstruction = $"{results.Count} семейств обработано." };
 
                 List<string> familyResults = results.ConvertAll(r => r.ToString());
 
@@ -102,13 +102,17 @@ namespace AddFamilyParameters.Utilities
 
             if (this.Skipped)
             {
-                s += "skipped";
+                s += "пропущено";
             }
             else
             {
-                int numTotal = this.textNoteTypeResults.Count;
+                int numTotal = 0;
+                if (this.textNoteTypeResults != null)
+                {
+                    numTotal = this.textNoteTypeResults.Count;
+                }
 
-                s += $"{numTotal} parameters processed";
+                s += $"{numTotal} параметров добавлено";
             }
 
             return s;

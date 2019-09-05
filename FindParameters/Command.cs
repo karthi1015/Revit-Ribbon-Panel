@@ -1,10 +1,11 @@
 namespace FindParameters
 {
+    using System.Windows.Interop;
+
     using Autodesk.Revit.Attributes;
     using Autodesk.Revit.DB;
     using Autodesk.Revit.UI;
 
-    using FindParameters.Utilities;
     using FindParameters.V;
 
     using Application = Autodesk.Revit.ApplicationServices.Application;
@@ -19,8 +20,10 @@ namespace FindParameters
             Application app = uiapp.Application;
             Document doc = uidoc.Document;
 
-            // ElementsExporter.GetElementsParameters(doc);
             FindParametersView findParametersView = new FindParametersView(doc);
+
+            WindowInteropHelper helper = new WindowInteropHelper(findParametersView) { Owner = Autodesk.Windows.ComponentManager.ApplicationWindow };
+
             findParametersView.ShowDialog();
 
             return Result.Succeeded;

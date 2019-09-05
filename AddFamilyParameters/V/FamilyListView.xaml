@@ -14,6 +14,9 @@
     mc:Ignorable="d" Title="Добавление параметров в семейства">
     <Grid>
         <Grid Grid.Row="0">
+            <CheckBox Name="CheckBoxProceedProjectParameters" 
+                      Content="Учитывать параметры проекта" Margin="10,10,10,10"
+                      />
             <Button Height="25" HorizontalAlignment="Right" VerticalAlignment="Bottom"
                     Content="Снять выделение"
                     Margin="10,10,10,10" Padding="4" Click="ButtonUncheckAllClick" />
@@ -60,7 +63,7 @@
                 </TreeView.Resources>
                 <TreeView.ItemContainerStyle>
                     <Style TargetType="{x:Type TreeViewItem}">
-                        <Setter Property="IsExpanded" Value="True" />
+                        <Setter Property="IsExpanded" Value="False" />
                     </Style>
                 </TreeView.ItemContainerStyle>
             </TreeView>

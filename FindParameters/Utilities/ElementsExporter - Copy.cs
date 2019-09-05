@@ -77,7 +77,7 @@
                             table.Columns.Add(parameter.Definition.Name);
                         }
 
-                        row[parameter.Definition.Name] = LabUtils.GetParameterValue(parameter);
+                        row[parameter.Definition.Name] = GetParameterValue(parameter);
                     }
                 }
 
@@ -113,6 +113,39 @@
             }
 
             return sortedElements;
+        }
+
+        private static string GetParameterValue(Parameter param)
+        {
+            string s;
+            switch (param.StorageType)
+            {
+                case StorageType.Double:
+                    s = param.AsValueString();
+                    break;
+
+                case StorageType.Integer:
+                    s = param.AsInteger().ToString();
+                    break;
+
+                case StorageType.String:
+                    s = param.AsString();
+                    break;
+
+                case StorageType.ElementId:
+                    s = param.AsValueString() == string.Empty ? param.AsElementId().IntegerValue.ToString() : param.AsValueString();
+                    break;
+
+                case StorageType.None:
+                    s = "?NONE?";
+                    break;
+
+                default:
+                    s = "?ELSE?";
+                    break;
+            }
+
+            return s;
         }
 
         // TODO if (parameter.Definition.ParameterGroup == BuiltInParameterGroup.PG_ADSK_MODEL_PROPERTIES)

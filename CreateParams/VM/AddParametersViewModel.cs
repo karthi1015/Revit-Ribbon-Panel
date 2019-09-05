@@ -120,7 +120,7 @@
 
                     if (revitDocument.IsFamilyDocument)
                     {
-                        AddFamilyParameters.VM.FamilyListViewModel.AddFamilyParameters(revitDocument, dataList, new AddFamilyParametersResult(revitDocument.OwnerFamily), isAddShared);
+                        AddFamilyParameters.VM.FamilyListViewModel.AddFamilyParameters(revitDocument, dataList, new AddFamilyParametersResult(revitDocument.OwnerFamily), isAddShared, false);
                         showResult = true;
                     }
                     else

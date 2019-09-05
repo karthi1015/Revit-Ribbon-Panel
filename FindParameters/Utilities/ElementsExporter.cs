@@ -20,7 +20,6 @@
         /// <summary>
         /// Exports all elements from a Revit document
         /// </summary>
-        /// <param name="doc"></param>
         /// <param name="pickedDefinitions"></param>
         /// <param name="sortedElements"></param>
         public static void ExportElementParameters(List<Parameter> pickedDefinitions, Dictionary<string, List<Element>> sortedElements)
@@ -106,7 +105,7 @@
                             table.Columns.Add(parameter.Definition.Name);
                         }
 
-                        row[parameter.Definition.Name] = LabUtils.GetParameterValue(parameter);
+                        row[parameter.Definition.Name] = GetParameterValue(parameter);
                     }
                 }
 
@@ -114,6 +113,39 @@
             }
 
             return table;
+        }
+
+        private static string GetParameterValue(Parameter param)
+        {
+            string s;
+            switch (param.StorageType)
+            {
+                case StorageType.Double:
+                    s = param.AsValueString();
+                    break;
+
+                case StorageType.Integer:
+                    s = param.AsInteger().ToString();
+                    break;
+
+                case StorageType.String:
+                    s = param.AsString();
+                    break;
+
+                case StorageType.ElementId:
+                    s = param.AsValueString() == string.Empty ? param.AsElementId().IntegerValue.ToString() : param.AsValueString();
+                    break;
+
+                case StorageType.None:
+                    s = "?NONE?";
+                    break;
+
+                default:
+                    s = "?ELSE?";
+                    break;
+            }
+
+            return s;
         }
 
         // TODO if (parameter.Definition.ParameterGroup == BuiltInParameterGroup.PG_ADSK_MODEL_PROPERTIES)

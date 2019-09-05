@@ -59,7 +59,7 @@ namespace AddFamilyParameters.V
         {
             try
             {
-                FamilyListViewModel.AddFamilyParameters(this.Families, isAddSharedChecked);
+                FamilyListViewModel.AddFamilyParameters(this.Families, isAddSharedChecked, this.CheckBoxProceedProjectParameters.IsChecked ?? false);
             }
             catch (Exception exception)
             {

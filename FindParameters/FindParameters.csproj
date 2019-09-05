@@ -42,6 +42,9 @@
     <StartProgram>$(ProgramW6432)\Autodesk\Revit 2019\Revit.exe</StartProgram>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AdWindows">
+      <HintPath>C:\Program Files\Autodesk\Revit 2019\AdWindows.dll</HintPath>
+    </Reference>
     <Reference Include="ClosedXML, Version=0.94.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ClosedXML.0.94.2\lib\net46\ClosedXML.dll</HintPath>
     </Reference>
@@ -87,7 +90,6 @@
     <Compile Include="Utilities\ElementsExporter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\ItemHelper.cs" />
-    <Compile Include="Utilities\LabUtils.cs" />
     <Compile Include="Utilities\ResultsHelper.cs" />
     <Compile Include="VM\FindParametersViewModel.cs" />
     <Compile Include="V\FindParametersView.xaml.cs">
