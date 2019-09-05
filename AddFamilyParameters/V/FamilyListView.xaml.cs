@@ -12,13 +12,17 @@ namespace AddFamilyParameters.V
     using System;
     using System.Collections.ObjectModel;
     using System.Windows;
+    using System.Windows.Controls;
 
     using AddFamilyParameters.M;
+    using AddFamilyParameters.Static_classes;
     using AddFamilyParameters.Utilities;
     using AddFamilyParameters.VM;
 
     using Autodesk.Revit.DB;
     using Autodesk.Revit.UI;
+
+    using Control = System.Windows.Controls.Control;
 
     /// <summary>
     /// The family list window.
@@ -82,6 +86,51 @@ namespace AddFamilyParameters.V
         private void ButtonCancelClick(object sender, RoutedEventArgs e)
         {
             this.Close();
+        }
+
+        private void ButtonExpandAll_OnClick(object sender, RoutedEventArgs e)
+        {
+            foreach (object item in this.FamiliesTreeView.Items)
+            {
+                TreeViewItem treeItem = this.FamiliesTreeView.ItemContainerGenerator.ContainerFromItem(item) as TreeViewItem;
+                if (treeItem != null)
+                {
+                    this.ExpandAll(treeItem, true);
+                }
+
+                treeItem.IsExpanded = true;
+            }
+        }
+
+        private void ButtonCollapseAll_OnClick(object sender, RoutedEventArgs e)
+        {
+            foreach (object item in this.FamiliesTreeView.Items)
+            {
+                TreeViewItem treeItem = this.FamiliesTreeView.ItemContainerGenerator.ContainerFromItem(item) as TreeViewItem;
+                if (treeItem != null)
+                {
+                    this.ExpandAll(treeItem, false);
+                }
+
+                treeItem.IsExpanded = false;
+            }
+        }
+
+        private void ExpandAll(ItemsControl items, bool expand)
+        {
+            foreach (object obj in items.Items)
+            {
+                ItemsControl childControl = items.ItemContainerGenerator.ContainerFromItem(obj) as ItemsControl;
+                if (childControl != null)
+                {
+                    this.ExpandAll(childControl, expand);
+                }
+
+                if (childControl is TreeViewItem item)
+                {
+                    item.IsExpanded = true;
+                }
+            }
         }
     }
 }
