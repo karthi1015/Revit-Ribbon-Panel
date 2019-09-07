@@ -12,7 +12,6 @@
     using Autodesk.Revit.DB;
     using Autodesk.Revit.UI;
 
-    using Application = Autodesk.Revit.ApplicationServices.Application;
     using Binding = Autodesk.Revit.DB.Binding;
 
     /// <summary>
@@ -22,12 +21,6 @@
     {
         private static Document revitDocument;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AddParametersViewModel"/> class.
-        /// </summary>
-        /// <param name="doc">
-        /// The doc.
-        /// </param>
         public AddParametersViewModel(Document doc)
         {
             revitDocument = doc;
@@ -97,7 +90,15 @@
         /// </summary>
         public static void CreateProjectParameter(bool isAddShared)
         {
-            DefinitionFile sharedParameterFile = revitDocument.Application.OpenSharedParameterFile();
+            DefinitionFile sharedParameterFile;
+            try
+            {
+                sharedParameterFile = revitDocument.Application.OpenSharedParameterFile();
+            }
+            catch
+            {
+                throw new ArgumentException("Проблема в файле общих параметров. Пожалуйста, выберите другой файл или создайте новый");
+            }
 
             if (isAddShared && ((sharedParameterFile == null) || (sharedParameterFile.Filename == string.Empty)))
             {

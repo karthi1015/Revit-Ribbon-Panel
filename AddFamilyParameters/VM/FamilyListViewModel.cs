@@ -1,18 +1,8 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="FamilyListViewModel.cs" company="PMTech">
-//   PMTech
-// </copyright>
-// <summary>
-//   Defines the FamilyListViewModel type.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace AddFamilyParameters.VM
+﻿namespace AddFamilyParameters.VM
 {
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Diagnostics;
     using System.Linq;
 
     using AddFamilyParameters.M;
@@ -30,12 +20,6 @@ namespace AddFamilyParameters.VM
 
         private static Document revitDocument;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FamilyListViewModel"/> class.
-        /// </summary>
-        /// <param name="doc">
-        /// The doc.
-        /// </param>
         public FamilyListViewModel(Document doc)
         {
             revitDocument = doc;
@@ -49,7 +33,23 @@ namespace AddFamilyParameters.VM
         /// </summary>
         public ObservableCollection<FamilyCategory> FamCategoriesList => famCategories;
 
-        private static DefinitionFile SharedParameterFile => revitDocument.Application.OpenSharedParameterFile();
+        private static DefinitionFile SharedParameterFile
+        {
+            get
+            {
+                DefinitionFile file; 
+                try
+                {
+                    file = revitDocument.Application.OpenSharedParameterFile();
+                }
+                catch
+                {
+                    throw new ArgumentException("Проблема в файле общих параметров. Пожалуйста, выберите другой файл или создайте новый");
+                }
+
+                return file;
+            }
+        }
 
         /// <summary>
         /// The add family parameters.

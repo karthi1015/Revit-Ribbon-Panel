@@ -1,5 +1,6 @@
 ﻿namespace CreateParams.V
 {
+    using System;
     using System.Drawing;
     using System.Drawing.Imaging;
     using System.IO;
@@ -9,6 +10,7 @@
     using AddFamilyParameters.V;
 
     using Autodesk.Revit.DB;
+    using Autodesk.Revit.UI;
 
     using CreateParams.VM;
 
@@ -73,7 +75,14 @@
 
         private void ButtonAddSharedParameters_OnClick(object sender, RoutedEventArgs e)
         {
-            AddParametersViewModel.CreateProjectParameter(this.CheckBoxAddShared.IsChecked ?? false);
+            try
+            {
+                AddParametersViewModel.CreateProjectParameter(this.CheckBoxAddShared.IsChecked ?? false);
+            }
+            catch (Exception ex)
+            {
+                TaskDialog.Show("Revit", ex.Message);
+            }
         }
 
         private void ButtonAddFamilyParameters_OnClick(object sender, RoutedEventArgs e)
