@@ -12,7 +12,7 @@ TreeView items inherit DependencyObject class.</li>
 <li>Also tried to implement MVVM here</li>
 
 <p align="center">
-  <img src="(https://user-images.githubusercontent.com/41282278/64475002-39aceb00-d185-11e9-8c78-665c03c76857.png">
+  <img src="https://user-images.githubusercontent.com/41282278/64475002-39aceb00-d185-11e9-8c78-665c03c76857.png">
 </p>
 
 ## Export parameters to excel ##
