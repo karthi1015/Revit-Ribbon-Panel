@@ -92,8 +92,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="PMTech Revit Ribbon Panel.addin" />
+    <None Include="Resources\icons8-paint-palette-32.png" />
     <None Include="Resources\icons8-export-csv-32.png" />
-    <None Include="Resources\icons8-add-to-collection-32.png" />
     <None Include="Resources\icons8-add-property-32.png" />
     <None Include="Resources\AddProperty.bmp" />
     <None Include="Settings.StyleCop" />
@@ -116,6 +116,10 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ConnectorsRecolor\ConnectorsRecolor.csproj">
+      <Project>{ae424f9c-f550-4a7b-be85-cd5b788a21b3}</Project>
+      <Name>ConnectorsRecolor</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CreateParams\CreateParams.csproj">
       <Project>{4f3e7b19-c615-43f4-ab05-1d9695a6c30f}</Project>
       <Name>CreateParams</Name>

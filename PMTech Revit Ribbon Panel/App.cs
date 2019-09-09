@@ -46,7 +46,7 @@ namespace PMTech_Revit_Ribbon_Panel
             var addSharedBtnData = new PushButtonData("Add shared parameters", "Добавить параметры", this.path + "\\CreateParams.dll", "CreateParams.Command")
                                      {
                                          ToolTip = "Пакетное добавление параметров в проект или в семейства по excel файлу",
-                                         LongDescription = "Разработчик: Кожевников Андрей Олегович",
+                                         LongDescription = "Разработчик: Кожевников Андрей",
                                          Image = imageSource,
                                          LargeImage = imageSource
                                      };
@@ -57,9 +57,7 @@ namespace PMTech_Revit_Ribbon_Panel
                 addSharedButton.Enabled = true;
             }
 
-            // ----------------------------
-            // ---Button Add shared parameters---
-            // ----------------------------
+            panel.AddSeparator();
 
             // ----------------------------
             // ---Button get parameters---
@@ -70,7 +68,7 @@ namespace PMTech_Revit_Ribbon_Panel
             var exportParametersBtnData = new PushButtonData("Export model", "Выгрузить модель", this.path + "\\FindParameters.dll", "FindParameters.Command")
                                      {
                                          ToolTip = "Выгрузить модель в excel",
-                                         LongDescription = "Разработчик: Кожевников Андрей Олегович",
+                                         LongDescription = "Разработчик: Кожевников Андрей",
                                          Image = imageSource,
                                          LargeImage = imageSource
                                      };
@@ -80,9 +78,27 @@ namespace PMTech_Revit_Ribbon_Panel
                 exportParametersButton.Enabled = true;
             }
 
+            panel.AddSeparator();
+
             // ----------------------------
             // ---Button get parameters---
             // ----------------------------
+            img = Properties.Resources.icons8_paint_palette_32;
+            imageSource = GetImageSource(img);
+
+            var colorConnectorsBtnData = new PushButtonData("Color Connectors", "НБ_Гладкое. Окраска коннекторов", this.path + "\\ConnectorsRecolor.dll", "ConnectorsRecolor.Command")
+                                          {
+                                              ToolTip = "Окраска коннекторов в проекте НБ_Гладкое",
+                                              LongDescription = "Разработчик: Кожевников Андрей, Климович Александр\n",
+                                              Image = imageSource,
+                                              LargeImage = imageSource
+                                          };
+
+            if (panel.AddItem(colorConnectorsBtnData) is PushButton colorConnectorsBtnDataButton)
+            {
+                colorConnectorsBtnDataButton.Enabled = true;
+            }
+
             return Result.Succeeded;
         }
 
