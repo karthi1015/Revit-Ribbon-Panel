@@ -34,14 +34,15 @@
         /// <summary>
         /// The set new shared parameter file.
         /// </summary>
-        public static void SetNewSharedParameterFile()
+        public static void SetNewSharedParameterFile(string initialDir)
         {
             var openFileDialog = new OpenFileDialog()
             {
                 Filter = @"Text Files|*.txt",
                 FilterIndex = 1,
                 RestoreDirectory = true,
-                Title = @"Задать файл общих параметров"
+                Title = @"Задать файл общих параметров",
+                InitialDirectory = initialDir
             };
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
@@ -54,14 +55,15 @@
         /// <summary>
         /// The create new shared parameters file.
         /// </summary>
-        public static void CreateNewSharedParametersFile()
+        public static void CreateNewSharedParametersFile(string initialDir)
         {
             var saveFileDialog = new SaveFileDialog()
             {
                 Filter = @"Text Files|*.txt",
                 FilterIndex = 1,
                 RestoreDirectory = true,
-                Title = @"Создать файл общих параметров"
+                Title = @"Создать файл общих параметров",
+                InitialDirectory = initialDir
             };
 
             if (saveFileDialog.ShowDialog() == DialogResult.OK)

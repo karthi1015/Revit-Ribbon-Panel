@@ -63,13 +63,13 @@
 
         private void ButtonBrowseSharedParameterFile_OnClick(object sender, RoutedEventArgs e)
         {
-            AddParametersViewModel.SetNewSharedParameterFile();
+            AddParametersViewModel.SetNewSharedParameterFile(Path.GetDirectoryName(this.FilePathTextBox.Text));
             this.FilePathTextBox.Text = this.viewModel.SharedParametersFilePath;
         }
 
         private void ButtonCreateSharedParameterFile_OnClick(object sender, RoutedEventArgs e)
         {
-            AddParametersViewModel.CreateNewSharedParametersFile();
+            AddParametersViewModel.CreateNewSharedParametersFile(Path.GetDirectoryName(this.FilePathTextBox.Text));
             this.FilePathTextBox.Text = this.viewModel.SharedParametersFilePath;
         }
 
