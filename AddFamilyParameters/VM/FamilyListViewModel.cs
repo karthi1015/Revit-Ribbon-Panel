@@ -11,9 +11,6 @@
     using Autodesk.Revit.DB;
     using Autodesk.Revit.UI;
 
-    /// <summary>
-    /// The family list view model.
-    /// </summary>
     public class FamilyListViewModel
     {
         private static ObservableCollection<FamilyCategory> famCategories;
