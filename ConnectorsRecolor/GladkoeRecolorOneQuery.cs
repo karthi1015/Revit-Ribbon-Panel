@@ -26,21 +26,21 @@ namespace ConnectorsRecolor
         {
             switch (pipeType)
             {
-                case "Азот":
+                case "Азот_":
                     return new FilteredElementCollector(doc).OfClass(typeof(Material)).FirstOrDefault(m => m.Name.Equals("0_153_255"))?.Id;
-                case "Вода":
+                case "Вода_":
                     return new FilteredElementCollector(doc).OfClass(typeof(Material)).FirstOrDefault(m => m.Name.Equals("0_96_0"))?.Id;
-                case "Газ":
+                case "Газ_":
                     return new FilteredElementCollector(doc).OfClass(typeof(Material)).FirstOrDefault(m => m.Name.Equals("255_220_112"))?.Id;
-                case "Дренаж":
+                case "Дренаж_":
                     return new FilteredElementCollector(doc).OfClass(typeof(Material)).FirstOrDefault(m => m.Name.Equals("192_192_192"))?.Id;
-                case "Канализация":
+                case "Канализация_":
                     return new FilteredElementCollector(doc).OfClass(typeof(Material)).FirstOrDefault(m => m.Name.Equals("192_192_192"))?.Id;
-                case "Нефтепродукты":
+                case "Нефтепродукты_":
                     return new FilteredElementCollector(doc).OfClass(typeof(Material)).FirstOrDefault(m => m.Name.Equals("160_80_0"))?.Id;
-                case "Пенообразователь":
+                case "Пенообразователь_":
                     return new FilteredElementCollector(doc).OfClass(typeof(Material)).FirstOrDefault(m => m.Name.Equals("224_0_0"))?.Id;
-                case "ХимическиеРеагенты":
+                case "ХимическиеРеагенты_":
                     return new FilteredElementCollector(doc).OfClass(typeof(Material)).FirstOrDefault(m => m.Name.Equals("128_96_0"))?.Id;
             }
 
@@ -67,10 +67,14 @@ namespace ConnectorsRecolor
                 .SelectMany(e => e.MEPModel.ConnectorManager.Connectors.Cast<Connector>(), (e, connector) => (familyInstance: e, connector))
                 .SelectMany(t => t.connector.AllRefs.Cast<Connector>(), (familyInstance, reference) => (familyInstance, reference))
                 .Where(
-                    t => t.reference.Owner.Name.Contains("Азот") || t.reference.Owner.Name.Contains("Вода") || t.reference.Owner.Name.Contains("Газ")
-                         || t.reference.Owner.Name.Contains("Дренаж") || t.reference.Owner.Name.Contains("Канализация")
-                         || t.reference.Owner.Name.Contains("Нефтепродукты") || t.reference.Owner.Name.Contains("Пенообразователь")
-                         || t.reference.Owner.Name.Contains("ХимическиеРеагенты"))
+                    t => t.reference.Owner.Name.StartsWith("Азот_") 
+                         || t.reference.Owner.Name.StartsWith("Вода_") 
+                         || t.reference.Owner.Name.StartsWith("Газ_")
+                         || t.reference.Owner.Name.StartsWith("Дренаж_") 
+                         || t.reference.Owner.Name.StartsWith("Канализация_")
+                         || t.reference.Owner.Name.StartsWith("Нефтепродукты_") 
+                         || t.reference.Owner.Name.StartsWith("Пенообразователь_")
+                         || t.reference.Owner.Name.StartsWith("ХимическиеРеагенты_"))
                 .Select(t => (t.familyInstance.familyInstance, t.reference.Owner))
                 .SelectMany(
                     e => e.familyInstance.MEPModel.ConnectorManager.Connectors.Cast<Connector>(),
@@ -89,7 +93,7 @@ namespace ConnectorsRecolor
 
             foreach (KeyValuePair<string, List<Element>> valuePair in pipes)
             {
-                if (valuePair.Key.Contains(pipeType))
+                if (valuePair.Key.StartsWith(pipeType))
                 {
                     ElementId material = GetMaterialId(doc, pipeType) ?? throw new ArgumentNullException(
                                              nameof(material),
@@ -114,9 +118,14 @@ namespace ConnectorsRecolor
             {
                 tran.Start("Change color");
 
-                count = ChangeColor(doc, pipes, "Азот") + ChangeColor(doc, pipes, "Вода") + ChangeColor(doc, pipes, "Газ") + ChangeColor(doc, pipes, "Дренаж")
-                        + ChangeColor(doc, pipes, "Канализация") + ChangeColor(doc, pipes, "Нефтепродукты") + ChangeColor(doc, pipes, "Пенообразователь")
-                        + ChangeColor(doc, pipes, "ХимическиеРеагенты");
+                count = ChangeColor(doc, pipes, "Азот_") + 
+                        ChangeColor(doc, pipes, "Вода_") + 
+                        ChangeColor(doc, pipes, "Газ_") + 
+                        ChangeColor(doc, pipes, "Дренаж_") +
+                        ChangeColor(doc, pipes, "Канализация_") + 
+                        ChangeColor(doc, pipes, "Нефтепродукты_") + 
+                        ChangeColor(doc, pipes, "Пенообразователь_") +
+                        ChangeColor(doc, pipes, "ХимическиеРеагенты_");
 
                 tran.Commit();
             }
