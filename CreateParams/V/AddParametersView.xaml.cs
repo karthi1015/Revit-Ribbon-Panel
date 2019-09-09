@@ -21,18 +21,12 @@
         private readonly Document revitDocument;
         private FamilyListView familyListView;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AddParametersView"/> class.
-        /// </summary>
-        /// <param name="doc">
-        /// The doc.
-        /// </param>
         public AddParametersView(Document doc)
         {
             this.InitializeComponent();
 
             Image img = Properties.Resources.icons8_add_property_32;
-            this.Icon = this.GetImageSource(img);
+            this.Icon = GetImageSource(img);
 
             this.revitDocument = doc;
             this.viewModel = new AddParametersViewModel(doc);
@@ -40,7 +34,7 @@
             this.FilePathTextBox.Text = this.viewModel.SharedParametersFilePath;
         }
 
-        private BitmapImage GetImageSource(Image img)
+        private static BitmapImage GetImageSource(Image img)
         {
             BitmapImage bmp = new BitmapImage();
         

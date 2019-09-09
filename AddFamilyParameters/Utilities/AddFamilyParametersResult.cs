@@ -10,6 +10,9 @@
 namespace AddFamilyParameters.Utilities
 {
     using System.Collections.Generic;
+    using System.Linq;
+
+    using AddFamilyParameters.M;
 
     using Autodesk.Revit.DB;
     using Autodesk.Revit.UI;
@@ -33,6 +36,12 @@ namespace AddFamilyParameters.Utilities
         public AddFamilyParametersResult(Element f)
         {
             this.FamilyName = f.Name;
+            this.textNoteTypeResults = null;
+        }
+
+        public AddFamilyParametersResult(Document f)
+        {
+            this.FamilyName = f.Title;
             this.textNoteTypeResults = null;
         }
 
@@ -61,7 +70,11 @@ namespace AddFamilyParameters.Utilities
         {
             if (results != null)
             {
-                TaskDialog d = new TaskDialog("Add parameter") { MainInstruction = $"{results.Count} семейств обработано." };
+                TaskDialog d = new TaskDialog("Add parameter");
+                if (results.Count > 1)
+                {
+                    d = new TaskDialog("Add parameter") { MainInstruction = $"{results.Count} семейств обработано." };
+                }
 
                 List<string> familyResults = results.ConvertAll(r => r.ToString());
 
@@ -90,15 +103,24 @@ namespace AddFamilyParameters.Utilities
             this.textNoteTypeResults.Add(r);
         }
 
-        /// <summary>
-        /// The to string.
-        /// </summary>
-        /// <returns>
-        /// The <see cref="string"/>.
-        /// </returns>
+        public void AddFamilyParameterNote(RevitParameter parameter)
+        {
+            if (this.textNoteTypeResults == null)
+            {
+                this.textNoteTypeResults = new List<AddParameterResult>();
+            }
+
+            AddParameterResult r = new AddParameterResult { Name = parameter.ParamName };
+            this.textNoteTypeResults.Add(r);
+        }
+
         public override string ToString()
         {
-            string s = this.FamilyName + ": ";
+            string s = string.Empty;
+            if (!string.IsNullOrEmpty(FamilyName))
+            {
+                s = this.FamilyName + ": ";
+            }
 
             if (this.Skipped)
             {
@@ -112,7 +134,7 @@ namespace AddFamilyParameters.Utilities
                     numTotal = this.textNoteTypeResults.Count;
                 }
 
-                s += $"{numTotal} параметров добавлено";
+                s += $"{numTotal} параметров добавлено.";
             }
 
             return s;

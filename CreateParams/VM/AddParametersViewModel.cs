@@ -117,27 +117,31 @@
                 }
 
                 var showResult = false;
+                AddFamilyParametersResult familyParametersResult;
                 using (var t = new Transaction(revitDocument))
                 {
                     t.Start($"Adding Parameters from Excel");
 
                     if (revitDocument.IsFamilyDocument)
                     {
-                        AddFamilyParameters.VM.FamilyListViewModel.AddFamilyParameters(revitDocument, dataList, new AddFamilyParametersResult(revitDocument.OwnerFamily), isAddShared, false);
-                        showResult = true;
+                        familyParametersResult = new AddFamilyParametersResult(revitDocument.OwnerFamily);
+                        AddFamilyParameters.VM.FamilyListViewModel.AddFamilyParameters(revitDocument, dataList, familyParametersResult, isAddShared, false);
                     }
                     else
                     {
-                        showResult = AddDocumentParameters(dataList, sharedParameterFile);
+                        familyParametersResult = new AddFamilyParametersResult(revitDocument);
+                        AddDocumentParameters(dataList, sharedParameterFile, familyParametersResult);
                     }
-                    
+
                     t.Commit();
                 }
 
-                if (showResult)
-                {
-                    TaskDialog.Show("Adding Project Parameters", "Параметры были успешно добавлены");
-                }
+                AddFamilyParametersResult.ShowResultsDialog(new List<AddFamilyParametersResult> { familyParametersResult });
+
+                //if (showResult)
+                //{
+                //    TaskDialog.Show("Adding Project Parameters", "Параметры были успешно добавлены");
+                //}
             }
             catch (Exception e)
             {
@@ -145,10 +149,9 @@
             }
         }
 
-        private static bool AddDocumentParameters(List<RevitParameter> dataList, DefinitionFile sharedParameterFile)
+        private static void AddDocumentParameters(List<RevitParameter> dataList, DefinitionFile sharedParameterFile, AddFamilyParametersResult results)
         {
             CategorySet categorySet = revitDocument.Application.Create.NewCategorySet();
-            bool showResult = false;
 
             foreach (var item in dataList)
             {
@@ -176,14 +179,11 @@
 
                 if (revitDocument.ParameterBindings.Contains(externalDefinition))
                 {
-                    if (revitDocument.ParameterBindings.ReInsert(externalDefinition, newIb))
-                    {
-                        showResult = true;
-                    }
+                    revitDocument.ParameterBindings.ReInsert(externalDefinition, newIb);
                 }
-            }
 
-            return showResult;
+                results.AddFamilyParameterNote(item);
+            }
         }
     }
 }

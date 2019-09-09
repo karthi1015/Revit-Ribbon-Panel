@@ -126,8 +126,11 @@
 
                     foreach (var r in results)
                     {
-                        r.FamilyDocument.LoadFamily(revitDocument, opt);
-                        r.FamilyDocument.Close(false);
+                        if (r.FamilyDocument != null)
+                        {
+                            r.FamilyDocument.LoadFamily(revitDocument, opt);
+                            r.FamilyDocument.Close(false);
+                        }
                     }
 
                     AddFamilyParametersResult.ShowResultsDialog(results);
@@ -159,6 +162,11 @@
                 }
 
                 bool badCategory = item.Category != (BuiltInCategory)familyDoc.OwnerFamily.FamilyCategory.Id.IntegerValue;
+
+                if (item.Category != (BuiltInCategory)familyDoc.OwnerFamily.FamilyCategory.Id.IntegerValue)
+                {
+                    throw new ArgumentException("В файле Excel параметру назначена неверная категория семейства. Проверьте корректность файла Excel");
+                }
 
                 if (nameIsInUseInFamilyManager || badCategory || nameIsInProject)
                 {
