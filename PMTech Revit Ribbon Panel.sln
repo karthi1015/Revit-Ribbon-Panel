@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AddFamilyParameters", "AddF
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FindParameters", "FindParameters\FindParameters.csproj", "{7E5C1081-736C-43E0-B70E-3B84D318D1B4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConnectorsRecolor", "ConnectorsRecolor\ConnectorsRecolor.csproj", "{AE424F9C-F550-4A7B-BE85-CD5B788A21B3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gladkoe", "ConnectorsRecolor\Gladkoe.csproj", "{AE424F9C-F550-4A7B-BE85-CD5B788A21B3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

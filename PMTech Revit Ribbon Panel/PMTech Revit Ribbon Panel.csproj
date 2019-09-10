@@ -116,9 +116,9 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ConnectorsRecolor\ConnectorsRecolor.csproj">
+    <ProjectReference Include="..\ConnectorsRecolor\Gladkoe.csproj">
       <Project>{ae424f9c-f550-4a7b-be85-cd5b788a21b3}</Project>
-      <Name>ConnectorsRecolor</Name>
+      <Name>Gladkoe</Name>
     </ProjectReference>
     <ProjectReference Include="..\CreateParams\CreateParams.csproj">
       <Project>{4f3e7b19-c615-43f4-ab05-1d9695a6c30f}</Project>
@@ -131,8 +131,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>if exist "$(AppData)\Autodesk\REVIT\Addins\2019" copy "$(ProjectDir)*.addin" "$(AppData)\Autodesk\REVIT\Addins\2019"
-if exist "$(AppData)\Autodesk\REVIT\Addins\2019" copy "$(ProjectDir)$(OutputPath)*.dll" "$(AppData)\Autodesk\REVIT\Addins\2019"</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.

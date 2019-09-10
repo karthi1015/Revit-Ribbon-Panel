@@ -86,7 +86,7 @@ namespace PMTech_Revit_Ribbon_Panel
             img = Properties.Resources.icons8_paint_palette_32;
             imageSource = GetImageSource(img);
 
-            var colorConnectorsBtnData = new PushButtonData("Color Connectors", "НБ_Гладкое. Окраска коннекторов", this.path + "\\ConnectorsRecolor.dll", "ConnectorsRecolor.Command")
+            var colorConnectorsBtnData = new PushButtonData("Color Connectors", "НБ_Гладкое. Окраска коннекторов", this.path + "\\Gladkoe.dll", "ConnectorsRecolor")
                                           {
                                               ToolTip = "Окраска коннекторов в проекте НБ_Гладкое",
                                               LongDescription = "Разработчик: Кожевников Андрей, Климович Александр\n",

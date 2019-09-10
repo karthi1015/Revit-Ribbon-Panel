@@ -1,16 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-
-using Autodesk.Revit.DB;
-using Autodesk.Revit.UI;
-
-namespace ConnectorsRecolor
+﻿namespace Gladkoe
 {
-    public class GladkoeRecolorOneQuery
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Linq;
+
+    using Autodesk.Revit.ApplicationServices;
+    using Autodesk.Revit.Attributes;
+    using Autodesk.Revit.DB;
+    using Autodesk.Revit.UI;
+
+    [Transaction(TransactionMode.Manual)]
+    [Regeneration(RegenerationOption.Manual)]
+    public class ConnectorsRecolor : IExternalCommand
     {
-        public static void ChangeColor(Document doc)
+        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
+        {
+            UIApplication uiapp = commandData.Application;
+            UIDocument uidoc = uiapp.ActiveUIDocument;
+            Application app = uiapp.Application;
+            Document doc = uidoc.Document;
+
+            ChangeColor(doc);
+
+            return Result.Succeeded;
+        }
+
+        private static void ChangeColor(Document doc)
         {
             try
             {
@@ -67,12 +83,12 @@ namespace ConnectorsRecolor
                 .SelectMany(e => e.MEPModel.ConnectorManager.Connectors.Cast<Connector>(), (e, connector) => (familyInstance: e, connector))
                 .SelectMany(t => t.connector.AllRefs.Cast<Connector>(), (familyInstance, reference) => (familyInstance, reference))
                 .Where(
-                    t => t.reference.Owner.Name.StartsWith("Азот_") 
-                         || t.reference.Owner.Name.StartsWith("Вода_") 
+                    t => t.reference.Owner.Name.StartsWith("Азот_")
+                         || t.reference.Owner.Name.StartsWith("Вода_")
                          || t.reference.Owner.Name.StartsWith("Газ_")
-                         || t.reference.Owner.Name.StartsWith("Дренаж_") 
+                         || t.reference.Owner.Name.StartsWith("Дренаж_")
                          || t.reference.Owner.Name.StartsWith("Канализация_")
-                         || t.reference.Owner.Name.StartsWith("Нефтепродукты_") 
+                         || t.reference.Owner.Name.StartsWith("Нефтепродукты_")
                          || t.reference.Owner.Name.StartsWith("Пенообразователь_")
                          || t.reference.Owner.Name.StartsWith("ХимическиеРеагенты_"))
                 .Select(t => (t.familyInstance.familyInstance, t.reference.Owner))
@@ -118,12 +134,12 @@ namespace ConnectorsRecolor
             {
                 tran.Start("Change color");
 
-                count = ChangeColor(doc, pipes, "Азот_") + 
-                        ChangeColor(doc, pipes, "Вода_") + 
-                        ChangeColor(doc, pipes, "Газ_") + 
+                count = ChangeColor(doc, pipes, "Азот_") +
+                        ChangeColor(doc, pipes, "Вода_") +
+                        ChangeColor(doc, pipes, "Газ_") +
                         ChangeColor(doc, pipes, "Дренаж_") +
-                        ChangeColor(doc, pipes, "Канализация_") + 
-                        ChangeColor(doc, pipes, "Нефтепродукты_") + 
+                        ChangeColor(doc, pipes, "Канализация_") +
+                        ChangeColor(doc, pipes, "Нефтепродукты_") +
                         ChangeColor(doc, pipes, "Пенообразователь_") +
                         ChangeColor(doc, pipes, "ХимическиеРеагенты_");
 

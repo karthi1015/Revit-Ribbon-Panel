@@ -37,13 +37,13 @@
         public static void SetNewSharedParameterFile(string initialDir)
         {
             var openFileDialog = new OpenFileDialog()
-            {
-                Filter = @"Text Files|*.txt",
-                FilterIndex = 1,
-                RestoreDirectory = true,
-                Title = @"Задать файл общих параметров",
-                InitialDirectory = initialDir
-            };
+                                 {
+                                     Filter = @"Text Files|*.txt",
+                                     FilterIndex = 1,
+                                     RestoreDirectory = true,
+                                     Title = @"Задать файл общих параметров",
+                                     InitialDirectory = initialDir
+                                 };
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
@@ -58,13 +58,13 @@
         public static void CreateNewSharedParametersFile(string initialDir)
         {
             var saveFileDialog = new SaveFileDialog()
-            {
-                Filter = @"Text Files|*.txt",
-                FilterIndex = 1,
-                RestoreDirectory = true,
-                Title = @"Создать файл общих параметров",
-                InitialDirectory = initialDir
-            };
+                                 {
+                                     Filter = @"Text Files|*.txt",
+                                     FilterIndex = 1,
+                                     RestoreDirectory = true,
+                                     Title = @"Создать файл общих параметров",
+                                     InitialDirectory = initialDir
+                                 };
 
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
@@ -116,7 +116,6 @@
                     return;
                 }
 
-                var showResult = false;
                 AddFamilyParametersResult familyParametersResult;
                 using (var t = new Transaction(revitDocument))
                 {
@@ -137,11 +136,6 @@
                 }
 
                 AddFamilyParametersResult.ShowResultsDialog(new List<AddFamilyParametersResult> { familyParametersResult });
-
-                //if (showResult)
-                //{
-                //    TaskDialog.Show("Adding Project Parameters", "Параметры были успешно добавлены");
-                //}
             }
             catch (Exception e)
             {
@@ -156,11 +150,7 @@
             foreach (var item in dataList)
             {
                 DefinitionGroup dg = ParamsHelper.GetOrCreateSharedParamsGroup(sharedParameterFile, item.GroupName);
-                ExternalDefinition externalDefinition = ParamsHelper.GetOrCreateSharedParamDefinition(
-                    dg,
-                    item.ParamType,
-                    item.ParamName,
-                    item.IsVisible);
+                ExternalDefinition externalDefinition = ParamsHelper.GetOrCreateSharedParamDefinition(dg, item.ParamType, item.ParamName, item.IsVisible);
 
                 Category category = revitDocument.Settings.Categories.get_Item(item.Category);
                 categorySet.Insert(category);
