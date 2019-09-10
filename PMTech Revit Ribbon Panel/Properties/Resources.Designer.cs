@@ -73,6 +73,26 @@ namespace PMTech_Revit_Ribbon_Panel.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap icons8_administrative_tools_32 {
+            get {
+                object obj = ResourceManager.GetObject("icons8_administrative_tools_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icons8_doctors_folder_32 {
+            get {
+                object obj = ResourceManager.GetObject("icons8_doctors_folder_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap icons8_export_csv_32 {
             get {
                 object obj = ResourceManager.GetObject("icons8_export_csv_32", resourceCulture);

@@ -92,6 +92,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="PMTech Revit Ribbon Panel.addin" />
+    <None Include="Resources\icons8-doctors-folder-32.png" />
+    <None Include="Resources\icons8-administrative-tools-32.png" />
     <None Include="Resources\icons8-paint-palette-32.png" />
     <None Include="Resources\icons8-export-csv-32.png" />
     <None Include="Resources\icons8-add-property-32.png" />
@@ -131,8 +133,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>if exist "$(AppData)\Autodesk\REVIT\Addins\2019" copy "$(ProjectDir)*.addin" "$(AppData)\Autodesk\REVIT\Addins\2019"
+if exist "$(AppData)\Autodesk\REVIT\Addins\2019" copy "$(ProjectDir)$(OutputPath)*.dll" "$(AppData)\Autodesk\REVIT\Addins\2019"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
