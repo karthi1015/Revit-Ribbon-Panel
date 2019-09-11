@@ -49,8 +49,9 @@
             {
                 tran.Start("Fill parameters");
 
-                SetParameters(doc, flanges, "Концевое условие", "Фланец", "Концевое условие 2", "Сварной шов");
-                SetParameters(doc, welds, "Концевое условие", "Сварной шов", "Концевое условие 2", "Сварной шов");
+                SetFlangesParameters(doc, flanges, "Фланец", "Сварной шов", "Сварной шов", "Сварной шов");
+
+                SetWeldParameters(doc, welds);
 
                 tran.Commit();
             }
@@ -58,28 +59,65 @@
             TaskDialog.Show("Fill parameters", "Параметры заполнены");
         }
 
-        private static void SetParameters(
-            Document doc,
-            List<ElementId> elementsId,
-            string parameterName,
-            string parameterValue,
-            string parameterName2 = null,
-            string parameterValue2 = null)
+        private static Parameter GetParameter(Element element, string parameterName)
+        {
+            return element.GetOrderedParameters().FirstOrDefault(e => e.Definition.Name.Equals(parameterName)) ?? throw new ArgumentNullException(
+                       parameterName,
+                       $"Проблема в нахождении параметра \"{parameterName}\", проверьте наименования параметров");
+        }
+
+        private static void SetWeldParameters(Document doc, List<ElementId> elementIds)
+        {
+            IEnumerable<Element> elements = elementIds.Select(doc.GetElement);
+
+            foreach (Element element in elements)
+            {
+                Parameter p = GetParameter(element, "Концевое условие");
+                p.Set("Сварной шов");
+
+                p = GetParameter(element, "Концевое условие 2");
+                p.Set("Сварной шов");
+
+                if (element is FamilyInstance fs && (fs.Symbol.FamilyName.Contains("Тройник") || fs.Symbol.FamilyName.Contains("Фильтр")))
+                {
+                    p = GetParameter(element, "Концевое условие 3");
+                    p.Set("Сварной шов");
+
+                    if (fs.Symbol.FamilyName.Contains("Крестовина"))
+                    {
+                        p = GetParameter(element, "Концевое условие 3");
+                        p.Set("Сварной шов");
+                        p = GetParameter(element, "Концевое условие 4");
+                        p.Set("Сварной шов");
+                    }
+                }
+            }
+        }
+
+        private static void SetFlangesParameters(Document doc, List<ElementId> elementsId, params string[] values)
         {
             IEnumerable<Element> elements = elementsId.Select(doc.GetElement);
 
             foreach (Element element in elements)
             {
-                Parameter p = element.GetOrderedParameters().FirstOrDefault(e => e.Definition.Name.Equals(parameterName)) ?? throw new ArgumentNullException(
-                                  nameof(p),
-                                  $"Проблема в нахождении параметра \"{parameterName}\", проверьте наименования параметров");
-                p.Set(parameterValue);
-                if (parameterName2 != null)
+                Parameter p = GetParameter(element, "Концевое условие");
+                p.Set(values[0]);
+
+                p = GetParameter(element, "Концевое условие 2");
+                p.Set(values[1]);
+
+                if (element is FamilyInstance fs && (fs.Symbol.FamilyName.Contains("Тройник") || fs.Symbol.FamilyName.Contains("Фильтр")))
                 {
-                    p = element.GetOrderedParameters().FirstOrDefault(e => e.Definition.Name.Equals(parameterName2)) ?? throw new ArgumentNullException(
-                            nameof(p),
-                            $"Проблема в нахождении параметра \"{parameterName2}\", проверьте наименования параметров");
-                    p.Set(parameterValue2);
+                    p = GetParameter(element, "Концевое условие 3");
+                    p.Set(values[2]);
+
+                    if (fs.Symbol.FamilyName.Contains("Крестовина"))
+                    {
+                        p = GetParameter(element, "Концевое условие 3");
+                        p.Set(values[2]);
+                        p = GetParameter(element, "Концевое условие 4");
+                        p.Set(values[3]);
+                    }
                 }
             }
         }
