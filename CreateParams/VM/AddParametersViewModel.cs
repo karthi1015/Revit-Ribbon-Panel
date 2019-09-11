@@ -165,11 +165,34 @@
                     newIb = revitDocument.Application.Create.NewTypeBinding(categorySet);
                 }
 
-                revitDocument.ParameterBindings.Insert(externalDefinition, newIb, item.ParamGroup);
+                // #1
+                // revitDocument.ParameterBindings.Insert(externalDefinition, newIb, item.ParamGroup);
+                // if (revitDocument.ParameterBindings.Contains(externalDefinition))
+                // {
+                // revitDocument.ParameterBindings.ReInsert(externalDefinition, newIb);
+                // }
 
-                if (revitDocument.ParameterBindings.Contains(externalDefinition))
+                // #2
+                // if (!revitDocument.ParameterBindings.Contains(externalDefinition))
+                // {
+                // revitDocument.ParameterBindings.Insert(externalDefinition, newIb, item.ParamGroup);
+                // }
+                // else
+                // {
+                // revitDocument.ParameterBindings.ReInsert(externalDefinition, newIb);
+                // }
+
+                // #3
+                // if (!revitDocument.ParameterBindings.Insert(externalDefinition, newIb, item.ParamGroup))
+                // {
+                // revitDocument.ParameterBindings.ReInsert(externalDefinition, newIb);
+                // }
+                if (!revitDocument.ParameterBindings.Contains(externalDefinition))
                 {
-                    revitDocument.ParameterBindings.ReInsert(externalDefinition, newIb);
+                    if (!revitDocument.ParameterBindings.Insert(externalDefinition, newIb, item.ParamGroup))
+                    {
+                        revitDocument.ParameterBindings.ReInsert(externalDefinition, newIb);
+                    }
                 }
 
                 results.AddFamilyParameterNote(item);

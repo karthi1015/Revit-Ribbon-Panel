@@ -69,19 +69,32 @@
             {
                 Parameter p = element.GetOrderedParameters().FirstOrDefault(e => e.Definition.Name.Equals("МатериалФитинга"));
                 p?.Set(materialId);
+
+                if (element is FamilyInstance fsWeld)
+                {
+                    var welds = fsWeld.MEPModel.ConnectorManager.Connectors.Cast<Connector>().SelectMany(c => c.AllRefs.Cast<Connector>().Select(e => e.Owner));
+                    foreach (Element weld in welds)
+                    {
+                        if (weld is FamilyInstance weldFs && weldFs.Symbol.FamilyName.Equals("801_СварнойШов_ОБЩИЙ"))
+                        {
+                            p = weld.GetOrderedParameters().FirstOrDefault(e => e.Definition.Name.Equals("МатериалСварки"));
+                            p?.Set(materialId);
+                        }
+                    }
+                }
             }
         }
 
-        private static Dictionary<string, List<Element>> GetElements(Document doc)
+        private static Dictionary<string, List<FamilyInstance>> GetElements(Document doc)
         {
             return new FilteredElementCollector(doc).WhereElementIsNotElementType()
                 .WhereElementIsViewIndependent()
                 .OfCategory(BuiltInCategory.OST_PipeFitting)
                 .OfClass(typeof(FamilyInstance))
                 .Cast<FamilyInstance>()
-                .Where(i => i.Name.Equals("ГОСТ 10704-91 Трубы стальные электросварные прямошовные") && i.Symbol.FamilyName.Equals("801_СварнойШов_ОБЩИЙ"))
+                .Where(i => i.Symbol.FamilyName.Equals("801_СварнойШов_ОБЩИЙ"))
                 .SelectMany(e => e.MEPModel.ConnectorManager.Connectors.Cast<Connector>(), (e, connector) => (familyInstance: e, connector))
-                .SelectMany(t => t.connector.AllRefs.Cast<Connector>(), (familyInstance, reference) => (familyInstance, reference))
+                .SelectMany(t => t.connector.AllRefs.Cast<Connector>(), (familyInstance, reference) => (tuple: familyInstance, reference))
                 .Where(
                     t => t.reference.Owner.Name.StartsWith("Азот_")
                          || t.reference.Owner.Name.StartsWith("Вода_")
@@ -91,29 +104,26 @@
                          || t.reference.Owner.Name.StartsWith("Нефтепродукты_")
                          || t.reference.Owner.Name.StartsWith("Пенообразователь_")
                          || t.reference.Owner.Name.StartsWith("ХимическиеРеагенты_"))
-                .Select(t => (t.familyInstance.familyInstance, t.reference.Owner))
-                .SelectMany(
-                    e => e.familyInstance.MEPModel.ConnectorManager.Connectors.Cast<Connector>(),
-                    (e, connector) => (familyInstance: e.familyInstance, connector, Owner: e.Owner))
-                .SelectMany(t => t.connector.AllRefs.Cast<Connector>(), (t, reference) => (InstanceConnectorOwnerTuple: t, reference))
+                .Select(t => (t.tuple.familyInstance, t.reference.Owner))
+                .SelectMany(e => e.familyInstance.MEPModel.ConnectorManager.Connectors.Cast<Connector>(), (e, connector) => (e.familyInstance, connector, e.Owner))
+                .SelectMany(t => t.connector.AllRefs.Cast<Connector>(), (t, reference) => (tuple: t, reference))
                 .Where(
                     t => (t.reference.Owner.Category.Id.IntegerValue == (int)BuiltInCategory.OST_PipeFitting)
                          && !t.reference.Owner.Name.Equals("ГОСТ 10704-91 Трубы стальные электросварные прямошовные"))
-                .GroupBy(e => e.InstanceConnectorOwnerTuple.Owner.Name, e => e.reference.Owner)
-                .ToDictionary(e => e.Key, e => e.ToList());
+                .GroupBy(e => e.tuple.Owner.Name, e => e.reference.Owner)
+                .ToDictionary(e => e.Key, e => e.Cast<FamilyInstance>().ToList());
         }
 
-        private static int ChangeColor(Document doc, Dictionary<string, List<Element>> pipes, string pipeType)
+        private static int ChangeColor(Document doc, Dictionary<string, List<FamilyInstance>> elements, string pipeType)
         {
             int count = 0;
 
-            foreach (KeyValuePair<string, List<Element>> valuePair in pipes)
+            foreach (KeyValuePair<string, List<FamilyInstance>> valuePair in elements)
             {
                 if (valuePair.Key.StartsWith(pipeType))
                 {
-                    ElementId material = GetMaterialId(doc, pipeType) ?? throw new ArgumentNullException(
-                                             nameof(material),
-                                             "Проблема в нахождении материалов, проверьте наименования материалов");
+                    ElementId material = GetMaterialId(doc, pipeType)
+                                         ?? throw new ArgumentNullException(nameof(material), "Проблема в нахождении материалов, проверьте наименования материалов");
                     SetColor(valuePair.Value, material);
                     count += valuePair.Value.Count;
                 }
@@ -126,22 +136,21 @@
         {
             var sw = Stopwatch.StartNew();
 
-            Dictionary<string, List<Element>> pipes = GetElements(doc) ?? throw new ArgumentNullException(
-                                                          nameof(pipes),
-                                                          "Проблема в нахождении коннекторов, проверьте наименования семейств");
+            Dictionary<string, List<FamilyInstance>> elements =
+                GetElements(doc) ?? throw new ArgumentNullException(nameof(elements), "Проблема в нахождении коннекторов, проверьте наименования семейств");
             int count;
             using (Transaction tran = new Transaction(doc))
             {
                 tran.Start("Change color");
 
-                count = ChangeColor(doc, pipes, "Азот_") +
-                        ChangeColor(doc, pipes, "Вода_") +
-                        ChangeColor(doc, pipes, "Газ_") +
-                        ChangeColor(doc, pipes, "Дренаж_") +
-                        ChangeColor(doc, pipes, "Канализация_") +
-                        ChangeColor(doc, pipes, "Нефтепродукты_") +
-                        ChangeColor(doc, pipes, "Пенообразователь_") +
-                        ChangeColor(doc, pipes, "ХимическиеРеагенты_");
+                count = ChangeColor(doc, elements, "Азот_")
+                        + ChangeColor(doc, elements, "Вода_")
+                        + ChangeColor(doc, elements, "Газ_")
+                        + ChangeColor(doc, elements, "Дренаж_")
+                        + ChangeColor(doc, elements, "Канализация_")
+                        + ChangeColor(doc, elements, "Нефтепродукты_")
+                        + ChangeColor(doc, elements, "Пенообразователь_")
+                        + ChangeColor(doc, elements, "ХимическиеРеагенты_");
 
                 tran.Commit();
             }

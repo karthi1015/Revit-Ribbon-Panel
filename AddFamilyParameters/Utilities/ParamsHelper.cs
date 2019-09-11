@@ -11,6 +11,8 @@ namespace AddFamilyParameters.Utilities
 {
     using System;
     using System.Collections.Generic;
+    using System.Data;
+    using System.Linq;
     using System.Runtime.InteropServices;
     using System.Windows.Forms;
 
@@ -18,6 +20,8 @@ namespace AddFamilyParameters.Utilities
 
     using Autodesk.Revit.DB;
     using Autodesk.Revit.UI;
+
+    using ClosedXML.Excel;
 
     /// <summary>
     /// The parameters helper.
@@ -73,7 +77,11 @@ namespace AddFamilyParameters.Utilities
             try
             {
                 ExternalDefinitionCreationOptions options = new ExternalDefinitionCreationOptions(parName, parType);
-                ExternalDefinition def = (defGrp.Definitions.get_Item(parName) ?? defGrp.Definitions.Create(options)) as ExternalDefinition;
+                ExternalDefinition def = defGrp.Definitions.get_Item(parName) as ExternalDefinition;
+                if (def == null)
+                {
+                    def = defGrp.Definitions.Create(options) as ExternalDefinition;
+                }
 
                 return def;
             }
@@ -82,6 +90,51 @@ namespace AddFamilyParameters.Utilities
                 MessageBox.Show($"ERROR: Failed to get or create Shared Params Definition: {ex.Message}");
                 return null;
             }
+        }
+
+        public static List<RevitParameter> LoadExcel2()
+        {
+            List<RevitParameter> myRows = null;
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = "Excel Files|*.xls;*.xlsx",
+                FilterIndex = 1,
+                RestoreDirectory = true,
+                Title = "Загрузка файла Excel с данными о параметрах"
+            };
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                myRows = new List<RevitParameter>();
+                string excelFilePath = openFileDialog.FileName;
+
+                using (var workbook = new XLWorkbook(excelFilePath))
+                {
+                    var worksheet = workbook.Worksheet(1);
+                    var rows = worksheet.RangeUsed().RowsUsed().Skip(2);
+
+                    foreach (var row in rows)
+                    {
+                        string paramType = row.Cell(4).GetValue<string>();
+                        string category = row.Cell(8).Value.ToString();
+                        string paramGroup = row.Cell(10).Value.ToString();
+
+                        var myRow = new RevitParameter
+                        {
+                            ParamName = row.Cell(1).Value.ToString(),
+                            GroupName = row.Cell(2).Value.ToString(),
+                            ParamType = (ParameterType)Enum.Parse(typeof(ParameterType), paramType),
+                            IsVisible = bool.Parse(row.Cell(6).Value.ToString()),
+                            Category = (BuiltInCategory)Enum.Parse(typeof(BuiltInCategory), category),
+                            ParamGroup = (BuiltInParameterGroup)Enum.Parse(typeof(BuiltInParameterGroup), paramGroup),
+                            IsInstance = bool.Parse(row.Cell(12).Value.ToString())
+                        };
+
+                        myRows.Add(myRow);
+                    }
+                }
+            }
+            return myRows;
         }
 
         /// <summary>
@@ -95,18 +148,18 @@ namespace AddFamilyParameters.Utilities
             List<RevitParameter> myRows = null;
 
             OpenFileDialog openFileDialog = new OpenFileDialog
-                                                {
-                                                    Filter = "Excel Files|*.xls;*.xlsx",
-                                                    FilterIndex = 1,
-                                                    RestoreDirectory = true,
-                                                    Title = "Загрузка файла Excel с данными о параметрах"
-                                                };
+            {
+                Filter = "Excel Files|*.xls;*.xlsx",
+                FilterIndex = 1,
+                RestoreDirectory = true,
+                Title = "Загрузка файла Excel с данными о параметрах"
+            };
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 myRows = new List<RevitParameter>();
                 var excelApp = new Microsoft.Office.Interop.Excel.Application();
-                var excelFilePath = openFileDialog.FileName;
+                string excelFilePath = openFileDialog.FileName;
 
                 // open the excel
                 var excelWorkBook = excelApp.Workbooks.Open(excelFilePath);
@@ -130,31 +183,33 @@ namespace AddFamilyParameters.Utilities
                         string category = (string)(range.Cells[rowCnt, 8] as Microsoft.Office.Interop.Excel.Range)?.Value2.ToString();
                         string paramGroup = (string)(range.Cells[rowCnt, 10] as Microsoft.Office.Interop.Excel.Range)?.Value2.ToString();
                         var myRow = new RevitParameter
-                                        {
-                                            ParamName = (string)(range.Cells[rowCnt, 1] as Microsoft.Office.Interop.Excel.Range)?.Value2.ToString(),
-                                            GroupName = (string)(range.Cells[rowCnt, 2] as Microsoft.Office.Interop.Excel.Range)?.Value2.ToString(),
-                                            ParamType = (ParameterType)Enum.Parse(
+                        {
+                            ParamName = (string)(range.Cells[rowCnt, 1] as Microsoft.Office.Interop.Excel.Range)?.Value2.ToString(),
+                            GroupName = (string)(range.Cells[rowCnt, 2] as Microsoft.Office.Interop.Excel.Range)?.Value2.ToString(),
+                            ParamType =
+                                            (ParameterType)Enum.Parse(
                                                 typeof(ParameterType),
                                                 paramType ?? throw new InvalidOperationException("Невозможно прочитать данный файл, неверный формат данных")),
-                                            IsVisible = bool.Parse(
+                            IsVisible =
+                                            bool.Parse(
                                                 (string)(range.Cells[rowCnt, 6] as Microsoft.Office.Interop.Excel.Range)?.Value2.ToString()
                                                 ?? throw new InvalidOperationException()),
-                                            Category = (BuiltInCategory)Enum.Parse(
-                                                typeof(BuiltInCategory),
-                                                category ?? throw new InvalidOperationException("Невозможно прочитать данный файл, неверный формат данных")),
-                                            ParamGroup = (BuiltInParameterGroup)Enum.Parse(
-                                                typeof(BuiltInParameterGroup),
-                                                paramGroup ?? throw new InvalidOperationException("Невозможно прочитать данный файл, неверный формат данных")),
-                                            IsInstance = bool.Parse(
-                                                (string)(range.Cells[rowCnt, 12] as Microsoft.Office.Interop.Excel.Range)?.Value2.ToString()
-                                                ?? throw new InvalidOperationException("Невозможно прочитать данный файл, неверный формат данных"))
-                                        };
+                            Category = (BuiltInCategory)Enum.Parse(
+                                            typeof(BuiltInCategory),
+                                            category ?? throw new InvalidOperationException("Невозможно прочитать данный файл, неверный формат данных")),
+                            ParamGroup = (BuiltInParameterGroup)Enum.Parse(
+                                            typeof(BuiltInParameterGroup),
+                                            paramGroup ?? throw new InvalidOperationException("Невозможно прочитать данный файл, неверный формат данных")),
+                            IsInstance = bool.Parse(
+                                            (string)(range.Cells[rowCnt, 12] as Microsoft.Office.Interop.Excel.Range)?.Value2.ToString()
+                                            ?? throw new InvalidOperationException("Невозможно прочитать данный файл, неверный формат данных"))
+                        };
 
                         myRows.Add(myRow);
                     }
-                    catch
+                    catch (Exception ex)
                     {
-                        TaskDialog.Show("Read excel", "Невозможно прочитать данный файл, неверный формат данных");
+                        TaskDialog.Show("Read excel", ex.Message);
                         break;
                     }
                 }
