@@ -72,18 +72,18 @@ namespace AddFamilyParameters.Utilities
         /// <returns>
         /// The <see cref="Definition"/>.
         /// </returns>
-        public static ExternalDefinition GetOrCreateSharedParamDefinition(DefinitionGroup defGrp, ParameterType parType, string parName, bool visible)
+        public static ExternalDefinition GetOrCreateSharedParamDefinition(DefinitionGroup dg, ParameterType parType, string parName, bool visible)
         {
             try
             {
-                ExternalDefinitionCreationOptions options = new ExternalDefinitionCreationOptions(parName, parType);
-                ExternalDefinition def = defGrp.Definitions.get_Item(parName) as ExternalDefinition;
-                if (def == null)
+                ExternalDefinition v = (from ExternalDefinition d in dg.Definitions where d.Name == parName select d).ToList().FirstOrDefault();
+                if (v == null)
                 {
-                    def = defGrp.Definitions.Create(options) as ExternalDefinition;
+                    var options = new ExternalDefinitionCreationOptions(parName, parType);
+                    v = dg.Definitions.Create(options) as ExternalDefinition;
                 }
 
-                return def;
+                return v;
             }
             catch (Exception ex)
             {

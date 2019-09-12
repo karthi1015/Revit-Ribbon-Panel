@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Text;
     using System.Windows.Forms;
 
@@ -143,60 +144,146 @@
             }
         }
 
+        // private static void AddDocumentParameters(List<RevitParameter> dataList, DefinitionFile sharedParameterFile, AddFamilyParametersResult results)
+        // {
+        // CategorySet categorySet = revitDocument.Application.Create.NewCategorySet();
+        // foreach (RevitParameter item in dataList)
+        // {
+        // DefinitionGroup dg = ParamsHelper.GetOrCreateSharedParamsGroup(sharedParameterFile, item.GroupName);
+        // ExternalDefinition externalDefinition = ParamsHelper.GetOrCreateSharedParamDefinition(dg, item.ParamType, item.ParamName, item.IsVisible);
+        // Category category = revitDocument.Settings.Categories.get_Item(item.Category);
+        // categorySet.Insert(category);
+        // Binding newIb;
+        // if (item.IsInstance)
+        // {
+        // newIb = revitDocument.Application.Create.NewInstanceBinding(categorySet);
+        // }
+        // else
+        // {
+        // newIb = revitDocument.Application.Create.NewTypeBinding(categorySet);
+        // }
+        // revitDocument.ParameterBindings.Insert(externalDefinition, newIb, item.ParamGroup);
+        // if (revitDocument.ParameterBindings.Contains(externalDefinition))
+        // {
+        // revitDocument.ParameterBindings.ReInsert(externalDefinition, newIb, item.ParamGroup);
+        // }
+        // results.AddFamilyParameterNote(item);
+        // }
         private static void AddDocumentParameters(List<RevitParameter> dataList, DefinitionFile sharedParameterFile, AddFamilyParametersResult results)
         {
-            CategorySet categorySet = revitDocument.Application.Create.NewCategorySet();
-
-            foreach (var item in dataList)
+            foreach (RevitParameter parameter in dataList)
             {
-                DefinitionGroup dg = ParamsHelper.GetOrCreateSharedParamsGroup(sharedParameterFile, item.GroupName);
-                ExternalDefinition externalDefinition = ParamsHelper.GetOrCreateSharedParamDefinition(dg, item.ParamType, item.ParamName, item.IsVisible);
+                DefinitionGroup dg = ParamsHelper.GetOrCreateSharedParamsGroup(sharedParameterFile, parameter.GroupName);
 
-                Category category = revitDocument.Settings.Categories.get_Item(item.Category);
+                // ExternalDefinition externalDefinition = ParamsHelper.GetOrCreateSharedParamDefinition(dg, parameter.ParamType, parameter.ParamName, parameter.IsVisible);
+                ExternalDefinition externalDefinition = (from ExternalDefinition d in dg.Definitions where d.Name == parameter.ParamName select d).ToList().FirstOrDefault();
+                if (externalDefinition == null)
+                {
+                    var options = new ExternalDefinitionCreationOptions(parameter.ParamName, parameter.ParamType);
+                    externalDefinition = dg.Definitions.Create(options) as ExternalDefinition;
+                }
+
+                Category category = revitDocument.Settings.Categories.get_Item(parameter.Category);
+                CategorySet categorySet = revitDocument.Application.Create.NewCategorySet();
                 categorySet.Insert(category);
 
-                Binding newIb;
-                if (item.IsInstance)
+                Binding newIb = revitDocument.Application.Create.NewTypeBinding(categorySet);
+                if (parameter.IsInstance)
                 {
                     newIb = revitDocument.Application.Create.NewInstanceBinding(categorySet);
                 }
-                else
+
+                var iterator = revitDocument.ParameterBindings.ForwardIterator();
+                iterator.Reset();
+                bool projectHasParameter = false;
+                while (iterator.MoveNext())
                 {
-                    newIb = revitDocument.Application.Create.NewTypeBinding(categorySet);
-                }
-
-                // #1
-                // revitDocument.ParameterBindings.Insert(externalDefinition, newIb, item.ParamGroup);
-                // if (revitDocument.ParameterBindings.Contains(externalDefinition))
-                // {
-                // revitDocument.ParameterBindings.ReInsert(externalDefinition, newIb);
-                // }
-
-                // #2
-                // if (!revitDocument.ParameterBindings.Contains(externalDefinition))
-                // {
-                // revitDocument.ParameterBindings.Insert(externalDefinition, newIb, item.ParamGroup);
-                // }
-                // else
-                // {
-                // revitDocument.ParameterBindings.ReInsert(externalDefinition, newIb);
-                // }
-
-                // #3
-                // if (!revitDocument.ParameterBindings.Insert(externalDefinition, newIb, item.ParamGroup))
-                // {
-                // revitDocument.ParameterBindings.ReInsert(externalDefinition, newIb);
-                // }
-                if (!revitDocument.ParameterBindings.Contains(externalDefinition))
-                {
-                    if (!revitDocument.ParameterBindings.Insert(externalDefinition, newIb, item.ParamGroup))
+                    if (iterator.Key.Name == parameter.ParamName)
                     {
-                        revitDocument.ParameterBindings.ReInsert(externalDefinition, newIb);
+                        projectHasParameter = true;
+                        break;
                     }
                 }
 
-                results.AddFamilyParameterNote(item);
+                if (!projectHasParameter && !revitDocument.ParameterBindings.Contains(externalDefinition))
+                {
+                    if (!revitDocument.ParameterBindings.Insert(externalDefinition, newIb, parameter.ParamGroup))
+                    {
+                        revitDocument.ParameterBindings.ReInsert(externalDefinition, newIb, parameter.ParamGroup);
+                    }
+                }
+
+                results.AddFamilyParameterNote(parameter);
             }
+        }
+
+        private static void RawCreateProjectParameterFromExistingSharedParameter(
+            DefinitionFile sharedParameterFile,
+            string name,
+            CategorySet cats,
+            BuiltInParameterGroup group,
+            bool inst)
+        {
+            var v = (from DefinitionGroup dg in sharedParameterFile.Groups from ExternalDefinition d in dg.Definitions where d.Name == name select d).ToList();
+            if ((v == null) || !v.Any())
+            {
+                throw new Exception("Invalid Name Input!");
+            }
+
+            ExternalDefinition def = v.First();
+
+            Binding binding = revitDocument.Application.Create.NewTypeBinding(cats);
+            if (inst)
+            {
+                binding = revitDocument.Application.Create.NewInstanceBinding(cats);
+            }
+
+            revitDocument.ParameterBindings.Insert(def, binding, group);
+        }
+
+        private static void RawCreateProjectParameterFromNewSharedParameter(
+            string defGroup,
+            string name,
+            ParameterType type,
+            bool visible,
+            CategorySet cats,
+            BuiltInParameterGroup paramGroup,
+            bool inst)
+        {
+            ExternalDefinitionCreationOptions options = new ExternalDefinitionCreationOptions(name, type);
+            ExternalDefinition def = revitDocument.Application.OpenSharedParameterFile().Groups.Create(defGroup).Definitions.Create(options) as ExternalDefinition;
+
+            Binding binding = revitDocument.Application.Create.NewTypeBinding(cats);
+            if (inst)
+            {
+                binding = revitDocument.Application.Create.NewInstanceBinding(cats);
+            }
+
+            revitDocument.ParameterBindings.Insert(def, binding, paramGroup);
+        }
+
+        private static void RawCreateProjectParameter(string name, ParameterType type, bool visible, CategorySet cats, BuiltInParameterGroup group, bool inst)
+        {
+            string oriFile = revitDocument.Application.SharedParametersFilename;
+            string tempFile = Path.GetTempFileName() + ".txt";
+            using (File.Create(tempFile))
+            {
+            }
+
+            revitDocument.Application.SharedParametersFilename = tempFile;
+            ExternalDefinitionCreationOptions options = new ExternalDefinitionCreationOptions(name, type);
+            ExternalDefinition def = revitDocument.Application.OpenSharedParameterFile().Groups.Create("TemporaryDefintionGroup").Definitions.Create(options) as ExternalDefinition;
+
+            revitDocument.Application.SharedParametersFilename = oriFile;
+            File.Delete(tempFile);
+
+            Binding binding = revitDocument.Application.Create.NewTypeBinding(cats);
+            if (inst)
+            {
+                binding = revitDocument.Application.Create.NewInstanceBinding(cats);
+            }
+
+            revitDocument.ParameterBindings.Insert(def, binding, group);
         }
     }
 }
