@@ -108,82 +108,178 @@
                 throw new ArgumentException("Выбранный файл общих параметров не существует. Пожалуйста, выберите другой файл или создайте новый");
             }
 
-            try
-            {
-                List<RevitParameter> dataList = ParamsHelper.LoadExcel();
+            List<RevitParameter> dataList = ParamsHelper.LoadExcel();
 
-                if (dataList == null)
+            if (dataList == null)
+            {
+                return;
+            }
+
+            AddFamilyParametersResult familyParametersResult;
+            using (var t = new Transaction(revitDocument))
+            {
+                t.Start($"Adding Parameters from Excel");
+
+                if (revitDocument.IsFamilyDocument)
                 {
-                    return;
+                    familyParametersResult = new AddFamilyParametersResult(revitDocument.OwnerFamily);
+                    AddFamilyParameters.VM.FamilyListViewModel.AddFamilyParameters(revitDocument, dataList, familyParametersResult, isAddShared, false);
+                }
+                else
+                {
+                    familyParametersResult = new AddFamilyParametersResult(revitDocument);
+                    AddDocumentParameters(dataList, sharedParameterFile, familyParametersResult);
                 }
 
-                AddFamilyParametersResult familyParametersResult;
-                using (var t = new Transaction(revitDocument))
-                {
-                    t.Start($"Adding Parameters from Excel");
-
-                    if (revitDocument.IsFamilyDocument)
-                    {
-                        familyParametersResult = new AddFamilyParametersResult(revitDocument.OwnerFamily);
-                        AddFamilyParameters.VM.FamilyListViewModel.AddFamilyParameters(revitDocument, dataList, familyParametersResult, isAddShared, false);
-                    }
-                    else
-                    {
-                        familyParametersResult = new AddFamilyParametersResult(revitDocument);
-                        AddDocumentParameters(dataList, sharedParameterFile, familyParametersResult);
-                    }
-
-                    t.Commit();
-                }
-
-                AddFamilyParametersResult.ShowResultsDialog(new List<AddFamilyParametersResult> { familyParametersResult });
+                t.Commit();
             }
-            catch (Exception e)
-            {
-                TaskDialog.Show("Adding Project Parameters", e.Message);
-            }
+
+            AddFamilyParametersResult.ShowResultsDialog(new List<AddFamilyParametersResult> { familyParametersResult });
         }
 
         private static void AddDocumentParameters(List<RevitParameter> dataList, DefinitionFile sharedParameterFile, AddFamilyParametersResult results)
         {
+            List<ProjectParameterData> projectParametersData = GetProjectParameterData(revitDocument);
             foreach (RevitParameter parameter in dataList)
             {
                 DefinitionGroup dg = ParamsHelper.GetOrCreateSharedParamsGroup(sharedParameterFile, parameter.GroupName);
                 ExternalDefinition externalDefinition = ParamsHelper.GetOrCreateSharedParamDefinition(dg, parameter.ParamType, parameter.ParamName, parameter.IsVisible);
 
                 Category category = revitDocument.Settings.Categories.get_Item(parameter.Category);
-                CategorySet categorySet = revitDocument.Application.Create.NewCategorySet();
-                categorySet.Insert(category);
 
-                Binding newIb = revitDocument.Application.Create.NewTypeBinding(categorySet);
-                if (parameter.IsInstance)
-                {
-                    newIb = revitDocument.Application.Create.NewInstanceBinding(categorySet);
-                }
-
-                var iterator = revitDocument.ParameterBindings.ForwardIterator();
-                iterator.Reset();
                 bool projectHasParameter = false;
-                while (iterator.MoveNext())
+                Binding newIb;
+                CategorySet categories = null;
+                foreach (var data in projectParametersData)
                 {
-                    if (iterator.Key.Name == parameter.ParamName)
+                    categories = data.Binding.Categories;
+
+                    if (externalDefinition.GUID.ToString().Equals(data.GUID))
+                    {
+                        if (categories.Contains(category))
+                        {
+                            projectHasParameter = true;
+                            break;
+                        }
+                        else
+                        {
+                            categories.Insert(category);
+                            newIb = revitDocument.Application.Create.NewTypeBinding(categories);
+                            if (parameter.IsInstance)
+                            {
+                                newIb = revitDocument.Application.Create.NewInstanceBinding(categories);
+                            }
+
+                            revitDocument.ParameterBindings.ReInsert(data.Definition, newIb, parameter.ParamGroup);
+                            break;
+                        }
+                    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    if (categories.Contains(category) && data.Name.Equals(parameter.ParamName) && externalDefinition.GUID.ToString().Equals(data.GUID))
                     {
                         projectHasParameter = true;
-                        revitDocument.ParameterBindings.ReInsert(iterator.Key, newIb, parameter.ParamGroup);
+                        break;
+                    }
+
+                    if ((!categories.Contains(category) && data.Name.Equals(parameter.ParamName)) ||
+                        (categories.Contains(category) && data.Name.Equals(parameter.ParamName) && !externalDefinition.GUID.ToString().Equals(data.GUID)))
+                    {
+                        categories.Insert(category);
+                        newIb = revitDocument.Application.Create.NewTypeBinding(categories);
+                        if (parameter.IsInstance)
+                        {
+                            newIb = revitDocument.Application.Create.NewInstanceBinding(categories);
+                        }
+
+                        revitDocument.ParameterBindings.ReInsert(data.Definition, newIb, parameter.ParamGroup);
                         break;
                     }
                 }
 
-                if (!projectHasParameter && !revitDocument.ParameterBindings.Contains(externalDefinition))
+                if (!projectHasParameter)
                 {
+                    // cs was null. Exception
+                    // var cs = (ElementBinding)revitDocument.ParameterBindings.get_Item(externalDefinition);
+                    // categories = cs.Categories;
+                    // categories.Insert(category);
+
+                    CategorySet categorySet = revitDocument.Application.Create.NewCategorySet();
+                    categorySet.Insert(category);
+
+                    newIb = revitDocument.Application.Create.NewTypeBinding(categorySet);
+                    if (parameter.IsInstance)
+                    {
+                        newIb = revitDocument.Application.Create.NewInstanceBinding(categorySet);
+                    }
+
                     if (!revitDocument.ParameterBindings.Insert(externalDefinition, newIb, parameter.ParamGroup))
                     {
                         revitDocument.ParameterBindings.ReInsert(externalDefinition, newIb, parameter.ParamGroup);
                     }
+
+                    results.AddFamilyParameterNote(parameter);
+                }
+            }
+        }
+
+        private static List<ProjectParameterData> GetProjectParameterData(Document doc)
+        {
+            if (doc == null)
+            {
+                throw new ArgumentNullException(nameof(doc));
+            }
+
+            if (doc.IsFamilyDocument)
+            {
+                throw new Exception("doc can not be a family document.");
+            }
+
+            List<ProjectParameterData> result = new List<ProjectParameterData>();
+
+            DefinitionBindingMapIterator it = doc.ParameterBindings.ForwardIterator();
+            it.Reset();
+            while (it.MoveNext())
+            {
+                var definition = (InternalDefinition)it.Key;
+                var sharedParameterElement = doc.GetElement(definition.Id) as SharedParameterElement;
+                
+                if (sharedParameterElement == null)
+                {
+                    continue;
                 }
 
-                results.AddFamilyParameterNote(parameter);
+                var newProjectParameterData = new ProjectParameterData
+                                              {
+                                                  Definition = it.Key, Name = it.Key.Name, Binding = it.Current as ElementBinding, GUID = sharedParameterElement.GuidValue.ToString()
+                                              };
+
+                result.Add(newProjectParameterData);
             }
+
+            return result;
+        }
+
+        private class ProjectParameterData
+        {
+            public Definition Definition { get; set; } = null;
+
+            public ElementBinding Binding { get; set; } = null;
+
+            public string Name { get; set; } = null;
+
+            public string GUID { get; set; }
         }
     }
 }

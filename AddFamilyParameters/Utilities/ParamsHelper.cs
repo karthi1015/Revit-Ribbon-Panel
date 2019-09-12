@@ -57,7 +57,7 @@ namespace AddFamilyParameters.Utilities
         /// <summary>
         /// Get or Create Shared Parameter Definition
         /// </summary>
-        /// <param name="defGrp">
+        /// <param name="dg">
         /// The definition group.
         /// </param>
         /// <param name="parType">

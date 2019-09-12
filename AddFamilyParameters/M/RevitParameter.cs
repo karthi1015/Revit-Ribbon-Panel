@@ -50,5 +50,7 @@ namespace AddFamilyParameters.M
         /// Gets or sets a value indicating whether instance.
         /// </summary>
         public bool IsInstance { get; set; }
+
+        public string GUID { get; set; }
     }
 }
