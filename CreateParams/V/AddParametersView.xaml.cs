@@ -69,13 +69,13 @@
 
         private void ButtonAddSharedParameters_OnClick(object sender, RoutedEventArgs e)
         {
-            //try
+            try
             {
                 AddParametersViewModel.CreateProjectParameter(this.CheckBoxAddShared.IsChecked ?? false);
             }
-            //catch (Exception ex)
+            catch (Exception ex)
             {
-                //TaskDialog.Show("Revit", ex.Message);
+                TaskDialog.Show("Revit", ex.Message);
             }
         }
 

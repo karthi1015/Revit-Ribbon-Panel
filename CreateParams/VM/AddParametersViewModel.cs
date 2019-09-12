@@ -149,10 +149,9 @@
 
                 bool projectHasParameter = false;
                 Binding newIb;
-                CategorySet categories = null;
                 foreach (var data in projectParametersData)
                 {
-                    categories = data.Binding.Categories;
+                    var categories = data.Binding.Categories;
 
                     if (externalDefinition.GUID.ToString().Equals(data.GUID))
                     {
@@ -161,41 +160,7 @@
                             projectHasParameter = true;
                             break;
                         }
-                        else
-                        {
-                            categories.Insert(category);
-                            newIb = revitDocument.Application.Create.NewTypeBinding(categories);
-                            if (parameter.IsInstance)
-                            {
-                                newIb = revitDocument.Application.Create.NewInstanceBinding(categories);
-                            }
 
-                            revitDocument.ParameterBindings.ReInsert(data.Definition, newIb, parameter.ParamGroup);
-                            break;
-                        }
-                    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-                    if (categories.Contains(category) && data.Name.Equals(parameter.ParamName) && externalDefinition.GUID.ToString().Equals(data.GUID))
-                    {
-                        projectHasParameter = true;
-                        break;
-                    }
-
-                    if ((!categories.Contains(category) && data.Name.Equals(parameter.ParamName)) ||
-                        (categories.Contains(category) && data.Name.Equals(parameter.ParamName) && !externalDefinition.GUID.ToString().Equals(data.GUID)))
-                    {
                         categories.Insert(category);
                         newIb = revitDocument.Application.Create.NewTypeBinding(categories);
                         if (parameter.IsInstance)
@@ -204,17 +169,34 @@
                         }
 
                         revitDocument.ParameterBindings.ReInsert(data.Definition, newIb, parameter.ParamGroup);
+                        projectHasParameter = true;
+                        break;
+                    }
+
+                    if (data.Name.Equals(parameter.ParamName))
+                    {
+                        // different GUID
+                        if (categories.Contains(category))
+                        {
+                            projectHasParameter = true;
+                            break;
+                        }
+
+                        categories.Insert(category);
+                        newIb = revitDocument.Application.Create.NewTypeBinding(categories);
+                        if (parameter.IsInstance)
+                        {
+                            newIb = revitDocument.Application.Create.NewInstanceBinding(categories);
+                        }
+
+                        revitDocument.ParameterBindings.ReInsert(data.Definition, newIb, parameter.ParamGroup);
+                        projectHasParameter = true;
                         break;
                     }
                 }
 
                 if (!projectHasParameter)
                 {
-                    // cs was null. Exception
-                    // var cs = (ElementBinding)revitDocument.ParameterBindings.get_Item(externalDefinition);
-                    // categories = cs.Categories;
-                    // categories.Insert(category);
-
                     CategorySet categorySet = revitDocument.Application.Create.NewCategorySet();
                     categorySet.Insert(category);
 
@@ -254,7 +236,7 @@
             {
                 var definition = (InternalDefinition)it.Key;
                 var sharedParameterElement = doc.GetElement(definition.Id) as SharedParameterElement;
-                
+
                 if (sharedParameterElement == null)
                 {
                     continue;
@@ -262,7 +244,10 @@
 
                 var newProjectParameterData = new ProjectParameterData
                                               {
-                                                  Definition = it.Key, Name = it.Key.Name, Binding = it.Current as ElementBinding, GUID = sharedParameterElement.GuidValue.ToString()
+                                                  Definition = it.Key,
+                                                  Name = it.Key.Name,
+                                                  Binding = it.Current as ElementBinding,
+                                                  GUID = sharedParameterElement.GuidValue.ToString()
                                               };
 
                 result.Add(newProjectParameterData);
