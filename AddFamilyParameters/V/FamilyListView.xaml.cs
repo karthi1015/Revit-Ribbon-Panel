@@ -1,6 +1,7 @@
 ﻿namespace AddFamilyParameters.V
 {
     using System;
+    using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Windows;
     using System.Windows.Controls;
@@ -11,7 +12,7 @@
 
     using Autodesk.Revit.DB;
     using Autodesk.Revit.UI;
-    
+
     public partial class FamilyListView : Window
     {
         private static bool isAddSharedChecked;
@@ -38,7 +39,14 @@
         {
             try
             {
-                FamilyListViewModel.AddFamilyParameters(this.Families, isAddSharedChecked, this.CheckBoxProceedProjectParameters.IsChecked ?? false);
+                List<AddFamilyParametersResult> results = FamilyListViewModel.AddFamilyParameters(
+                    this.Families,
+                    isAddSharedChecked,
+                    this.CheckBoxProceedProjectParameters.IsChecked ?? false);
+
+                this.Close();
+
+                AddFamilyParametersResult.ShowResultsDialog(results);
             }
             catch (Exception exception)
             {

@@ -58,7 +58,7 @@
         /// <param name="checkProject"></param>
         /// <exception cref="ArgumentException">Throws when no families are checked
         /// </exception>
-        public static void AddFamilyParameters(ObservableCollection<FamilyCategory> families, bool isAddShared, bool checkProject)
+        public static List<AddFamilyParametersResult> AddFamilyParameters(ObservableCollection<FamilyCategory> families, bool isAddShared, bool checkProject)
         {
             List<Family> fam = (from familyCategory in families
                                 from item in familyCategory.Members
@@ -130,9 +130,11 @@
                         }
                     }
 
-                    AddFamilyParametersResult.ShowResultsDialog(results);
+                    return results;
                 }
             }
+
+            throw new ArgumentException("Не удалось загрузить данные из excel");
         }
 
         public static void AddFamilyParameters(Document familyDoc, List<RevitParameter> dataList, AddFamilyParametersResult results, bool isAddShared, bool checkProject)
