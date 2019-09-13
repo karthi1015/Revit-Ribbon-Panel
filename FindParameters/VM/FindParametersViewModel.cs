@@ -17,12 +17,10 @@ namespace FindParameters.VM
         private static ObservableCollection<RevitBuiltInParameterGroup> parameterCategories;
 
         private static Dictionary<string, List<Element>> elements;
-        private static Document revitDocument;
 
         public FindParametersViewModel(Document doc)
         {
-            revitDocument = doc;
-            elements = ElementsExporter.GetFilteredElementsByCategory(revitDocument);
+            elements = ElementsExporter.GetFilteredElementsByCategory(doc);
             Dictionary<string, List<Parameter>> paramDictionary = FindParameterCategories();
 
             InitializeParameterCategoryCollection(paramDictionary);

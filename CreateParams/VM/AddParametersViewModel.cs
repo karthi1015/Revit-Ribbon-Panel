@@ -108,11 +108,11 @@
                 throw new ArgumentException("Выбранный файл общих параметров не существует. Пожалуйста, выберите другой файл или создайте новый");
             }
 
-            List<RevitParameter> dataList = ParamsHelper.LoadExcel();
+            List<RevitParameter> dataList = ParamsHelper.LoadExcel2();
 
             if (dataList == null)
             {
-                return;
+                throw new ArgumentException("Не удалось получить данные из файла excel");
             }
 
             AddFamilyParametersResult familyParametersResult;

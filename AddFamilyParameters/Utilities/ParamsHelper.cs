@@ -115,19 +115,19 @@ namespace AddFamilyParameters.Utilities
 
                     foreach (var row in rows)
                     {
-                        string paramType = row.Cell(4).GetValue<string>();
-                        string category = row.Cell(8).Value.ToString();
-                        string paramGroup = row.Cell(10).Value.ToString();
+                        var paramType = row.Cell(4).CachedValue.ToString();
+                        string category = row.Cell(8).CachedValue.ToString();
+                        string paramGroup = row.Cell(10).CachedValue.ToString();
 
                         var myRow = new RevitParameter
                         {
-                            ParamName = row.Cell(1).Value.ToString(),
-                            GroupName = row.Cell(2).Value.ToString(),
+                            ParamName = row.Cell(1).CachedValue.ToString(),
+                            GroupName = row.Cell(2).CachedValue.ToString(),
                             ParamType = (ParameterType)Enum.Parse(typeof(ParameterType), paramType),
-                            IsVisible = bool.Parse(row.Cell(6).Value.ToString()),
+                            IsVisible = bool.Parse(row.Cell(6).CachedValue.ToString()),
                             Category = (BuiltInCategory)Enum.Parse(typeof(BuiltInCategory), category),
                             ParamGroup = (BuiltInParameterGroup)Enum.Parse(typeof(BuiltInParameterGroup), paramGroup),
-                            IsInstance = bool.Parse(row.Cell(12).Value.ToString())
+                            IsInstance = bool.Parse(row.Cell(12).CachedValue.ToString())
                         };
 
                         myRows.Add(myRow);
