@@ -35,7 +35,9 @@
 
             this.FilePathTextBox.Text = this.viewModel.SharedParametersFilePath;
             this.AddParameterGroupBox.Header = doc.IsFamilyDocument ? "Текущее семейство" : "Текущий проект";
+            this.Title = doc.IsFamilyDocument ? $"Добавление параметров. Семейство: \"{doc.Title}\"" : $"Добавление параметров. Проект: \"{doc.Title}\"";
             this.CheckBoxAddShared.Visibility = doc.IsFamilyDocument ? Visibility.Visible : Visibility.Hidden;
+            this.ButtonAddFamilyParameters.IsEnabled = !doc.IsFamilyDocument;
             this.CheckBoxAddShared.Margin = doc.IsFamilyDocument ? new Thickness(20, 20, 0, 0) : new Thickness(20, 0, 0, 0);
             this.Height = doc.IsFamilyDocument ? 240 : 220;
             this.MinHeight = doc.IsFamilyDocument ? 240 : 220;
