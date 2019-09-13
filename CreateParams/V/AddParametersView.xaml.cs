@@ -14,6 +14,8 @@
 
     using CreateParams.VM;
 
+    using Visibility = System.Windows.Visibility;
+
     public partial class AddParametersView : Window
     {
         private readonly AddParametersViewModel viewModel;
@@ -27,31 +29,36 @@
 
             Image img = Properties.Resources.icons8_add_property_32;
             this.Icon = GetImageSource(img);
-
             this.revitDocument = doc;
+
             this.viewModel = new AddParametersViewModel(doc);
-            
+
             this.FilePathTextBox.Text = this.viewModel.SharedParametersFilePath;
+            this.AddParameterGroupBox.Header = doc.IsFamilyDocument ? "Текущее семейство" : "Текущий проект";
+            this.CheckBoxAddShared.Visibility = doc.IsFamilyDocument ? Visibility.Visible : Visibility.Hidden;
+            this.CheckBoxAddShared.Margin = doc.IsFamilyDocument ? new Thickness(20, 20, 0, 0) : new Thickness(20, 0, 0, 0);
+            this.Height = doc.IsFamilyDocument ? 240 : 220;
+            this.MinHeight = doc.IsFamilyDocument ? 240 : 220;
         }
 
         private static BitmapImage GetImageSource(Image img)
         {
             BitmapImage bmp = new BitmapImage();
-        
+
             using (var ms = new MemoryStream())
             {
                 img.Save(ms, ImageFormat.Png);
                 ms.Position = 0;
-        
+
                 bmp.BeginInit();
-        
+
                 bmp.CacheOption = BitmapCacheOption.OnLoad;
                 bmp.UriSource = null;
                 bmp.StreamSource = ms;
-        
+
                 bmp.EndInit();
             }
-        
+
             return bmp;
         }
 
@@ -81,10 +88,10 @@
 
         private void ButtonAddFamilyParameters_OnClick(object sender, RoutedEventArgs e)
         {
-            this.familyListView = new FamilyListView(this.revitDocument, this.CheckBoxAddShared.IsChecked ?? false)
-                                      {
-                                          Owner = this
-                                      };
+            this.familyListView = new FamilyListView(this.revitDocument)
+            {
+                Owner = this
+            };
 
             this.familyListView.ShowDialog();
         }

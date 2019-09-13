@@ -15,14 +15,11 @@
 
     public partial class FamilyListView : Window
     {
-        private static bool isAddSharedChecked;
-
-        public FamilyListView(Document doc, bool isAddShared)
+        public FamilyListView(Document doc)
         {
             try
             {
                 this.InitializeComponent();
-                isAddSharedChecked = isAddShared;
 
                 var familyListViewModel = new FamilyListViewModel(doc);
                 this.Families = familyListViewModel.FamCategoriesList;
@@ -41,7 +38,7 @@
             {
                 List<AddFamilyParametersResult> results = FamilyListViewModel.AddFamilyParameters(
                     this.Families,
-                    isAddSharedChecked,
+                    this.CheckBoxAddShared.IsChecked ?? false,
                     this.CheckBoxProceedProjectParameters.IsChecked ?? false);
 
                 this.Close();

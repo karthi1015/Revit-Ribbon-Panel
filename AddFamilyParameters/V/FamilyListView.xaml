@@ -6,8 +6,8 @@
     xmlns:m="clr-namespace:AddFamilyParameters.M"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:helperClass="clr-namespace:AddFamilyParameters.Utilities"
-    Width="215"
-    Height="406"
+    Width="450"
+    Height="650"
     MinWidth="450"
     MinHeight="650"
     WindowStartupLocation="CenterScreen"
@@ -16,9 +16,17 @@
         <Grid Grid.Row="0">
             <CheckBox Name="CheckBoxProceedProjectParameters"
                       Content="Учитывать параметры проекта" Margin="10,10,10,10" />
+            <CheckBox
+                Name="CheckBoxAddShared"
+                Width="240"
+                Height="15"
+                Margin="10,10,0,20"
+                HorizontalAlignment="left"
+                VerticalAlignment="Center"
+                Content="Добавить параметры как общие" />
             <Button Height="25" HorizontalAlignment="Right" VerticalAlignment="Bottom"
                     Content="Снять выделение" Width="110"
-                    Margin="10,35,10,10" Padding="4" Click="ButtonUncheckAllClick" />
+                    Margin="10,75,10,10" Padding="4" Click="ButtonUncheckAllClick" />
             <Button Height="25" Width="110" HorizontalAlignment="Right" VerticalAlignment="Bottom"
                     Margin="10,10,250,10" Content="Развернуть все" Name="ButtonExpandAll" Click="ButtonExpandAll_OnClick"/>
             <Button Height="25" Width="110" HorizontalAlignment="Right" VerticalAlignment="Bottom"
