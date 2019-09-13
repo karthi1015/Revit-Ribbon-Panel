@@ -93,7 +93,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="VM\AddParametersViewModel.cs" />
-    <Compile Include="VM\Class1.cs" />
     <Compile Include="V\AddParametersView.xaml.cs">
       <DependentUpon>AddParametersView.xaml</DependentUpon>
     </Compile>

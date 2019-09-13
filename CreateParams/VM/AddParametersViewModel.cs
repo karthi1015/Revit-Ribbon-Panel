@@ -211,6 +211,11 @@
                         revitDocument.ParameterBindings.ReInsert(externalDefinition, newIb, parameter.ParamGroup);
                     }
 
+                    projectParametersData.Add(
+                        new ProjectParameterData
+                        {
+                            Definition = externalDefinition, Name = externalDefinition.Name, Binding = (ElementBinding)newIb, GUID = externalDefinition.GUID.ToString()
+                        });
                     results.AddFamilyParameterNote(parameter);
                 }
             }
