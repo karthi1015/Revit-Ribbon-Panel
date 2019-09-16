@@ -62,7 +62,20 @@ namespace Gladkoe.LineSectionNumberFillParameter
         private static Parameter GetParameter(Element element, string parameterName)
         {
             return element.GetOrderedParameters().FirstOrDefault(e => e.Definition.Name.Equals(parameterName))
-                   ?? throw new ArgumentException($"Проблема в нахождении параметра \"{parameterName}\", проверьте верность наименования и наличие параметров");
+                   ?? throw new ArgumentException(
+                       $"Проблема в нахождении параметра \"{parameterName}\", проверьте верность наименования и наличие параметров.\n"
+                       + $"Необходимо, чтобы категории:\n"
+                       + $"\"Трубы\",\n "
+                       + $"\"Арматура трубопроводов\", \n"
+                       + $"\"Соединительные детали трубопроводов\" \n \n"
+                       + $"содержали параметры:\n \n"
+                       + $"\"Номер участка линии\", \n"
+                       + $"\"№ поз. по ГП\", \n"
+                       + $"\"Шифр продукта\", \n"
+                       + $"\"Номер по технологической схеме\", \n"
+                       + $"\"Условный диаметр\"(тип - длина), \n"
+                       + $"\"Условное давление\" (тип - давление), \n"
+                       + $"\"Конструкция трубопровода\"");
         }
 
         private static void SetParameters(List<Element> elements)
