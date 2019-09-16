@@ -12,7 +12,7 @@
 
     [Transaction(TransactionMode.Manual)]
     [Regeneration(RegenerationOption.Manual)]
-    public class FillingParameters : IExternalCommand
+    public class EndConditionFillParameter : IExternalCommand
     {
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {

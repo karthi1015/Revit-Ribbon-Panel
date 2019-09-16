@@ -169,6 +169,7 @@
                         }
 
                         revitDocument.ParameterBindings.ReInsert(data.Definition, newIb, parameter.ParamGroup);
+                        results.AddProjectParameterNote(parameter, true);
                         projectHasParameter = true;
                         break;
                     }
@@ -190,6 +191,7 @@
                         }
 
                         revitDocument.ParameterBindings.ReInsert(data.Definition, newIb, parameter.ParamGroup);
+                        results.AddProjectParameterNote(parameter, true);
                         projectHasParameter = true;
                         break;
                     }
@@ -216,7 +218,7 @@
                         {
                             Definition = externalDefinition, Name = externalDefinition.Name, Binding = (ElementBinding)newIb, GUID = externalDefinition.GUID.ToString()
                         });
-                    results.AddFamilyParameterNote(parameter);
+                    results.AddProjectParameterNote(parameter, false);
                 }
             }
         }

@@ -27,12 +27,6 @@ namespace AddFamilyParameters.Utilities
         /// </summary>
         private List<AddParameterResult> textNoteTypeResults;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AddFamilyParametersResult"/> class.
-        /// </summary>
-        /// <param name="f">
-        /// The f.
-        /// </param>
         public AddFamilyParametersResult(Element f)
         {
             this.FamilyName = f.Name;
@@ -86,12 +80,6 @@ namespace AddFamilyParameters.Utilities
             }
         }
 
-        /// <summary>
-        /// The add family parameter note.
-        /// </summary>
-        /// <param name="parameter">
-        /// The parameter.
-        /// </param>
         public void AddFamilyParameterNote(FamilyParameter parameter)
         {
             if (this.textNoteTypeResults == null)
@@ -103,21 +91,32 @@ namespace AddFamilyParameters.Utilities
             this.textNoteTypeResults.Add(r);
         }
 
-        public void AddFamilyParameterNote(RevitParameter parameter)
+        // public void AddFamilyParameterNote(RevitParameter parameter)
+        // {
+        //     if (this.textNoteTypeResults == null)
+        //     {
+        //         this.textNoteTypeResults = new List<AddParameterResult>();
+        //     }
+        //
+        //     AddParameterResult r = new AddParameterResult { Name = parameter.ParamName };
+        //     this.textNoteTypeResults.Add(r);
+        // }
+
+        public void AddProjectParameterNote(RevitParameter parameter, bool b)
         {
             if (this.textNoteTypeResults == null)
             {
                 this.textNoteTypeResults = new List<AddParameterResult>();
             }
 
-            AddParameterResult r = new AddParameterResult { Name = parameter.ParamName };
+            AddParameterResult r = new AddParameterResult { Name = parameter.ParamName, IsAdded = b };
             this.textNoteTypeResults.Add(r);
         }
 
         public override string ToString()
         {
             string s = string.Empty;
-            if (!string.IsNullOrEmpty(FamilyName))
+            if (!string.IsNullOrEmpty(this.FamilyName))
             {
                 s = this.FamilyName + ": ";
             }
@@ -129,12 +128,14 @@ namespace AddFamilyParameters.Utilities
             else
             {
                 int numTotal = 0;
+                int numReInsertedTotal = 0;
                 if (this.textNoteTypeResults != null)
                 {
                     numTotal = this.textNoteTypeResults.Count;
+                    numReInsertedTotal = this.textNoteTypeResults.Count(x => x.IsAdded);
                 }
-
-                s += $"{numTotal} параметров добавлено.";
+                
+                s += $"{numTotal} новых параметров добавлено. {(numReInsertedTotal > 0 ? string.Empty : "Параметров перезаписано: " + numReInsertedTotal)}";
             }
 
             return s;
@@ -143,6 +144,8 @@ namespace AddFamilyParameters.Utilities
         private class AddParameterResult
         {
             public string Name { get; set; }
+
+            public bool IsAdded { get; set; }
         }
     }
 }

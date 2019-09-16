@@ -44,12 +44,12 @@ namespace PMTech_Revit_Ribbon_Panel
 
             // create the button data
             var addSharedBtnData = new PushButtonData("Add shared parameters", "Добавить параметры", this.path + "\\CreateParams.dll", "CreateParams.Command")
-            {
-                ToolTip = "Пакетное добавление параметров в проект или в семейства по excel файлу",
-                LongDescription = "Разработчик: Кожевников Андрей",
-                Image = imageSource,
-                LargeImage = imageSource
-            };
+                                   {
+                                       ToolTip = "Пакетное добавление параметров в проект или в семейства по excel файлу",
+                                       LongDescription = "Разработчик: Кожевников Андрей",
+                                       Image = imageSource,
+                                       LargeImage = imageSource
+                                   };
 
             // add the button to the ribbon
             if (panel.AddItem(addSharedBtnData) is PushButton addSharedButton)
@@ -66,12 +66,12 @@ namespace PMTech_Revit_Ribbon_Panel
             imageSource = GetImageSource(img);
 
             var exportParametersBtnData = new PushButtonData("Export model", "Выгрузить модель", this.path + "\\FindParameters.dll", "FindParameters.Command")
-            {
-                ToolTip = "Выгрузить модель в excel",
-                LongDescription = "Разработчик: Кожевников Андрей",
-                Image = imageSource,
-                LargeImage = imageSource
-            };
+                                          {
+                                              ToolTip = "Выгрузить модель в excel",
+                                              LongDescription = "Разработчик: Кожевников Андрей",
+                                              Image = imageSource,
+                                              LargeImage = imageSource
+                                          };
 
             if (panel.AddItem(exportParametersBtnData) is PushButton exportParametersButton)
             {
@@ -89,34 +89,54 @@ namespace PMTech_Revit_Ribbon_Panel
             PulldownButtonData pullDownDataGladkoe = new PulldownButtonData("Gladkoe", "НБ_Гладкое")
                                                      {
                                                          Image = imageSource, LargeImage = imageSource, ToolTip = "Утилиты для проекта НБ_Гладкое"
-            };
+                                                     };
             PulldownButton pullDownButtonGladkoe = panel.AddItem(pullDownDataGladkoe) as PulldownButton;
 
             img = Properties.Resources.icons8_paint_palette_32;
             imageSource = GetImageSource(img);
 
             var colorConnectorsBtnData = new PushButtonData("Color Connectors", "Окраска коннекторов", this.path + "\\Gladkoe.dll", "Gladkoe.ConnectorsRecolor")
-            {
-                ToolTip = "Окраска коннекторов в проекте НБ_Гладкое",
-                LongDescription = "Разработчик: Кожевников Андрей,\n Климович Александр",
-                Image = imageSource,
-                LargeImage = imageSource
-            };
+                                         {
+                                             ToolTip = "Окраска коннекторов в проекте НБ_Гладкое",
+                                             LongDescription = "Разработчик: Кожевников Андрей,\n Климович Александр",
+                                             Image = imageSource,
+                                             LargeImage = imageSource
+                                         };
 
             pullDownButtonGladkoe.AddPushButton(colorConnectorsBtnData);
 
+            // ----------------------------
+            // ----------------------------
             img = Properties.Resources.icons8_doctors_folder_32;
             imageSource = GetImageSource(img);
 
-            var fillParametersBtnData = new PushButtonData("Fill parameters", "Заполнить \"Концевое условие\"", this.path + "\\Gladkoe.dll", "Gladkoe.FillingParameters")
-            {
-                ToolTip = "Заполнение параметров \"Концевое условие\" (сварной шов / фланец) в проекте НБ_Гладкое",
-                LongDescription = "Разработчик: Кожевников Андрей",
-                Image = imageSource,
-                LargeImage = imageSource
-            };
+            var endConditionFillParameterData =
+                new PushButtonData("endConditionFillParameter", "Заполнить \"Концевое условие\"", this.path + "\\Gladkoe.dll", "Gladkoe.EndConditionFillParameter")
+                {
+                    ToolTip = "Заполнение параметров \"Концевое условие\" (сварной шов / фланец) в проекте НБ_Гладкое",
+                    LongDescription = "Разработчик: Кожевников Андрей",
+                    Image = imageSource,
+                    LargeImage = imageSource
+                };
 
-            pullDownButtonGladkoe.AddPushButton(fillParametersBtnData);
+            pullDownButtonGladkoe.AddPushButton(endConditionFillParameterData);
+
+            // ----------------------------
+            // ----------------------------
+            var lineSectionNumberFillParameterData =
+                new PushButtonData(
+                    "lineSectionNumberFillParameter",
+                    "Заполнить \"Номер участка линии\"",
+                    this.path + "\\Gladkoe.dll",
+                    "Gladkoe.LineSectionNumberFillParameter.LineSectionNumberFillParameter")
+                {
+                    ToolTip = "Заполнение параметра \"Номер участка линии\" в проекте НБ_Гладкое",
+                    LongDescription = "Разработчик: Кожевников Андрей",
+                    Image = imageSource,
+                    LargeImage = imageSource
+                };
+
+            pullDownButtonGladkoe.AddPushButton(lineSectionNumberFillParameterData);
 
             return Result.Succeeded;
         }

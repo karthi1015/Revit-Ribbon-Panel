@@ -39,6 +39,8 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -47,12 +49,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FillingParameters.cs" />
+    <Compile Include="EndConditionFillParameter.cs" />
     <Compile Include="ConnectorsRecolor.cs" />
+    <Compile Include="LineSectionNumberFillParameter\LineSectionNumberFillParameter.cs" />
+    <Compile Include="LineSectionNumberFillParameter\ResultWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LineSectionNumberFillParameter\ResultWindow.Designer.cs">
+      <DependentUpon>ResultWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\ElementsOfClassSelectionFilter.cs" />
+    <Compile Include="Utilities\ParameterHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Settings.StyleCop" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="LineSectionNumberFillParameter\ResultWindow.resx">
+      <DependentUpon>ResultWindow.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
