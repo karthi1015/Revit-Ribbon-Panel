@@ -67,7 +67,7 @@ namespace Gladkoe.LineSectionNumberFillParameter
 
         private static void SetParameters(List<Element> elements)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             int i = 0;
             foreach (Element element in elements)
             {
@@ -95,7 +95,7 @@ namespace Gladkoe.LineSectionNumberFillParameter
                 else if ((s1 == string.Empty) || (s2 == string.Empty) || (s4 == string.Empty) || (s5 == string.Empty) || (s6 == string.Empty))
                 {
                     sb.Append(
-                        $"element ID: {element.Id.IntegerValue}, не заполнены: "
+                        $"element ID: {element.Id.IntegerValue.ToString()}, не заполнены: "
                         + $"{(s1 != string.Empty ? string.Empty : GetParameter(element, "№ поз. по ГП").Definition.Name + ",")}"
                         + $"{(s2 != string.Empty ? string.Empty : GetParameter(element, "Шифр продукта").Definition.Name + ",")}"
                         + $"{(s4 != string.Empty ? string.Empty : GetParameter(element, "Условный диаметр").Definition.Name + ",")}"
@@ -105,15 +105,8 @@ namespace Gladkoe.LineSectionNumberFillParameter
                 }
             }
 
-            if (sb.Length != 0)
-            {
-                var window = new ResultWindow(sb);
-                window.ShowDialog();
-            }
-            else
-            {
-                TaskDialog.Show("Fill parameters", $"{i} параметров заполнено");
-            }
+            var window = new ResultWindow(sb, i);
+            window.ShowDialog();
         }
 
         private static List<Element> GetElements()
