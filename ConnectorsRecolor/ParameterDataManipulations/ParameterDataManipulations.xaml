@@ -16,7 +16,7 @@
                 <ColumnDefinition />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <Button x:Name="FillParametersBtn" Content="Заполнить" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top" Width="100" Height="40"/>
+            <Button x:Name="FillParametersBtn" Content="Заполнить" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top" Width="100" Height="40" Click="FillParametersBtn_OnClick"/>
             <Button x:Name="SaveParametersBtn" Content="Сохранить" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top" Width="100" Grid.Column="1" Height="40"/>
         </Grid>
     </Grid>

@@ -3,21 +3,23 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Windows.Interop;
 
+    using Autodesk.Revit.ApplicationServices;
+    using Autodesk.Revit.Attributes;
     using Autodesk.Revit.DB;
     using Autodesk.Revit.DB.Plumbing;
     using Autodesk.Revit.UI;
 
-    public static class CopyParameters
+    [Transaction(TransactionMode.Manual)]
+    [Regeneration(RegenerationOption.Manual)]
+    public class FillParameters : IExternalCommand
     {
         public static Document RevitDocument { get; private set; }
 
-        public static UIDocument UiRevitDocument { get; private set; }
-
-        public static void FillParams(Document doc, UIDocument uidoc)
+        public static void FillParams(Document doc)
         {
             RevitDocument = doc;
-            UiRevitDocument = uidoc;
 
             try
             {
@@ -27,6 +29,20 @@
             {
                 TaskDialog.Show("Fill parameters", e.Message);
             }
+        }
+
+        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
+        {
+            UIApplication uiapp = commandData.Application;
+            UIDocument uidoc = uiapp.ActiveUIDocument;
+            Application app = uiapp.Application;
+            Document doc = uidoc.Document;
+
+            ParameterDataManipulations window = new ParameterDataManipulations(doc);
+            WindowInteropHelper helper = new WindowInteropHelper(window) { Owner = Autodesk.Windows.ComponentManager.ApplicationWindow };
+            window.ShowDialog();
+            
+            return Result.Succeeded;
         }
 
         private static void FillParametersAction()
@@ -46,7 +62,21 @@
         private static Parameter GetParameter(Element element, string parameterName)
         {
             return element.GetOrderedParameters().FirstOrDefault(e => e.Definition.Name.Equals(parameterName))
-                   ?? throw new ArgumentException($"Проблема в нахождении параметра \"{parameterName}\", проверьте верность наименования и наличие параметров");
+                   ?? throw new ArgumentException(
+                       $"Проблема в нахождении параметра \"{parameterName}\", проверьте верность наименования и наличие параметров.\n"
+                       + $"Необходимо, чтобы категории:\n"
+                       + $"\"Арматура трубопроводов\",\n "
+                       + $"\"Оборудование\", \n"
+                       + $"\"Гибкие трубы\", \n"
+                       + $"\"Сантехнические приборы\", \n"
+                       + $"\"Соединительные детали трубопроводов\" \n \n"
+                       + $"содержали параметр:\n"
+                       + $"\"UID\" (тип текст) \n \n"
+                       + $"\"Трубы:\", \n"
+                       + $"содержали параметр:\n"
+                       + $"\"Наружный диаметр (тип - длина)\", \n"
+                       + $"\"Условный диаметр (тип - длина)\", \n"
+                       + $"\"Длина\"(тип - длина)");
         }
 
         private static void SetParameters(List<Element> elements)

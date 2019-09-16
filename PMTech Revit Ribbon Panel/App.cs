@@ -138,6 +138,29 @@ namespace PMTech_Revit_Ribbon_Panel
 
             pullDownButtonGladkoe.AddPushButton(lineSectionNumberFillParameterData);
 
+            // ----------------------------
+            // ----------------------------
+            var parameterManipulationButtonData =
+                new PushButtonData(
+                    "parameterManipulation",
+                    "Сохранение пар-ров в файл + заполнение труб",
+                    this.path + "\\Gladkoe.dll",
+                    "Gladkoe.ParameterDataManipulations.FillParameters")
+                {
+                    ToolTip = "Заполнение параметров \"ID\", \"Длина\", \"Наружный диаметр\", \"Условный диаметр\" и сохранение параметров категорий:\n"
+                              + $"\"Арматура трубопроводов\",\n "
+                              + $"\"Оборудование\", \n"
+                              + $"\"Гибкие трубы\", \n"
+                              + $"\"Сантехнические приборы\", \n"
+                              + $"\"Соединительные детали трубопроводов\" \n \n в файл",
+
+                    LongDescription = "Разработчик: Кожевников Андрей",
+                    Image = imageSource,
+                    LargeImage = imageSource
+                };
+
+            pullDownButtonGladkoe.AddPushButton(parameterManipulationButtonData);
+
             return Result.Succeeded;
         }
 
