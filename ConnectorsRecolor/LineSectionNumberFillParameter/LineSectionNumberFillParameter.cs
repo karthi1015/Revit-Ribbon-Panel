@@ -17,11 +17,11 @@ namespace Gladkoe.LineSectionNumberFillParameter
     [Regeneration(RegenerationOption.Manual)]
     public class LineSectionNumberFillParameter : IExternalCommand
     {
-        private static Document revitDocument;
+        public static Document RevitDocument { get; private set; }
 
         public static void FillParams(Document doc)
         {
-            revitDocument = doc;
+            RevitDocument = doc;
 
             try
             {
@@ -49,7 +49,7 @@ namespace Gladkoe.LineSectionNumberFillParameter
         {
             List<Element> elements = GetElements();
 
-            using (Transaction tran = new Transaction(revitDocument))
+            using (Transaction tran = new Transaction(RevitDocument))
             {
                 tran.Start("Заполнить номер участка линии");
 
@@ -111,7 +111,7 @@ namespace Gladkoe.LineSectionNumberFillParameter
 
         private static List<Element> GetElements()
         {
-            return new FilteredElementCollector(revitDocument).WhereElementIsNotElementType()
+            return new FilteredElementCollector(RevitDocument).WhereElementIsNotElementType()
                 .WhereElementIsViewIndependent()
                 .WherePasses(
                     new ElementMulticategoryFilter(

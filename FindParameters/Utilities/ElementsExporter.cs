@@ -119,15 +119,15 @@
             switch (param.StorageType)
             {
                 case StorageType.Double:
-                    s = param.AsValueString();
+                    s = param.HasValue ? param.AsValueString() : string.Empty;
                     break;
 
                 case StorageType.Integer:
-                    s = param.AsInteger().ToString();
+                    s = param.HasValue ? param.AsInteger().ToString() : string.Empty;
                     break;
 
                 case StorageType.String:
-                    s = param.AsString();
+                    s = param.HasValue ? param.AsString() : string.Empty;
                     break;
 
                 case StorageType.ElementId:

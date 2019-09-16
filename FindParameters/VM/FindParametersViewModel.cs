@@ -10,23 +10,18 @@ using FindParameters.Utilities;
 
 namespace FindParameters.VM
 {
-    using Autodesk.Revit.DB.Structure;
-
     public class FindParametersViewModel
     {
-        private static ObservableCollection<RevitBuiltInParameterGroup> parameterCategories;
-
-        private static Dictionary<string, List<Element>> elements;
-
         public FindParametersViewModel(Document doc)
         {
-            elements = ElementsExporter.GetFilteredElementsByCategory(doc);
-            Dictionary<string, List<Parameter>> paramDictionary = FindParameterCategories();
+            Elements = ElementsExporter.GetFilteredElementsByCategory(doc);
 
-            InitializeParameterCategoryCollection(paramDictionary);
+            InitializeParameterCategoryCollection(FindParameterCategories());
         }
 
-        public ObservableCollection<RevitBuiltInParameterGroup> ParameterCategoriesList => parameterCategories;
+        public static ObservableCollection<RevitBuiltInParameterGroup> ParameterCategoriesList { get; private set; }
+
+        public static Dictionary<string, List<Element>> Elements { get; private set; }
 
         public static void ExportElementParameters(ObservableCollection<RevitBuiltInParameterGroup> parameterGroups, bool isUseVoidChecked, bool isUseHidden)
         {
@@ -40,22 +35,22 @@ namespace FindParameters.VM
                 throw new ArgumentException("Пожалуйста, выберите параметры, которые вы хотите экспортировать");
             }
 
-            ElementsExporter.ExportElementParameters(pickedDefinitions, elements);
+            ElementsExporter.ExportElementParameters(pickedDefinitions, Elements);
         }
 
         private static void InitializeParameterCategoryCollection(Dictionary<string, List<Parameter>> source)
         {
-            parameterCategories = new ObservableCollection<RevitBuiltInParameterGroup>();
+            ParameterCategoriesList = new ObservableCollection<RevitBuiltInParameterGroup>();
 
             foreach (var item in source)
             {
-                parameterCategories.Add(new RevitBuiltInParameterGroup(item.Value) { Name = item.Key });
+                ParameterCategoriesList.Add(new RevitBuiltInParameterGroup(item.Value) { Name = item.Key });
             }
         }
 
         private static Dictionary<string, List<Parameter>> FindParameterCategories()
         {
-            return elements.Values.SelectMany(e => e)
+            return Elements.Values.SelectMany(e => e)
                 .SelectMany(e => e.GetOrderedParameters())
                 .GroupBy(p => p.Definition.Name)
                 .Select(p => p.First())
