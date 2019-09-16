@@ -8,9 +8,9 @@
         xmlns:helperClass="clr-namespace:FindParameters.Utilities"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Width="625"
+        Width="630"
         Height="700"
-        MinWidth="625"
+        MinWidth="630"
         MinHeight="700"
         Title="Экспорт параметров в Excel" >
     <Grid>

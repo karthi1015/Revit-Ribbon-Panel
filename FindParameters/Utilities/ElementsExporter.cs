@@ -103,7 +103,7 @@
                             table.Columns.Add(parameter.Definition.Name);
                         }
 
-                        row[parameter.Definition.Name] = GetParameterValue(parameter);
+                        row[parameter.Definition.Name] = GetStringParameterValue(parameter);
                     }
                 }
 
@@ -113,7 +113,7 @@
             return table;
         }
 
-        private static string GetParameterValue(Parameter param)
+        private static string GetStringParameterValue(Parameter param)
         {
             string s;
             switch (param.StorageType)

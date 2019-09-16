@@ -31,6 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="RevitAPI">
       <HintPath>C:\Program Files\Autodesk\Revit 2019\RevitAPI.dll</HintPath>
     </Reference>
@@ -41,14 +43,20 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ParameterDataManipulations\FillParameters.cs" />
+    <Compile Include="ParameterDataManipulations\ParameterDataManipulations.xaml.cs">
+      <DependentUpon>ParameterDataManipulations.xaml</DependentUpon>
+    </Compile>
     <Compile Include="EndConditionFillParameter.cs" />
     <Compile Include="ConnectorsRecolor.cs" />
     <Compile Include="LineSectionNumberFillParameter\LineSectionNumberFillParameter.cs" />
@@ -69,6 +77,12 @@
     <EmbeddedResource Include="LineSectionNumberFillParameter\ResultWindow.resx">
       <DependentUpon>ResultWindow.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="ParameterDataManipulations\ParameterDataManipulations.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -86,12 +86,12 @@ namespace Gladkoe.LineSectionNumberFillParameter
             {
                 Parameter resultParameter = GetParameter(element, "Номер участка линии");
 
-                string s1 = GetParameter(element, "№ поз. по ГП").GetParameterValue();
-                string s2 = GetParameter(element, "Шифр продукта").GetParameterValue();
-                string s3 = GetParameter(element, "Номер по технологической схеме").GetParameterValue();
-                string s4 = GetParameter(element, "Условный диаметр").GetParameterValue().Split(' ').FirstOrDefault();
-                string s5 = GetParameter(element, "Условное давление").GetParameterValue().Split(' ').FirstOrDefault();
-                string s6 = GetParameter(element, "Конструкция трубопровода").GetParameterValue();
+                string s1 = GetParameter(element, "№ поз. по ГП").GetStringParameterValue();
+                string s2 = GetParameter(element, "Шифр продукта").GetStringParameterValue();
+                string s3 = GetParameter(element, "Номер по технологической схеме").GetStringParameterValue();
+                string s4 = GetParameter(element, "Условный диаметр").GetStringParameterValue().Split(' ').FirstOrDefault();
+                string s5 = GetParameter(element, "Условное давление").GetStringParameterValue().Split(' ').FirstOrDefault();
+                string s6 = GetParameter(element, "Конструкция трубопровода").GetStringParameterValue();
 
                 if ((s1 != string.Empty) && (s2 != string.Empty) && (s3 != string.Empty) && (s4 != string.Empty) && (s5 != string.Empty) && (s6 != string.Empty))
                 {

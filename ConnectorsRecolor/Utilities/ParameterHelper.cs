@@ -10,7 +10,7 @@
         {
             double imperialValue = param;
 
-            return imperialValue * MetersInFeet; // feet
+            return imperialValue * MetersInFeet;
         }
 
         public static double FeetAsMillimeters(this double param)
@@ -27,7 +27,7 @@
             return imperialValue * MetersInFeet * 100;
         }
 
-        public static string GetParameterValue(this Parameter param)
+        public static string GetStringParameterValue(this Parameter param)
         {
             string s;
             switch (param.StorageType)
