@@ -14,14 +14,14 @@ namespace FindParameters.VM
     {
         public FindParametersViewModel(Document doc)
         {
-            Elements = ElementsExporter.GetFilteredElementsByCategory(doc);
+            Elements = ElementsExporter.GetElements(doc);
 
-            InitializeParameterCategoryCollection(FindParameterCategories());
+            this.InitializeParameterCategoryCollection(FindParameterCategories());
         }
 
-        public static ObservableCollection<RevitBuiltInParameterGroup> ParameterCategoriesList { get; private set; }
-
         public static Dictionary<string, List<Element>> Elements { get; private set; }
+
+        public ObservableCollection<RevitBuiltInParameterGroup> ParameterCategoriesList { get; private set; }
 
         public static void ExportElementParameters(ObservableCollection<RevitBuiltInParameterGroup> parameterGroups, bool isUseVoidChecked, bool isUseHidden)
         {
@@ -38,16 +38,6 @@ namespace FindParameters.VM
             ElementsExporter.ExportElementParameters(pickedDefinitions, Elements);
         }
 
-        private static void InitializeParameterCategoryCollection(Dictionary<string, List<Parameter>> source)
-        {
-            ParameterCategoriesList = new ObservableCollection<RevitBuiltInParameterGroup>();
-
-            foreach (var item in source)
-            {
-                ParameterCategoriesList.Add(new RevitBuiltInParameterGroup(item.Value) { Name = item.Key });
-            }
-        }
-
         private static Dictionary<string, List<Parameter>> FindParameterCategories()
         {
             return Elements.Values.SelectMany(e => e)
@@ -58,6 +48,16 @@ namespace FindParameters.VM
                 .GroupBy(p => p.Definition.ParameterGroup, p => p)
                 .OrderBy(grp => LabelUtils.GetLabelFor(grp.Key))
                 .ToDictionary(e => LabelUtils.GetLabelFor(e.Key), e => e.ToList());
+        }
+
+        private void InitializeParameterCategoryCollection(Dictionary<string, List<Parameter>> source)
+        {
+            this.ParameterCategoriesList = new ObservableCollection<RevitBuiltInParameterGroup>();
+
+            foreach (var item in source)
+            {
+                this.ParameterCategoriesList.Add(new RevitBuiltInParameterGroup(item.Value) { Name = item.Key });
+            }
         }
 
         private class ParameterEqualityComparer : IEqualityComparer<Parameter>

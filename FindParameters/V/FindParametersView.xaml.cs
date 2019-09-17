@@ -18,8 +18,8 @@ namespace FindParameters.V
         public FindParametersView(Document doc)
         {
             this.InitializeComponent();
-
-            this.ParameterGroups = FindParametersViewModel.ParameterCategoriesList;
+            FindParametersViewModel findParametersViewModel = new FindParametersViewModel(doc);
+            this.ParameterGroups = findParametersViewModel.ParameterCategoriesList;
         }
 
         public ObservableCollection<RevitBuiltInParameterGroup> ParameterGroups { get; set; }

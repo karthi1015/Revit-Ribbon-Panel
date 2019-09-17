@@ -43,15 +43,16 @@
 
             TaskDialog.Show(
                 "Parameter Export",
-                $"{sortedElements.Count} categories and a total " + $"of {sortedElements.Values.Sum(list => list.Count)} elements exported " + $"in {sw.Elapsed.TotalSeconds:F2} seconds.");
+                $"{sortedElements.Count} categories and a total "
+                + $"of {sortedElements.Values.Sum(list => list.Count)} elements exported "
+                + $"in {sw.Elapsed.TotalSeconds:F2} seconds.");
         }
 
         public static Dictionary<string, List<Element>> GetFilteredElementsByCategory(Document doc)
         {
             var sortedElements = new Dictionary<string, List<Element>>();
 
-            var els = new FilteredElementCollector(doc)
-                .WhereElementIsNotElementType()
+            var els = new FilteredElementCollector(doc).WhereElementIsNotElementType()
                 .WhereElementIsViewIndependent()
                 .Where(e => (e.Category != null) && e.Category.HasMaterialQuantities);
 
@@ -72,6 +73,38 @@
             }
 
             return sortedElements;
+        }
+
+        public static Dictionary<string, List<Element>> GetElements(Document doc)
+        {
+            return new FilteredElementCollector(doc).WhereElementIsNotElementType()
+                .WhereElementIsViewIndependent()
+                .WherePasses(
+                    new ElementMulticategoryFilter(
+                        new List<BuiltInCategory>
+                        {
+                            BuiltInCategory.OST_PipeAccessory,
+                            BuiltInCategory.OST_PipeCurves,
+                            BuiltInCategory.OST_MechanicalEquipment,
+                            BuiltInCategory.OST_PipeFitting,
+                            BuiltInCategory.OST_FlexPipeCurves,
+                            BuiltInCategory.OST_PlumbingFixtures
+                        }))
+                .ToElements()
+                .Where(
+                    delegate(Element e)
+                    {
+                        Parameter volume = e.get_Parameter(BuiltInParameter.HOST_VOLUME_COMPUTED);
+
+                        if ((e is FamilyInstance fs && (fs.SuperComponent != null)) || ((volume != null) && !volume.HasValue))
+                        {
+                            return false;
+                        }
+
+                        return true;
+                    })
+                .GroupBy(e => e.Category.Name, e => e)
+                .ToDictionary(e => e.Key, e => e.ToList());
         }
 
         private static DataSet GetDataSet(Dictionary<string, List<Element>> sortedElements, List<Parameter> pickedDefinitions)
@@ -146,7 +179,6 @@
             return s;
         }
 
-        // TODO if (parameter.Definition.ParameterGroup == BuiltInParameterGroup.PG_ADSK_MODEL_PROPERTIES)
         // TODO select from BuiltInParameterGroup
         // TODO select if you want void elements in table or not
     }

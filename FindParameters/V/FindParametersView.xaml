@@ -8,10 +8,8 @@
         xmlns:helperClass="clr-namespace:FindParameters.Utilities"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Width="630"
-        Height="700"
-        MinWidth="630"
-        MinHeight="700"
+        MinWidth="630" Width="630" Height="700"
+        MinHeight="700" d:DesignHeight="700" d:DesignWidth="630"
         Title="Экспорт параметров в Excel" >
     <Grid>
         <Grid.ColumnDefinitions>
@@ -26,14 +24,14 @@
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="0">
-                <Button Height="25" HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                <Button Height="28" Width="110" HorizontalAlignment="Right" VerticalAlignment="Bottom"
                         Content="Снять выделение"
-                        Margin="10,15,10,10" Padding="4" Click="ButtonUncheckAllClick" />
-                <Button Height="25" Width="110" HorizontalAlignment="Right" VerticalAlignment="Bottom"
-                        Margin="10,15,275,10" Content="Развернуть все" Name="ButtonExpandAll"
+                        Margin="10,10,10,10" Padding="4" Click="ButtonUncheckAllClick" />
+                <Button Height="28" Width="100" HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                        Margin="10,10,270,10" Content="Развернуть все" Name="ButtonExpandAll"
                         Click="ButtonExpandAll_OnClick" />
-                <Button Height="25" Width="110" HorizontalAlignment="Right" VerticalAlignment="Bottom"
-                        Margin="10,15,140,10" Content="Свернуть все" Name="ButtonCollapseAll"
+                <Button Height="28" Width="100" HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                        Margin="10,10,145,10" Content="Свернуть все" Name="ButtonCollapseAll"
                         Click="ButtonCollapseAll_OnClick" />
             </Grid>
             <Grid Grid.Row="1">
