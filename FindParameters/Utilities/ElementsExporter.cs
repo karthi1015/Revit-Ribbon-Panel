@@ -43,9 +43,7 @@
 
             TaskDialog.Show(
                 "Parameter Export",
-                $"{sortedElements.Count} categories and a total "
-                + $"of {sortedElements.Values.Sum(list => list.Count)} elements exported "
-                + $"in {sw.Elapsed.TotalSeconds:F2} seconds.");
+                $"{sortedElements.Count} categories and a total of {sortedElements.Values.Sum(list => list.Count)} elements exported in {sw.Elapsed.TotalSeconds:F2} seconds.");
         }
 
         public static Dictionary<string, List<Element>> GetFilteredElementsByCategory(Document doc)
@@ -90,7 +88,7 @@
                             BuiltInCategory.OST_FlexPipeCurves,
                             BuiltInCategory.OST_PlumbingFixtures
                         }))
-                .ToElements()
+                .Where(e => e.Category != null)
                 .Where(
                     delegate(Element e)
                     {
@@ -120,14 +118,14 @@
 
         private static DataTable GetTable(KeyValuePair<string, List<Element>> element, List<Parameter> pickedDefinitions)
         {
-            var table = new DataTable { TableName = element.Key };
+            var table = new DataTable { TableName = new string(element.Key.Take(31).ToArray()) };
 
             table.Columns.Add("ID");
             foreach (Element item in element.Value)
             {
                 DataRow row = table.NewRow();
                 row["ID"] = item.Id.IntegerValue.ToString();
-                foreach (Parameter parameter in item.Parameters)
+                foreach (Parameter parameter in item.GetOrderedParameters())
                 {
                     if (pickedDefinitions.Select(p => p.Id).Contains(parameter.Id))
                     {
@@ -139,7 +137,7 @@
                         row[parameter.Definition.Name] = GetStringParameterValue(parameter);
                     }
                 }
-
+                
                 table.Rows.Add(row);
             }
 
