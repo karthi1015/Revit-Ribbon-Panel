@@ -38,51 +38,33 @@
             }
         }
 
-        private static ElementId GetMaterialId(Document doc, string pipeType)
+        private static void ChangeColorOneQuery(Document doc)
         {
-            switch (pipeType)
+            var sw = Stopwatch.StartNew();
+
+            Dictionary<string, List<FamilyInstance>> elements =
+                GetElements(doc) ?? throw new ArgumentNullException(nameof(elements), @"Проблема в нахождении коннекторов, проверьте наименования семейств");
+
+            int count;
+            using (Transaction tran = new Transaction(doc))
             {
-                case "Азот_":
-                    return new FilteredElementCollector(doc).OfClass(typeof(Material)).FirstOrDefault(m => m.Name.Equals("0_153_255"))?.Id;
-                case "Вода_":
-                    return new FilteredElementCollector(doc).OfClass(typeof(Material)).FirstOrDefault(m => m.Name.Equals("0_96_0"))?.Id;
-                case "Газ_":
-                    return new FilteredElementCollector(doc).OfClass(typeof(Material)).FirstOrDefault(m => m.Name.Equals("255_220_112"))?.Id;
-                case "Дренаж_":
-                    return new FilteredElementCollector(doc).OfClass(typeof(Material)).FirstOrDefault(m => m.Name.Equals("192_192_192"))?.Id;
-                case "Канализация_":
-                    return new FilteredElementCollector(doc).OfClass(typeof(Material)).FirstOrDefault(m => m.Name.Equals("192_192_192"))?.Id;
-                case "Нефтепродукты_":
-                    return new FilteredElementCollector(doc).OfClass(typeof(Material)).FirstOrDefault(m => m.Name.Equals("160_80_0"))?.Id;
-                case "Пенообразователь_":
-                    return new FilteredElementCollector(doc).OfClass(typeof(Material)).FirstOrDefault(m => m.Name.Equals("224_0_0"))?.Id;
-                case "ХимическиеРеагенты_":
-                    return new FilteredElementCollector(doc).OfClass(typeof(Material)).FirstOrDefault(m => m.Name.Equals("128_96_0"))?.Id;
+                tran.Start("Change color");
+
+                count = ChangeColor(doc, elements, "Азот_")
+                        + ChangeColor(doc, elements, "Вода_")
+                        + ChangeColor(doc, elements, "Газ_")
+                        + ChangeColor(doc, elements, "Дренаж_")
+                        + ChangeColor(doc, elements, "Канализация_")
+                        + ChangeColor(doc, elements, "Нефтепродукты_")
+                        + ChangeColor(doc, elements, "Пенообразователь_")
+                        + ChangeColor(doc, elements, "ХимическиеРеагенты_");
+
+                tran.Commit();
             }
 
-            return null;
-        }
+            sw.Stop();
 
-        private static void SetColor(IEnumerable<Element> elements, ElementId materialId)
-        {
-            foreach (Element element in elements)
-            {
-                Parameter p = element.GetOrderedParameters().FirstOrDefault(e => e.Definition.Name.Equals("МатериалФитинга"));
-                p?.Set(materialId);
-
-                if (element is FamilyInstance fsWeld)
-                {
-                    var welds = fsWeld.MEPModel.ConnectorManager.Connectors.Cast<Connector>().SelectMany(c => c.AllRefs.Cast<Connector>().Select(e => e.Owner));
-                    foreach (Element weld in welds)
-                    {
-                        if (weld is FamilyInstance weldFs && weldFs.Symbol.FamilyName.Equals("801_СварнойШов_ОБЩИЙ"))
-                        {
-                            p = weld.GetOrderedParameters().FirstOrDefault(e => e.Definition.Name.Equals("МатериалСварки"));
-                            p?.Set(materialId);
-                        }
-                    }
-                }
-            }
+            TaskDialog.Show("Recolor", $"{count} elements proceed " + $"in {sw.Elapsed.TotalSeconds:F2} seconds.");
         }
 
         private static Dictionary<string, List<FamilyInstance>> GetElements(Document doc)
@@ -123,7 +105,7 @@
                 if (valuePair.Key.StartsWith(pipeType))
                 {
                     ElementId material = GetMaterialId(doc, pipeType)
-                                         ?? throw new ArgumentNullException(nameof(material), "Проблема в нахождении материалов, проверьте наименования материалов");
+                                         ?? throw new ArgumentNullException(nameof(material), @"Проблема в нахождении материалов, проверьте наименования материалов");
                     SetColor(valuePair.Value, material);
                     count += valuePair.Value.Count;
                 }
@@ -132,32 +114,53 @@
             return count;
         }
 
-        private static void ChangeColorOneQuery(Document doc)
+        private static ElementId GetMaterialId(Document doc, string pipeType)
         {
-            var sw = Stopwatch.StartNew();
-
-            Dictionary<string, List<FamilyInstance>> elements =
-                GetElements(doc) ?? throw new ArgumentNullException(nameof(elements), "Проблема в нахождении коннекторов, проверьте наименования семейств");
-            int count;
-            using (Transaction tran = new Transaction(doc))
+            switch (pipeType)
             {
-                tran.Start("Change color");
-
-                count = ChangeColor(doc, elements, "Азот_")
-                        + ChangeColor(doc, elements, "Вода_")
-                        + ChangeColor(doc, elements, "Газ_")
-                        + ChangeColor(doc, elements, "Дренаж_")
-                        + ChangeColor(doc, elements, "Канализация_")
-                        + ChangeColor(doc, elements, "Нефтепродукты_")
-                        + ChangeColor(doc, elements, "Пенообразователь_")
-                        + ChangeColor(doc, elements, "ХимическиеРеагенты_");
-
-                tran.Commit();
+                case "Азот_":
+                    return new FilteredElementCollector(doc).OfClass(typeof(Material)).FirstOrDefault(m => m.Name.Equals("0_153_255"))?.Id;
+                case "Вода_":
+                    return new FilteredElementCollector(doc).OfClass(typeof(Material)).FirstOrDefault(m => m.Name.Equals("0_96_0"))?.Id;
+                case "Газ_":
+                    return new FilteredElementCollector(doc).OfClass(typeof(Material)).FirstOrDefault(m => m.Name.Equals("255_220_112"))?.Id;
+                case "Дренаж_":
+                    return new FilteredElementCollector(doc).OfClass(typeof(Material)).FirstOrDefault(m => m.Name.Equals("192_192_192"))?.Id;
+                case "Канализация_":
+                    return new FilteredElementCollector(doc).OfClass(typeof(Material)).FirstOrDefault(m => m.Name.Equals("192_192_192"))?.Id;
+                case "Нефтепродукты_":
+                    return new FilteredElementCollector(doc).OfClass(typeof(Material)).FirstOrDefault(m => m.Name.Equals("160_80_0"))?.Id;
+                case "Пенообразователь_":
+                    return new FilteredElementCollector(doc).OfClass(typeof(Material)).FirstOrDefault(m => m.Name.Equals("224_0_0"))?.Id;
+                case "ХимическиеРеагенты_":
+                    return new FilteredElementCollector(doc).OfClass(typeof(Material)).FirstOrDefault(m => m.Name.Equals("128_96_0"))?.Id;
             }
 
-            sw.Stop();
+            return null;
+        }
 
-            TaskDialog.Show("Recolor", $"{count} elements proceed " + $"in {sw.Elapsed.TotalSeconds:F2} seconds.");
+        private static void SetColor(IEnumerable<Element> elements, ElementId materialId)
+        {
+            foreach (Element element in elements)
+            {
+                Parameter p = element.GetOrderedParameters().FirstOrDefault(e => e.Definition.Name.Equals("МатериалФитинга"));
+                p?.Set(materialId);
+
+                if (element is FamilyInstance fsWeld)
+                {
+                    var welds = fsWeld.MEPModel.ConnectorManager.Connectors
+                        .Cast<Connector>()
+                        .SelectMany(c => c.AllRefs.Cast<Connector>().Select(e => e.Owner));
+                    foreach (Element weld in welds)
+                    {
+                        if (weld is FamilyInstance weldFs && weldFs.Symbol.FamilyName.Equals("801_СварнойШов_ОБЩИЙ"))
+                        {
+                            p = weld.GetOrderedParameters().FirstOrDefault(e => e.Definition.Name.Equals("МатериалСварки"));
+                            p?.Set(materialId);
+                        }
+                    }
+                }
+            }
         }
     }
 }
