@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
+    using System.Text;
 
     using Autodesk.Revit.ApplicationServices;
     using Autodesk.Revit.Attributes;
@@ -61,9 +62,20 @@
 
         private static Parameter GetParameter(Element element, string parameterName)
         {
-            return element.GetOrderedParameters().FirstOrDefault(e => e.Definition.Name.Equals(parameterName)) ?? throw new ArgumentNullException(
-                       parameterName,
-                       $"Проблема в нахождении параметра \"{parameterName}\", проверьте наименования параметров");
+            StringBuilder sb2 = new StringBuilder();
+            sb2.AppendLine($"Проблема в нахождении параметра \"{parameterName}\", проверьте верность наименования и наличие параметров.");
+            sb2.AppendLine();
+            sb2.AppendLine("Необходимо, чтобы категории:");
+            sb2.AppendLine("\"Оборудование\",");
+            sb2.AppendLine("\"Арматура трубопроводов\",");
+            sb2.AppendLine();
+            sb2.AppendLine("содержали параметры:");
+            sb2.AppendLine("\"Концевое условие\",");
+            sb2.AppendLine("\"Концевое условие 2\",");
+            sb2.AppendLine("\"Концевое условие 3\",");
+            sb2.AppendLine("\"Концевое условие 4\",");
+
+            return element.GetOrderedParameters().FirstOrDefault(e => e.Definition.Name.Equals(parameterName)) ?? throw new ArgumentNullException(parameterName,sb2.ToString());
         }
 
         private static void SetWeldParameters(Document doc, List<ElementId> elementIds)

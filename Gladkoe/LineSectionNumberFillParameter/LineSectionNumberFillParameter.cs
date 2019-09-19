@@ -61,21 +61,25 @@ namespace Gladkoe.LineSectionNumberFillParameter
 
         private static Parameter GetParameter(Element element, string parameterName)
         {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine($"Проблема в нахождении параметра \"{parameterName}\", проверьте верность наименования и наличие параметров.");
+            sb.AppendLine();
+            sb.AppendLine("Необходимо, чтобы категории:");
+            sb.AppendLine("\"Трубы\",");
+            sb.AppendLine("\"Арматура трубопроводов\",");
+            sb.AppendLine("\"Арматура трубопроводов\",");
+            sb.AppendLine("\"Соединительные детали трубопроводов\"");
+            sb.AppendLine();
+            sb.AppendLine("содержали параметры:");
+            sb.AppendLine("\"Номер участка линии\",");
+            sb.AppendLine("\"№ поз. по ГП\",");
+            sb.AppendLine("\"Шифр продукта\",");
+            sb.AppendLine("\"Номер по технологической схеме\",");
+            sb.AppendLine("\"Условный диаметр\"(тип - длина)");
+            sb.AppendLine("\"Условное давление\" (тип - давление)");
+            sb.AppendLine("\"Конструкция трубопровода");
             return element.GetOrderedParameters().FirstOrDefault(e => e.Definition.Name.Equals(parameterName))
-                   ?? throw new ArgumentException(
-                       $"Проблема в нахождении параметра \"{parameterName}\", проверьте верность наименования и наличие параметров.\n"
-                       + $"Необходимо, чтобы категории:\n"
-                       + $"\"Трубы\",\n "
-                       + $"\"Арматура трубопроводов\", \n"
-                       + $"\"Соединительные детали трубопроводов\" \n \n"
-                       + $"содержали параметры:\n \n"
-                       + $"\"Номер участка линии\", \n"
-                       + $"\"№ поз. по ГП\", \n"
-                       + $"\"Шифр продукта\", \n"
-                       + $"\"Номер по технологической схеме\", \n"
-                       + $"\"Условный диаметр\"(тип - длина), \n"
-                       + $"\"Условное давление\" (тип - давление), \n"
-                       + $"\"Конструкция трубопровода\"");
+                   ?? throw new ArgumentException(sb.ToString());
         }
 
         private static void SetParameters(List<Element> elements)

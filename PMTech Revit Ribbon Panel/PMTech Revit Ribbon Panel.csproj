@@ -118,7 +118,7 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ConnectorsRecolor\Gladkoe.csproj">
+    <ProjectReference Include="..\Gladkoe\Gladkoe.csproj">
       <Project>{ae424f9c-f550-4a7b-be85-cd5b788a21b3}</Project>
       <Name>Gladkoe</Name>
     </ProjectReference>
@@ -134,7 +134,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
-</PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
